@@ -1,0 +1,27 @@
+fmManGDB(Funcoes base de acesso aos dados)
+	bbfuncao(Funcoes de uso geral)
+	
+Troca de senha Nova/Antiga
+	MANGDB => dbMainBeforeConnect() + 587
+	
+GERUSU = possui os usuarios
+GERGUS = grupos
+
+
+Problema com o Layout do Banco
+tabela = fincnb
+campo IN1CNB, In2CNB
+Formulario
+fmManE02
+
+windows + R
+putty
+enter
+ip do dori <200.161.143.30>
+enter => porta 22
+odin
+senha
+date
+sudo su
+senha
+date -s HH:MM:SS
