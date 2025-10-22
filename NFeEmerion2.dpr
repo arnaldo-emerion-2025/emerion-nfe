@@ -3,8 +3,8 @@ program NFeEmerion2;
 uses
   Forms,
   Uprincipal in 'Uprincipal.pas' {Form1},
-  uMsg in 'W:\_wglib\Lib2010\uMsg.pas',
-  uFuncoes in 'W:\_wglib\Lib2010\uFuncoes.pas';
+  uMsg in 'uMsg.pas',
+  uFuncoes in 'uFuncoes.pas';
 
 {$R *.res}
 

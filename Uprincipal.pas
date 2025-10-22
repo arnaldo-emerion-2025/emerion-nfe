@@ -74,12 +74,11 @@ type
     strxNome: string;
     strDenegada: String;
     function validaCliente(cgc, uf: String): TCliente;
-    function StrToTpEmis(const codigo: Integer): TACBrTipoEmissao;
     function RecuperaChaveEnviando: string;
     procedure ReescreveChaveEnviada(strChave, strProtocolo: string;
       strDEPCSefaz: string = '');
     function EnviaNFe2(RChave, RProtocolo: String; SN: Boolean;
-      TipoEnvio: integer = 3): Boolean;
+      TipoEnvio: Integer = 3): Boolean;
     function LimpaStr(str: String): String;
     procedure DPEC_SEFAZ;
     procedure ConfirmaEnvioDPEC(strEnviado: string);
@@ -118,21 +117,21 @@ type
       VCGeraisCaminhoArquivoSchemas: string;
     VCGeraisCaminhoArquivoTipoImpressao,
       VCGeraisCaminhoArquivoFileImpressao: string;
-    VCGeraisDanfe, VCGeraisFormaemissao: integer;
+    VCGeraisDanfe, VCGeraisFormaemissao: Integer;
     VCGeraisSalvar: Boolean;
 
     // ========= Variaveis WebSevice VWebS
     VWebSUF: string;
-    VWebSAmbiente: integer;
+    VWebSAmbiente: Integer;
     VWebSVisualizar: Boolean;
     VSIte: string;
 
     // ========= Variaveis PROXY VProxy
     VProxyHost, VProxyUsuario, VProxySenha, VProxyPorta: string;
 
-    VNumLote: integer;
+    VNumLote: Integer;
 
-    ParNF: integer;
+    ParNF: Integer;
     ACAO: string;
     vchave: string;
 
@@ -146,7 +145,7 @@ type
     procedure LoadXML(MyMemo: TMemo; MyWebBrowser: TWebBrowser);
     { Public declarations }
     function RecuperarXMLFATPED(RChave, RProtocolo: string; SN: Boolean;
-      TipoEnvio: integer = 3): Boolean;
+      TipoEnvio: Integer = 3): Boolean;
     function ValidaCNPJ(sCNPJ: string; MostraMsg: Boolean = true): Boolean;
   end;
 
@@ -158,89 +157,9 @@ implementation
 {$R *.dfm}
 
 uses
-  // ACBrNFebNotasFiscais,
   ConvUtils,
   ACBrNFeWebServices,
   pcnConversaoNFe, ACBrDFeSSL, blcksock;
-
-function VALIDAcpf(cpf: string): Boolean;
-var
-  i: integer;
-  Want: char;
-  Wvalid: Boolean;
-  Wdigit1, Wdigit2: integer;
-begin
-  Result := False;
-  if trim(cpf) <> '' then
-  begin
-
-    Wdigit1 := 0;
-    Wdigit2 := 0;
-    Want := cpf[1];
-    // variavel para testar se o cpf � repetido como 111.111.111-11
-    Delete(cpf, ansipos('.', cpf), 1); // retira as mascaras se houver
-    Delete(cpf, ansipos('.', cpf), 1);
-    Delete(cpf, ansipos('-', cpf), 1);
-
-    Wvalid := False;
-    // testar se o cpf � repetido como 111.111.111-11
-    for i := 1 to length(cpf) do
-    begin
-      if cpf[i] <> Want then
-      begin
-        Wvalid := true;
-        // se o cpf possui um digito diferente ele passou no primeiro teste
-        break
-      end;
-    end;
-    // se o cpf � composto por numeros repetido retorna falso
-    if not Wvalid then
-    begin
-      Result := False;
-      exit;
-    end;
-
-    // executa o calculo para o primeiro verificador
-    for i := 1 to 9 do
-    begin
-      Wdigit1 := Wdigit1 + (strtoint(cpf[10 - i]) * (i + 1));
-    end;
-    Wdigit1 := ((11 - (Wdigit1 mod 11)) mod 11) mod 10;
-    { formula do primeiro verificador
-      soma=1�*2+2�*3+3�*4.. at� 9�*10
-      digito1 = 11 - soma mod 11
-      se digito > 10 digito1 =0
-    }
-
-    // verifica se o 1� digito confere
-    if IntToStr(Wdigit1) <> cpf[10] then
-    begin
-      Result := False;
-      exit;
-    end;
-
-    for i := 1 to 10 do
-    begin
-      Wdigit2 := Wdigit2 + (strtoint(cpf[11 - i]) * (i + 1));
-    end;
-    Wdigit2 := ((11 - (Wdigit2 mod 11)) mod 11) mod 10;
-    { formula do segundo verificador
-      soma=1�*2+2�*3+3�*4.. at� 10�*11
-      digito1 = 11 - soma mod 11
-      se digito > 10 digito1 =0
-    }
-
-    // confere o 2� digito verificador
-    if IntToStr(Wdigit2) <> cpf[11] then
-    begin
-      Result := False;
-      exit;
-    end;
-
-    // se chegar at� aqui o cpf � valido
-    Result := true;
-  end;
-end;
 
 function TForm1.ValidaCNPJ(sCNPJ: string; MostraMsg: Boolean = true): Boolean;
 begin
@@ -253,17 +172,9 @@ var
   IniFile: string;
   arqIni: TIniFile;
 begin
-
   IniFile := ChangeFileExt(Application.ExeName, '.ini');
-
   arqIni := TIniFile.Create(IniFile);
-
-  try
-
-  finally
-    arqIni.Free;
-  end;
-
+  arqIni.Free;
 end;
 
 function TForm1.RecuperaChaveEnviando: string;
@@ -283,11 +194,7 @@ begin
 end;
 
 function TForm1.RecuperarXMLFATPED(RChave, RProtocolo: string; SN: Boolean;
-  TipoEnvio: integer = 3): Boolean;
-var
-  Arquivo: TextFile;
-  Linha: string;
-  ArrumaDuplicada: TextFile;
+  TipoEnvio: Integer = 3): Boolean;
 begin
 
   EnviaNFe2(RChave, RProtocolo, SN, TipoEnvio);
@@ -315,8 +222,6 @@ begin
           .NFe.procNFe.xMotivo);
       end;
 
-      // Teste := ACBrNFe1.NotasFiscais.Items[0].SaveToFile(ACBrNFe1.NotasFiscais.Items[0].NomeArq);
-
       if ((ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 539) or
         (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 502) or
         (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 204) or
@@ -332,12 +237,6 @@ begin
   ACBrNFe1.NotasFiscais.LoadFromFile(VCGeraisCaminhoArquivoRetorno + '\' +
     RChave + '-nfe.xml');
   ACBrNFe1.Consultar;
-
-  // if (ACBrNFe1.WebServices.Consulta.Protocolo = RProtocolo) then
-  if (pos(ACBrNFe1.WebServices.Consulta.Protocolo, RProtocolo) > 0) then
-  begin
-    // ShowMessage('Condicao Verdadeira');
-  end;
 
   ACBrNFe1.NotasFiscais.Items[0].GravarXML(RChave + '-nfe.xml');
   ACBrNFe1.NotasFiscais.Items[0].GravarXML
@@ -386,7 +285,6 @@ procedure TForm1.GravarConfiguracao;
 var
   IniFile: string;
   Ini: TIniFile;
-  StreamMemo: TMemoryStream;
 begin
   IniFile := ChangeFileExt(Application.ExeName, '.ini');
 
@@ -449,7 +347,6 @@ begin
   Ini := TIniFile.Create(IniFile);
   try
 
-    // ACBrNFe1.Configuracoes.Certificados.Senha        := Ini.ReadString( 'Certificado','Senha'   ,'') ;
     // ===== Achando o Certificado pelo Caminho ou pelo numero de s�rie
 {$IFDEF ACBrNFeOpenSSL}
     ACBrNFe1.Configuracoes.Certificados.Certificado :=
@@ -527,12 +424,13 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Schemas (' +
         VCGeraisCaminhoArquivoSchemas +
-        ') n�o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nao encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
     // Valida��o
-    ACBrNFe1.Configuracoes.Geral.FormaEmissao := StrToTpEmis(VCGeraisFormaemissao);
+    ACBrNFe1.Configuracoes.Geral.FormaEmissao :=
+      StrToTpEmis(VCGeraisFormaemissao);
     ACBrNFe1.Configuracoes.Geral.Salvar := VCGeraisSalvar;
     ACBrNFe1.Configuracoes.Arquivos.PathSalvar := VCGeraisCaminhoArquivosXML;
     ACBrNFe1.Configuracoes.Arquivos.PathSchemas :=
@@ -563,8 +461,6 @@ begin
     VWebSAmbiente := Ini.ReadInteger('WebService', 'Ambiente', 0);
     VWebSVisualizar := Ini.ReadBool('WebService', 'Visualizar', False);
 
-    // ACBrNFeDANFERave1.Site := VSIte;
-    // ACBrNFeDANFERaveCB1.Site := VSIte;
     ACBrNFeDANFEFR1.Site := VSIte;
 
     ACBrNFe1.Configuracoes.WebServices.uf := VWebSUF;
@@ -602,40 +498,7 @@ begin
       Application.Terminate;
     end;
 
-    // ACBrNFeDANFERave1.PathPDF := VCGeraisCaminhoArquivoDANFE;
-    // ACBrNFeDANFERaveCB1.PathPDF := VCGeraisCaminhoArquivoDANFE;
     ACBrNFeDANFEFR1.PathPDF := VCGeraisCaminhoArquivoDANFE;
-
-    { if (VCGeraisCaminhoArquivoTipoImpressao = 'RAVE') then
-      begin
-      // Antigo
-      // ACBrNFeDANFERave1.RavFile := VCGeraisCaminhoArquivoSchemas + '\NotaFiscalEletronica.rav';
-
-      // Confirma se existe arquivo.
-      if fileexists(VCGeraisCaminhoArquivoFileImpressao) then
-      begin
-      ACBrNFeDANFERave1.RavFile := VCGeraisCaminhoArquivoFileImpressao;
-      ACBrNFe1.DANFE := ACBrNFeDANFERave1;
-      end
-      else
-      if fileexists(VCGeraisCaminhoArquivoSchemas + '\NotaFiscalEletronica.rav') then
-      begin
-      ACBrNFeDANFERave1.RavFile := VCGeraisCaminhoArquivoSchemas + '\NotaFiscalEletronica.rav';
-      ACBrNFe1.DANFE := ACBrNFeDANFERave1;
-      end
-      else
-      begin
-      messagebox(0, pwidechar('N�o localizado o arquivo de impress�o do DANFE: ' +
-      VCGeraisCaminhoArquivoTipoImpressao + '. Verifique e tente novamente.'), 'Emiss�o de NFe',
-      MB_OK + MB_ICONINFORMATION);
-      Application.Terminate;
-      end;
-      end
-      else }
-    // if (VCGeraisCaminhoArquivoTipoImpressao = 'FAST') then
-    // begin
-    // Antigo
-    // ACBrNFeDANFERave1.RavFile := VCGeraisCaminhoArquivoSchemas + '\NotaFiscalEletronica.rav';
 
     // Confirma se existe arquivo.
     if fileexists(VCGeraisCaminhoArquivoFileImpressao) then
@@ -651,7 +514,6 @@ begin
         MB_OK + MB_ICONINFORMATION);
       Application.Terminate;
     end;
-    // end;
 
   finally
     Ini.Free;
@@ -663,7 +525,7 @@ function TForm1.LimpaStr(str: String): String;
 const
   caracteres: array [0 .. 5] of char = ('/', '.', ',', '-', '\', ' ');
 var
-  i: integer;
+  i: Integer;
 begin
   str := trim(str);
 
@@ -690,18 +552,13 @@ end;
 
 procedure TForm1.bEnviarNfeClick;
 var
-  Arquivo: TextFile;
   Linha: string;
-  i, j, colunai, colunaf: integer;
+  i, j, colunai, colunaf: Integer;
   achou: Boolean;
   chaveDup, protocoloDupl, aux: string;
-  ArrumaDuplicada: TextFile;
-  intVezes: integer;
   strNome: String;
-  dataMaior: Boolean;
 begin
   achou := False;
-  dataMaior := strTODate('01/11/2025') > Date;
   try
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\EVNOTA' + IntToStr(ParNF) +
       '.txt') = False then
@@ -804,7 +661,7 @@ begin
           Linha := Memo1.Lines[i];
 
           for j := colunai + 1 to colunaf - 1 do
-            if Linha[j] in ['0' .. '9'] then
+            if CharInset(Linha[j], ['0' .. '9']) then
             begin
               chaveDup := chaveDup + Linha[j];
             end;
@@ -821,15 +678,12 @@ begin
         end;
       end;
 
-      { if achou then
-        messagebox(Handle, pchar(E.Message), 'Envio NFe', mb_OK); }
-
       if achou then
       begin
         ACBrNFe1.NotasFiscais.Clear;
         ACBrNFe1.WebServices.Consulta.NFeChave := chaveDup;
         ACBrNFe1.WebServices.Consulta.Executar;
-        aux := UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS);
+        aux := string(UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS));
         colunai := pos('<protNFe', aux);
         colunaf := pos('</protNFe>', aux);
         protocoloDupl := '';
@@ -846,12 +700,12 @@ begin
 
         if messagebox(Handle,
           pchar('Numera��o de NFe j� enviada anteriormente com a chave: ' +
-          chaveDup + #13 + //
+          chaveDup + #13 +
           'Caso seja a mesma NFe voc� pode optar por Sim para recuperar o XML.'
           + #13 +
-          //
-          'Em caso de d�vida poder� consultar no site ' + //
-          'http://www.nfe.fazenda.gov.br' + #13 + //
+
+          'Em caso de d�vida poder� consultar no site ' +
+          'http://www.nfe.fazenda.gov.br' + #13 +
           'Para facilitar a chave se encontra na �rea de transfer�ncia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
           pchar('Envio de NFe'), MB_YESNO + MB_ICONQUESTION) = IDYES then
         begin
@@ -861,8 +715,6 @@ begin
             ACBrNFe1.NotasFiscais.LoadFromFile
               (ACBrNFe1.Configuracoes.Arquivos.PathSalvar + '\' +
               IntToStr(ParNF) + '-env-lot.xml');
-            // ACBrNFe1.Configuracoes.Arquivos.PathNFe
-            // if (ACBrNFe1.NotasFiscais.Count > 0) then
             Foi := true;
           end
           else
@@ -874,8 +726,6 @@ begin
 
     end;
   end;
-
-  // =============================================
 
   if not Foi then
   begin
@@ -896,31 +746,27 @@ begin
       (chaveDup <> '') then
     begin
 
-      Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS);
-
-      /// LoadXML(Memo1, WBResposta);
-
-      intVezes := 0;
+      Memo1.Lines.Text :=
+        string(UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS));
 
       if (trim(chaveDup) = '') then
       begin
         strNome := VCGeraisCaminhoArquivoRetorno + '\' + IntToStr(VNumLote) +
           ' - NF-e- ' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0]
           .chDFe + '.xml';
-        // strNome := VCGeraisCaminhoArquivoRetorno + '\' + IntToStr(VNumLote) + ' - NF-e- ' + chaveDup + '.xml';
+
         CopyFile(pchar(VCGeraisCaminhoArquivoRetorno + '\' +
           ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe +
           '-nfe.xml'), pchar(strNome), true);
-        // showmessage(strNome);
+
       end;
 
       RecChave := RecuperaChaveEnviando;
 
       if RecChave <> ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe
       then
-        ReescreveChaveEnviada(ifthen(achou, //
-          chaveDup, //
-          ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe), //
+        ReescreveChaveEnviada(ifthen(achou, chaveDup,
+          ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe),
           ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].nProt);
     end
     else
@@ -931,17 +777,7 @@ begin
 end;
 
 procedure TForm1.bEnviarNfeClick2;
-var
-  Arquivo: TextFile;
-  Linha: string;
-  i, j, colunai, colunaf: integer;
-  achou: Boolean;
-  chaveDup, protocoloDupl, aux: string;
-  ArrumaDuplicada: TextFile;
-  intVezes: integer;
-  strNome: String;
 begin
-  achou := False;
 
   try
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\EVNOTA' + IntToStr(ParNF) +
@@ -968,7 +804,7 @@ begin
       ShowMessage(E.Message);
     end;
   end;
-  // ACBrNFe1.NotasFiscais.GravarTXT;
+
   ACBrNFe1.NotasFiscais.Items[0].GravarXML('XML_' + IntToStr(ParNF) + '.xml');
 
 end;
@@ -981,16 +817,12 @@ begin
 
   strDenegada := 'N';
 
-  // Form1.Top := 2000;
-  // Alterado
   ACBrNFe1 := TACBrNFe.Create(self);
   ACBrNFeDANFEFR1 := TACBrNFeDANFEFR.Create(self);
   ACBrNFe1.Configuracoes.Arquivos.PathSalvar :=
     ExtractFilePath(Application.ExeName);
 
   LerConfiguracao;
-
-  // GravarConfiguracao;
 
   try
     ACAO := ParamStr(1);
@@ -1026,8 +858,8 @@ begin
         bEnviarSNClick
       else if ACAO = 'COMPLEMENTOSN' then
         bComplementoSNClick
-      //else if ACAO = 'DPEC' then
-        //ContigenciaDPEC
+        // else if ACAO = 'DPEC' then
+        // ContigenciaDPEC
       else if ACAO = 'DPECSEFAZ' then
         DPEC_SEFAZ
       else if ACAO = 'XML' then
@@ -1083,7 +915,7 @@ end;
 procedure TForm1.bCancelaNFeClick;
 var
   Arquivo: TextFile;
-  Linha, Chave, aux: string;
+  Linha, aux: string;
 begin
   try
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\CNNOTA' + IntToStr(ParNF) +
@@ -1147,8 +979,6 @@ begin
     end
   end;
 
-  // Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Cancelamento.RetWS);
-  // LoadXML(Memo1, WBResposta);
   CopyFile(pchar(VCGeraisCaminhoArquivosXML + '\' +
     ACBrNFe1.WebServices.Retorno.ChaveNFe + '-nfe.xml'),
     pchar(VCGeraisCaminhoArquivoCancelada + '\' + IntToStr(VNumLote) +
@@ -1167,7 +997,7 @@ procedure TForm1.bCancelaNFeEventoClick;
 var
   idLote, VAux: String;
   Arquivo: TextFile;
-  Linha, Chave, aux: string;
+  Linha, aux: string;
 begin
   try
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\CNNOTA' + IntToStr(ParNF) +
@@ -1211,7 +1041,7 @@ begin
       VAux := '';
       ACBrNFe1.EventoNFe.Evento.Clear;
       ACBrNFe1.EventoNFe.idLote := strtoint(idLote);
-      with ACBrNFe1.EventoNFe.Evento.Add do
+      with ACBrNFe1.EventoNFe.Evento.New do
       begin
         infEvento.dhEvento := now;
         infEvento.tpEvento := teCancelamento;
@@ -1248,13 +1078,12 @@ end;
 
 procedure TForm1.bComplementoClick;
 var
-  Arquivo: TextFile;
   Linha: string;
-  i, j, colunai, colunaf: integer;
+  i, j, colunai, colunaf: Integer;
   achou: Boolean;
   chaveDup, protocoloDupl, aux: string;
-  ArrumaDuplicada: TextFile;
 begin
+  achou := False;
   try
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\CPNOTA' + IntToStr(ParNF) +
       '.txt') = False then
@@ -1319,7 +1148,7 @@ begin
           Linha := Memo1.Lines[i];
 
           for j := colunai + 1 to colunaf - 1 do
-            if Linha[j] in ['0' .. '9'] then
+            if CharInset(Linha[j], ['0' .. '9']) then
             begin
               chaveDup := chaveDup + Linha[j];
             end;
@@ -1341,7 +1170,7 @@ begin
         ACBrNFe1.NotasFiscais.Clear;
         ACBrNFe1.WebServices.Consulta.NFeChave := chaveDup;
         ACBrNFe1.WebServices.Consulta.Executar;
-        aux := UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS);
+        aux := string(UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS));
         colunai := pos('<protNFe', aux);
         colunaf := pos('</protNFe>', aux);
         protocoloDupl := '';
@@ -1380,8 +1209,6 @@ begin
     end;
   end;
 
-  // =============================================
-  // showmessage(Memo1.Lines.Text);
   if not Foi then
   begin
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
@@ -1396,8 +1223,9 @@ begin
     if (ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].nProt <> '') or
       (chaveDup <> '') then
     begin
-      Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS);
-      /// LoadXML(Memo1, WBResposta);
+      Memo1.Lines.Text :=
+        string(UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS));
+
       CopyFile(pchar(VCGeraisCaminhoArquivoRetorno + '\' +
         ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe +
         '-nfe.xml'), pchar(VCGeraisCaminhoArquivoRetorno + '\' +
@@ -1427,7 +1255,6 @@ end;
 
 function TForm1.validaCliente(cgc, uf: String): TCliente;
 var
-  IniFile: TIniFile;
   status: String;
 begin
 
@@ -1440,10 +1267,10 @@ begin
     ACBrNFe1.WebServices.ConsultaCadastro.cpf := cgc;
   ACBrNFe1.WebServices.ConsultaCadastro.Executar;
 
-  Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.ConsultaCadastro.RetWS);
+  Memo1.Lines.Text :=
+    string(UTF8Encode(ACBrNFe1.WebServices.ConsultaCadastro.RetWS));
   Memo2.Lines.Text :=
-    UTF8Encode(ACBrNFe1.WebServices.ConsultaCadastro.RetornoWS);
-  /// LoadXML(Memo1, WBResposta);
+    string(UTF8Encode(ACBrNFe1.WebServices.ConsultaCadastro.RetornoWS));
 
   if (ACBrNFe1.WebServices.ConsultaCadastro.RetConsCad.InfCad.Items[0].cSit = 0)
   then
@@ -1464,35 +1291,9 @@ begin
 
   // Procedure para exibir os dados do cliente em um formul�rio
   consultaCliente(Result.cgc, Result.ie, status);
-
-  { //Escrevendo informa��es no config.ini
-    iniFile := TIniFile.Create(ExtractFilePath(application.ExeName) + 'config.ini');
-    iniFile.WriteString('validacao', 'ie', result.ie);
-    iniFile.WriteString('validacao', 'cgc', result.cgc);
-    iniFile.WriteBool('validacao', 'denegada', result.isDenegada); }
-
-end;
-
-function TForm1.StrToTpEmis(const codigo: Integer): TACBrTipoEmissao;
-begin
-  case Codigo of
-    0: Result := teNormal;
-    1: Result := teContingencia;
-    2: Result := teSCAN;
-    3: Result := teDPEC;
-    4: Result := teFSDA;
-    5: Result := teSVCAN;
-    6: Result := teSVCRS;
-    7: Result := teSVCSP;
-    8: Result := teOffLine;
-  else
-    raise Exception.CreateFmt('Código inválido (%d). Esperado valor entre 1 e 9.', [Codigo]);
-  end;
 end;
 
 procedure TForm1.bConsultaDisponibilidade;
-var
-  strAux: string;
 begin
   ACBrNFe1.WebServices.StatusServico.Executar;
 end;
@@ -1500,7 +1301,7 @@ end;
 procedure TForm1.bConsultaNFeClick;
 var
   Arquivo: TextFile;
-  Linha, aux: string;
+  Linha: string;
 begin
   try
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\CSNOTA' + IntToStr(ParNF) +
@@ -1536,19 +1337,13 @@ begin
   ACBrNFe1.NotasFiscais.Clear;
   ACBrNFe1.NotasFiscais.LoadFromFile(trim(Copy(Linha, 4, 890)));
 
-  { ACBrNFe1.WebServices.Consulta.NFeChave := trim(Copy(Linha, 4, 400));
-    ACBrNFe1.WebServices.Consulta.Executar;
-
-    Memo1.Lines.Text :=  UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS);
-    //memoRespWS.Lines.Text :=  UTF8Encode(ACBrNFe1.WebServices.Consulta.RetornoWS);
-    LoadXML(Memo1, WBResposta); }
-
   try
     ACBrNFe1.Consultar;
   except
     on E: Exception do
     begin
-      Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS);
+      Memo1.Lines.Text :=
+        string(UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS));
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CS' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1556,7 +1351,7 @@ begin
     end
   end;
 
-  Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS);
+  Memo1.Lines.Text := string(UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS));
   Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\' + IntToStr(ParNF) +
     ' Consulta - NF-e- ' + IntToStr(ParNF) + '.xml');
   Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\' + IntToStr(ParNF) +
@@ -1601,27 +1396,10 @@ begin
   Reset(Arquivo);
 
   Readln(Arquivo, Linha);
-  // Linha := 'x:\XML\' + Copy(Linha, (pos('NF-e- ', Linha) + length('NF-e- ')), 44) + '-nfe.xml';
   try
     if fileexists(Linha) then
     begin
       ACBrNFe1.NotasFiscais.LoadFromFile(Linha);
-
-      { if ACBrNFe1.NotasFiscais.Items[0].NFe.Ide.tpEmis = teDPEC then
-        begin
-
-        Readln(Arquivo, Linha);
-
-        if trim(Linha) = '' then
-        begin
-        ACBrNFe1.WebServices.ConsultaDPEC.NFeChave := ACBrNFe1.NotasFiscais.Items[0].NFe.infNFe.ID;
-        ACBrNFe1.WebServices.ConsultaDPEC.Executar;
-        Linha := ACBrNFe1.WebServices.ConsultaDPEC.nRegDPEC + ' ' + DateTimeToStr
-        (ACBrNFe1.WebServices.ConsultaDPEC.dhRegDPEC);
-
-        end;
-        ACBrNFe1.DANFE.ProtocoloNFe := Linha;
-        end; }
 
       ACBrNFeDANFEFR1.MostraSetup := true;
       ACBrNFe1.NotasFiscais.Imprimir;
@@ -1649,7 +1427,7 @@ var
   Arquivo: TextFile;
   Linha: string;
   CNPJ, justificativa: string;
-  numeroinicial, numerofinal, ano, modelo, serie: integer;
+  numeroinicial, numerofinal, ano, modelo, serie: Integer;
 begin
   AssignFile(Arquivo, VCGeraisCaminhoArquivoLeitura + '\INUTILIZAR' +
     IntToStr(ParNF) + '.txt');
@@ -1693,8 +1471,8 @@ begin
       SysUtils.Abort;
     end
   end;
-  Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Inutilizacao.RetWS);
-  // Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\' + IntToStr(ParNF) + ' INUTILIZADA - NF-e.xml');
+  Memo1.Lines.Text :=
+    string(UTF8Encode(ACBrNFe1.WebServices.Inutilizacao.RetWS));
   Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\' + IntToStr(ParNF) +
     ' INUTILIZADA - NF-e.xml');
 end;
@@ -1703,13 +1481,11 @@ procedure TForm1.bEnviarSNClick;
 var
   Arquivo: TextFile;
   Linha: string;
-  i, j, colunai, colunaf: integer;
+  i, j, colunai, colunaf: Integer;
   achou: Boolean;
   chaveDup, protocoloDupl, aux: string;
-  ArrumaDuplicada: TextFile;
-  VSNprod: Real;
 begin
-
+  Achou := False;
   try
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\EVNOTA' + IntToStr(ParNF) +
       '.txt') = False then
@@ -1778,7 +1554,7 @@ begin
           chaveDup := '';
           Linha := Memo1.Lines[i];
           for j := colunai + 1 to colunaf - 1 do
-            if Linha[j] in ['0' .. '9'] then
+            if CharInset(Linha[j], ['0' .. '9']) then
               chaveDup := chaveDup + Linha[j];
           achou := true;
         end;
@@ -1792,7 +1568,7 @@ begin
         ACBrNFe1.NotasFiscais.Clear;
         ACBrNFe1.WebServices.Consulta.NFeChave := chaveDup;
         ACBrNFe1.WebServices.Consulta.Executar;
-        aux := UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS);
+        aux := string(UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS));
         colunai := pos('<protNFe', aux);
         colunaf := pos('</protNFe>', aux);
         protocoloDupl := '';
@@ -1832,8 +1608,6 @@ begin
     end;
   end;
 
-  // =============================================
-
   if not Foi then
   begin
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
@@ -1849,8 +1623,9 @@ begin
     if (ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].nProt <> '') or
       (chaveDup <> '') then
     begin
-      Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS);
-      /// LoadXML(Memo1, WBResposta);
+      Memo1.Lines.Text :=
+        string(UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS));
+
       CopyFile(pchar(VCGeraisCaminhoArquivoRetorno + '\' +
         ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe +
         '-nfe.xml'), pchar(VCGeraisCaminhoArquivoRetorno + '\' +
@@ -1877,11 +1652,9 @@ procedure TForm1.bComplementoSNClick;
 var
   Arquivo: TextFile;
   Linha: string;
-  i, j, colunai, colunaf: integer;
+  i, j, colunai, colunaf: Integer;
   achou: Boolean;
   chaveDup, protocoloDupl, aux: string;
-  ArrumaDuplicada: TextFile;
-  VSNprod: Real;
 begin
   try
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\CPNOTA' + IntToStr(ParNF) +
@@ -1941,7 +1714,6 @@ begin
 
       Memo1.Lines.Text := (E.Message);
       Foi := False;
-      // ==============================
       for i := 0 to Memo1.Lines.Count - 1 do
       begin
         colunai := pos('[', Memo1.Lines[i]);
@@ -1964,7 +1736,7 @@ begin
         ACBrNFe1.NotasFiscais.Clear;
         ACBrNFe1.WebServices.Consulta.NFeChave := chaveDup;
         ACBrNFe1.WebServices.Consulta.Executar;
-        aux := UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS);
+        aux := string(UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS));
         colunai := pos('<protNFe', aux);
         colunaf := pos('</protNFe>', aux);
         protocoloDupl := '';
@@ -1984,8 +1756,6 @@ begin
     end;
   end;
 
-  // =============================================
-
   if not Foi then
   begin
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
@@ -2001,8 +1771,9 @@ begin
     if (ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].nProt <> '') or
       (chaveDup <> '') then
     begin
-      Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS);
-      /// LoadXML(Memo1, WBResposta);
+      Memo1.Lines.Text :=
+        string(UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS));
+
       CopyFile(pchar(VCGeraisCaminhoArquivoRetorno + '\' +
         ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe +
         '-nfe.xml'), pchar(VCGeraisCaminhoArquivoRetorno + '\' +
@@ -2081,10 +1852,7 @@ begin
   AssignFile(Arquivo, VCGeraisCaminhoArquivoLeitura + '\DEPCSEFAZ' +
     IntToStr(ParNF) + '.txt');
   Reset(Arquivo);
-  // x:\XML\34619 - NF-e- 35150361748646000146550010000346191508302463-nfe.xml
   Readln(Arquivo, Linha);
-
-  // Linha := 'x:\XML\' + Copy(Linha, (pos('NF-e- ', Linha) + length('NF-e- ')), 44)  + '-nfe.xml';
   try
     try
       if fileexists(Linha) then
@@ -2137,11 +1905,11 @@ begin
 end;
 
 function TForm1.EnviaNFe2(RChave, RProtocolo: String; SN: Boolean;
-  TipoEnvio: integer = 3): Boolean;
+  TipoEnvio: Integer = 3): Boolean;
 var
   Arquivo: TextFile;
   Linha: string;
-  i, j, colunai, colunaf: integer;
+  i, j, colunai, colunaf: Integer;
   VSNprod, VSNAliq, vliq, voriginal, Pfcp, Vfcp: Real;
   codigoBarra, unidadeTributacao, numeroparcela, FCI, nfat, loja: string;
 begin
@@ -2279,10 +2047,6 @@ begin
             Ide.tpAmb := taProducao;
 
           // Finalidade de emiss�o da NF-e
-          { if (Copy(Linha, 123, 1)) = '1' then
-            ide.finNFe := fnNormal; }
-
-          // Finalidade de emiss�o da NF-e
           case (strtoint(Copy(Linha, 123, 1))) of
             1:
               Ide.finNFe := fnNormal;
@@ -2294,28 +2058,15 @@ begin
               Ide.finNFe := fnDevolucao;
 
           end;
-          // Forma de Pagamento Ajuste e Devolu��o
-          // if (Ide.finNFe = fnAjuste) or (Ide.finNFe = fnDevolucao) or
-          // (Ide.finNFe = fnComplementar) then
+
           if (Ide.finNFe <> fnNormal) then
           begin
-            with pag.Add do
+            with pag.New do
             begin
               tPag := fpSemPagamento;
               vPag := 0;
             end;
           end;
-
-          { if (Copy(Linha, 123, 1)) = '1' then
-            begin
-            Ide.finNFe := fnNormal;
-            end
-            else
-            if (Copy(Linha, 123, 1)) = '2' then
-            begin
-            Ide.finNFe := fnComplementar;
-
-            end; }
 
           Ide.procEmi := peAplicativoContribuinte;
 
@@ -2365,20 +2116,6 @@ begin
             if Copy(Linha, 7, 3) <> '000' then
               refNFe := Copy(Linha, 7, 44);
 
-            { if Copy(Linha, 51, 2)  <> '00' then
-              RefNF.cUF := strtoint(Copy(Linha, 51, 2));
-
-              if trim(Copy(Linha, 53, 2)) <> '' then
-              RefNF.modelo := strtoint(Copy(Linha, 53, 2));
-
-              RefNF.AAMM := Copy(Linha, 55, 4);
-
-              if trim(Copy(Linha, 59, 3)) <> '' then
-              RefNF.serie := strtoint(Copy(Linha, 59, 3)); RefNF.CNPJ := Copy(Linha, 62, 14);
-
-              if trim(Copy(Linha, 76, 9)) <> '' then
-              RefNF.nNF := strtoint(Copy(Linha, 76, 9)); }
-
             if trim(Copy(Linha, 87, 3)) <> '' then
             begin
               RefECF.modelo := ECFModRef2D;
@@ -2388,7 +2125,6 @@ begin
             if trim(Copy(Linha, 90, 6)) <> '' then
               RefECF.nCOO := Copy(Linha, 90, 6);
 
-            // showmessage(copy(Linha, 177, 44));
           end;
         end
         else
@@ -2692,7 +2428,7 @@ begin
             begin
               if (Copy(Linha, 0, 6)) = 'EM1207' then
               begin
-                if Prod.CFOP[1] in ['3'] then
+                if CharInset(Prod.CFOP[1], ['3']) then
                 begin
                   with Prod.DI.New do
                   begin
@@ -2706,7 +2442,7 @@ begin
                     // Ler a proxima linha
                     while (Copy(Linha, 0, 6)) = 'EM1208' do
                     begin
-                      if Prod.CFOP[1] in ['3'] then
+                      if CharInset(Prod.CFOP[1], ['3']) then
                         with adi.New do
                         begin
 
@@ -2749,8 +2485,6 @@ begin
                   '.', ',', [rfReplaceAll]));
                 dFab := strtodate(Copy(Linha, 42, 10));
                 dVal := strtodate(Copy(Linha, 52, 10));
-                // vPMC := StrToFloat(StringReplace(trim(Copy(Linha, 62, 15)), '.',
-                // ',', [rfReplaceAll]));
               end;
 
               Readln(Arquivo, Linha); // Ler a proxima linha
@@ -2896,8 +2630,6 @@ begin
               Imposto.ICMS.vICMSST :=
                 StrToFloat(StringReplace((Copy(Linha, 92, 15)), '.', ',',
                 [rfReplaceAll]));
-              // Valor do ICMS ST 15
-              // Imposto.ICMS.modBC := dbiValorOperacao;
               // Valor do ICMS Desonerado
               Imposto.ICMS.vICMSDeson :=
                 StrToFloat(StringReplace((Copy(Linha, 107, 15)), '.', ',',
@@ -3040,8 +2772,7 @@ begin
                 StrToFloat(StringReplace((Copy(Linha, 54, 13)), '.', ',',
                 [rfReplaceAll]));
               // Valor do ICMS
-              (* --simples-- *)
-              // Imposto.ICMS.vCredICMSSN := VSNprod * (VSNAliq / 100);
+
               Imposto.ICMS.vCredICMSSN :=
                 StrToFloat(StringReplace((Copy(Linha, 54, 13)), '.', ',',
                 [rfReplaceAll]));
@@ -3202,10 +2933,6 @@ begin
 
             end;
 
-            // Imposto.ICMSUFDest.vFCPUFDest := Vfcp;// StrToFloat(StringReplace((Copy(Linha, 82, 15)), '.', ',',
-            // ShowMessage('VALOR vFCPUFDest ' +floattostr(Imposto.ICMSUFDest.vFCPUFDest));
-            // [rfReplaceAll])); // Valor do ICMS relativo ao Fundo de Combate � Pobreza (FCP) da UF de destino
-
             Imposto.ICMSUFDest.vBCUFDest :=
               StrToFloat(StringReplace((Copy(Linha, 7, 15)), '.', ',',
               [rfReplaceAll])); // Valor da BC do ICMS na UF de destino
@@ -3223,20 +2950,14 @@ begin
             Imposto.ICMSUFDest.pICMSInterPart :=
               StrToFloat(StringReplace((Copy(Linha, 67, 15)), '.', ',',
               [rfReplaceAll]));
-            // Percentual provis�rio de partilha do ICMS Interestadual
-            // ShowMessage('VALOR pICMSInterPart ' + floattostr(Imposto.ICMSUFDest.pICMSInterPart));
 
             Imposto.ICMSUFDest.vICMSUFDest :=
               StrToFloat(StringReplace((Copy(Linha, 97, 15)), '.', ',',
               [rfReplaceAll]));
-            // Valor do ICMS Interestadual para a UF de destino
-            // ShowMessage('Valor vICMSUFDest ' + floattostr(Imposto.ICMSUFDest.vICMSUFDest));
 
             Imposto.ICMSUFDest.vICMSUFRemet :=
               StrToFloat(StringReplace((Copy(Linha, 112, 15)), '.', ',',
               [rfReplaceAll]));
-            // Valor do ICMS Interestadual para a UF do remetente
-            // ShowMessage('Valor vICMSUFRemet ' + floattostr(Imposto.ICMSUFDest.vICMSUFRemet));
 
             // Ler aProxima linha pra chamar o 209
             Readln(Arquivo, Linha); // Ler a proxima linha
@@ -3345,7 +3066,7 @@ begin
               03:
                 Imposto.COFINS.CST := cof03;
               04:
-                Imposto.COFINS.CST :=  cof04;
+                Imposto.COFINS.CST := cof04;
               06:
                 Imposto.COFINS.CST := cof06;
               07:
@@ -3421,7 +3142,6 @@ begin
           '.', ',', [rfReplaceAll]));
 
         // Informar a soma no cabe�alho da nota
-        // if (length(Linha) > 222) and (trim(Copy(Linha, 217, 15)) <> '') then
         Total.ICMSTot.vTotTrib :=
           StrToFloat(StringReplace((Copy(Linha, 217, 15)), '.', ',',
           [rfReplaceAll]));
@@ -3435,17 +3155,14 @@ begin
           Total.ICMSTot.vFCPUFDest :=
             StrToFloat(StringReplace((Copy(Linha, 247, 15)), '.', ',',
             [rfReplaceAll]));
-          // ShowMessage('Total.ICMSTot.vFCPUFDest ' + floattostr(Total.ICMSTot.vFCPUFDest));
 
           Total.ICMSTot.vICMSUFDest :=
             StrToFloat(StringReplace((Copy(Linha, 262, 15)), '.', ',',
             [rfReplaceAll]));
-          // ShowMessage('Total.ICMSTot.vICMSUFDest ' + floattostr(Total.ICMSTot.vICMSUFDest));
 
           Total.ICMSTot.vICMSUFRemet :=
             StrToFloat(StringReplace((Copy(Linha, 277, 15)), '.', ',',
             [rfReplaceAll]));
-          // ShowMessage('Total.ICMSTot.vICMSUFRemet ' + floattostr(Total.ICMSTot.vICMSUFRemet));
 
         end;
 
@@ -3506,15 +3223,12 @@ begin
 
         Transp.VeicTransp.placa := (Copy(Linha, 407, 7));
         Transp.VeicTransp.uf := (Copy(Linha, 414, 2));;
-        // Transp.VeicTransp.rntc ='';
 
       end; // fim do EM0211
 
       // =============================EM1211=============================//
       if (Copy(Linha, 0, 6)) = 'EM1211' then
       begin
-        // exporta.UFembarq := Copy(Linha, 7, 2);
-        // exporta.xLocEmbarq := Copy(Linha, 9, 60);
         exporta.UFSaidaPais := Copy(Linha, 7, 2);
         exporta.xLocExporta := Copy(Linha, 9, 60);
         exporta.xLocDespacho := Copy(Linha, 69, 60);
@@ -3570,7 +3284,8 @@ begin
 
 {$ENDREGION}
         if ((strtodate(Copy(Linha, 75, 2) + '/' + Copy(Linha, 72, 2) + '/' +
-          Copy(Linha, 67, 4)) > Date) or (strtoIntDef(numeroparcela, 0) > 1)) then
+          Copy(Linha, 67, 4)) > Date) or (strtoIntDef(numeroparcela, 0) > 1))
+        then
         begin
           with Cobr.Dup.New do
           begin
