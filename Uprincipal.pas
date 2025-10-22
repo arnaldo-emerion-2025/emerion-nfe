@@ -1,4 +1,4 @@
-unit Uprincipal;
+ï»¿unit Uprincipal;
 
 interface
 
@@ -41,8 +41,8 @@ uses
   DBXFirebird,
   SqlExpr,
   SimpleDS, ACBrNFeDANFEFRDM, ACBrDFe, pcnConversao, System.Math,
-  ACBrDFeReport, ACBrDFeDANFeReport, frxExportXLS, frxExportImage,
-  frxExportHTML;
+  ACBrDFeReport, ACBrDFeDANFeReport, frxExportImage,
+  frxExportHTML, frxExportBaseDialog;
 
 type
   TForm1 = class(TForm)
@@ -77,10 +77,8 @@ type
     function RecuperaChaveEnviando: string;
     procedure ReescreveChaveEnviada(strChave, strProtocolo: string;
       strDEPCSefaz: string = '');
-    procedure VerificaInternet;
     function EnviaNFe2(RChave, RProtocolo: String; SN: Boolean;
       TipoEnvio: integer = 3): Boolean;
-    function EnviaNFe2DB(TipoEnvio: integer = 3): Boolean;
     function LimpaStr(str: String): String;
     procedure ContigenciaDPEC;
     procedure DPEC_SEFAZ;
@@ -94,7 +92,7 @@ type
     function LeftZero(Const Text: string; Const Tam: word;
       Const RetQdoVazio: String = ' '): string;
 
-    // Antigos botões do NFEEMERION
+    // Antigos botï¿½es do NFEEMERION
     procedure bConfigClick;
     procedure bEnviarNfeClick;
     procedure bEnviarNfeClick2;
@@ -164,7 +162,6 @@ implementation
 {$R *.dfm}
 
 uses
-  pcnNFe,
   // ACBrNFebNotasFiscais,
   ConvUtils,
   ACBrNFeWebServices,
@@ -184,13 +181,13 @@ begin
     Wdigit1 := 0;
     Wdigit2 := 0;
     Want := cpf[1];
-    // variavel para testar se o cpf é repetido como 111.111.111-11
+    // variavel para testar se o cpf ï¿½ repetido como 111.111.111-11
     Delete(cpf, ansipos('.', cpf), 1); // retira as mascaras se houver
     Delete(cpf, ansipos('.', cpf), 1);
     Delete(cpf, ansipos('-', cpf), 1);
 
     Wvalid := False;
-    // testar se o cpf é repetido como 111.111.111-11
+    // testar se o cpf ï¿½ repetido como 111.111.111-11
     for i := 1 to length(cpf) do
     begin
       if cpf[i] <> Want then
@@ -200,7 +197,7 @@ begin
         break
       end;
     end;
-    // se o cpf é composto por numeros repetido retorna falso
+    // se o cpf ï¿½ composto por numeros repetido retorna falso
     if not Wvalid then
     begin
       Result := False;
@@ -214,12 +211,12 @@ begin
     end;
     Wdigit1 := ((11 - (Wdigit1 mod 11)) mod 11) mod 10;
     { formula do primeiro verificador
-      soma=1°*2+2°*3+3°*4.. até 9°*10
+      soma=1ï¿½*2+2ï¿½*3+3ï¿½*4.. atï¿½ 9ï¿½*10
       digito1 = 11 - soma mod 11
       se digito > 10 digito1 =0
     }
 
-    // verifica se o 1° digito confere
+    // verifica se o 1ï¿½ digito confere
     if IntToStr(Wdigit1) <> cpf[10] then
     begin
       Result := False;
@@ -232,19 +229,19 @@ begin
     end;
     Wdigit2 := ((11 - (Wdigit2 mod 11)) mod 11) mod 10;
     { formula do segundo verificador
-      soma=1°*2+2°*3+3°*4.. até 10°*11
+      soma=1ï¿½*2+2ï¿½*3+3ï¿½*4.. atï¿½ 10ï¿½*11
       digito1 = 11 - soma mod 11
       se digito > 10 digito1 =0
     }
 
-    // confere o 2° digito verificador
+    // confere o 2ï¿½ digito verificador
     if IntToStr(Wdigit2) <> cpf[11] then
     begin
       Result := False;
       exit;
     end;
 
-    // se chegar até aqui o cpf é valido
+    // se chegar atï¿½ aqui o cpf ï¿½ valido
     Result := true;
   end;
 end;
@@ -271,14 +268,6 @@ begin
     arqIni.Free;
   end;
 
-end;
-
-procedure TForm1.VerificaInternet;
-var
-  Flags: DWord;
-begin
-  { if not InternetGetConnectedState(@Flags, 0) then
-    ShowMessage('Você não está conectado à Internet.'); }
 end;
 
 function TForm1.RecuperaChaveEnviando: string;
@@ -339,7 +328,7 @@ begin
       if ((ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 539) or
         (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 502) or
         (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 204) or
-        (pos(IntToStr(VNumLote) + '->Rejeição: Duplicidade de NF-e', E.Message)
+        (pos(IntToStr(VNumLote) + '->Rejeiï¿½ï¿½o: Duplicidade de NF-e', E.Message)
         > 0)) then
         Result := true
       else
@@ -641,7 +630,7 @@ begin
     Ini.WriteInteger('Geral', 'DANFE', VCGeraisDanfe);
     // 0=RETRATO  / 1=PAISAGEM
     Ini.WriteInteger('Geral', 'FormaEmissao', VCGeraisFormaemissao);
-    // 0=NORMAL  / 1=CONTIGÊNCIA  / 2=SCAN  / 3=DPEC  / 4=FSDA
+    // 0=NORMAL  / 1=CONTIGï¿½NCIA  / 2=SCAN  / 3=DPEC  / 4=FSDA
     Ini.WriteString('Geral', 'LogoMarca', VCGeraisLogo);
     Ini.WriteBool('Geral', 'Salvar', true);
     // Salvar os arquivos de envio e resposta
@@ -661,7 +650,7 @@ begin
 
     Ini.WriteString('WebService', 'UF', VWebSUF);
     Ini.WriteInteger('WebService', 'Ambiente', VWebSAmbiente);
-    // 0=produção  / 1=homologação
+    // 0=produï¿½ï¿½o  / 1=homologaï¿½ï¿½o
     Ini.WriteBool('WebService', 'Visualizar', true);
 
     // ====================== PROXY   ===============================================
@@ -688,7 +677,7 @@ begin
   try
 
     // ACBrNFe1.Configuracoes.Certificados.Senha        := Ini.ReadString( 'Certificado','Senha'   ,'') ;
-    // ===== Achando o Certificado pelo Caminho ou pelo numero de série
+    // ===== Achando o Certificado pelo Caminho ou pelo numero de sï¿½rie
 {$IFDEF ACBrNFeOpenSSL}
     ACBrNFe1.Configuracoes.Certificados.Certificado :=
       Ini.readString('Certificado', 'Caminho', '');
@@ -699,7 +688,7 @@ begin
     ACBrNFe1.Configuracoes.Certificados.NumeroSerie :=
       Ini.readString('Certificado', 'NumSerie', '');
 {$ENDIF}
-    // ===== Setando as configurações Gerais
+    // ===== Setando as configuraï¿½ï¿½es Gerais
     VCGeraisFormaemissao := Ini.ReadInteger('Geral', 'FormaEmissao', 0);
     VCGeraisSalvar := Ini.ReadBool('Geral', 'Salvar', true);
     VCGeraisCaminhoArquivosXML := Ini.readString('Geral', 'PathXML', '');
@@ -715,12 +704,12 @@ begin
     VCGeraisCaminhoArquivoFileImpressao :=
       Ini.readString('Geral', 'FileImpressao', '');
 
-    // Validando as Pastas necessárias para o envio da NFe
+    // Validando as Pastas necessï¿½rias para o envio da NFe
     if not DirectoryExists(VCGeraisCaminhoArquivosXML) then
     begin
       messagebox(Handle, pchar('Caminho para a pasta XML (' +
         VCGeraisCaminhoArquivosXML +
-        ') não encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nï¿½o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -729,7 +718,7 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Leitura (' +
         VCGeraisCaminhoArquivoLeitura +
-        ') não encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nï¿½o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -738,7 +727,7 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Retorno (' +
         VCGeraisCaminhoArquivoRetorno +
-        ') não encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nï¿½o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -747,7 +736,7 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Cancelada (' +
         VCGeraisCaminhoArquivoCancelada +
-        ') não encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nï¿½o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -756,7 +745,7 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Danfe (' +
         VCGeraisCaminhoArquivoDANFE +
-        ') não encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nï¿½o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -765,11 +754,11 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Schemas (' +
         VCGeraisCaminhoArquivoSchemas +
-        ') não encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nï¿½o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
-    // Validação
+    // Validaï¿½ï¿½o
     ACBrNFe1.Configuracoes.Geral.FormaEmissao :=
       StrToTpEmis(Ok, IntToStr(VCGeraisFormaemissao + 1));
     ACBrNFe1.Configuracoes.Geral.Salvar := VCGeraisSalvar;
@@ -796,7 +785,7 @@ begin
     ACBrNFe1.Configuracoes.Arquivos.DownloadDFe.PathDownload :=
       VCGeraisCaminhoArquivoDownload;
 
-    // ====== Setando as configuraçoes WebService
+    // ====== Setando as configuraï¿½oes WebService
     VSIte := Ini.readString('WebService', 'SITE', '');
     VWebSUF := Ini.readString('WebService', 'UF', '');
     VWebSAmbiente := Ini.ReadInteger('WebService', 'Ambiente', 0);
@@ -814,7 +803,7 @@ begin
 
     ACBrNFe1.Configuracoes.WebServices.Visualizar := VWebSVisualizar;
 
-    // ===== Setando as configurações de Proxy
+    // ===== Setando as configuraï¿½ï¿½es de Proxy
     VProxyHost := Ini.readString('Proxy', 'Host', '');
     VProxyPorta := Ini.readString('Proxy', 'Porta', '');
     VProxyUsuario := Ini.readString('Proxy', 'User', '');
@@ -824,7 +813,7 @@ begin
     ACBrNFe1.Configuracoes.WebServices.ProxyUser := VProxyUsuario;
     ACBrNFe1.Configuracoes.WebServices.ProxyPass := VProxySenha;
 
-    // Setando as Configuraçoes Gerais
+    // Setando as Configuraï¿½oes Gerais
     VCGeraisDanfe := Ini.ReadInteger('Geral', 'DANFE', 0);
     VCGeraisLogo := Ini.readString('Geral', 'LogoMarca', '');
     if ACBrNFe1.DANFE <> nil then
@@ -836,8 +825,8 @@ begin
     if trim(VCGeraisCaminhoArquivoFileImpressao) = '' then
     begin
       messagebox(0,
-        'Não foi informado tipo de impressão. Verifique e tente novamente.',
-        'Emissão de NFe', MB_OK + MB_ICONINFORMATION);
+        'Nï¿½o foi informado tipo de impressï¿½o. Verifique e tente novamente.',
+        'Emissï¿½o de NFe', MB_OK + MB_ICONINFORMATION);
       Application.Terminate;
     end;
 
@@ -864,8 +853,8 @@ begin
       end
       else
       begin
-      messagebox(0, pwidechar('Não localizado o arquivo de impressão do DANFE: ' +
-      VCGeraisCaminhoArquivoTipoImpressao + '. Verifique e tente novamente.'), 'Emissão de NFe',
+      messagebox(0, pwidechar('Nï¿½o localizado o arquivo de impressï¿½o do DANFE: ' +
+      VCGeraisCaminhoArquivoTipoImpressao + '. Verifique e tente novamente.'), 'Emissï¿½o de NFe',
       MB_OK + MB_ICONINFORMATION);
       Application.Terminate;
       end;
@@ -884,9 +873,9 @@ begin
     end
     else
     begin
-      messagebox(0, pwidechar('Não localizado o arquivo de impressão do DANFE: '
+      messagebox(0, pwidechar('Nï¿½o localizado o arquivo de impressï¿½o do DANFE: '
         + VCGeraisCaminhoArquivoTipoImpressao +
-        '. Verifique e tente novamente.'), 'Emissão de NFe',
+        '. Verifique e tente novamente.'), 'Emissï¿½o de NFe',
         MB_OK + MB_ICONINFORMATION);
       Application.Terminate;
     end;
@@ -947,7 +936,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados Nï¿½O encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -956,7 +945,7 @@ begin
     Application.Terminate;
   end;
 
-  // Busca informações do Arquivo de Leitura
+  // Busca informaï¿½ï¿½es do Arquivo de Leitura
   try
     EnviaNFe2('', '', False);
   Except
@@ -1085,14 +1074,14 @@ begin
         end;
 
         if messagebox(Handle,
-          pchar('Numeração de NFe já enviada anteriormente com a chave: ' +
+          pchar('Numeraï¿½ï¿½o de NFe jï¿½ enviada anteriormente com a chave: ' +
           chaveDup + #13 + //
-          'Caso seja a mesma NFe você pode optar por Sim para recuperar o XML.'
+          'Caso seja a mesma NFe vocï¿½ pode optar por Sim para recuperar o XML.'
           + #13 +
           //
-          'Em caso de dúvida poderá consultar no site ' + //
+          'Em caso de dï¿½vida poderï¿½ consultar no site ' + //
           'http://www.nfe.fazenda.gov.br' + #13 + //
-          'Para facilitar a chave se encontra na área de transferência. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
+          'Para facilitar a chave se encontra na ï¿½rea de transferï¿½ncia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
           pchar('Envio de NFe'), MB_YESNO + MB_ICONQUESTION) = IDYES then
         begin
 
@@ -1189,7 +1178,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados Nï¿½O encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1198,7 +1187,7 @@ begin
     Application.Terminate;
   end;
 
-  // Busca informações do Arquivo de Leitura
+  // Busca informaï¿½ï¿½es do Arquivo de Leitura
   try
     EnviaNFe2('', '', False);
     ACBrNFe1.NotasFiscais.Validar;
@@ -1299,12 +1288,12 @@ begin
     Clipboard.Close;
     end;
 
-    if messagebox(Handle, pchar('Numeração de NFe já enviada anteriormente com a chave: ' + chaveDup + #13 + //
-    'Caso seja a mesma NFe você pode optar por Sim para recuperar o XML.' + #13 +
+    if messagebox(Handle, pchar('Numeraï¿½ï¿½o de NFe jï¿½ enviada anteriormente com a chave: ' + chaveDup + #13 + //
+    'Caso seja a mesma NFe vocï¿½ pode optar por Sim para recuperar o XML.' + #13 +
     //
-    'Em caso de dúvida poderá consultar no site ' + //
+    'Em caso de dï¿½vida poderï¿½ consultar no site ' + //
     'http://www.nfe.fazenda.gov.br' + #13 + //
-    'Para facilitar a chave se encontra na área de transferência. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
+    'Para facilitar a chave se encontra na ï¿½rea de transferï¿½ncia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
     pchar('Envio de NFe'), MB_YESNO + MB_ICONQUESTION) = IDYES then
     begin
 
@@ -1370,12 +1359,6 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  // ConexaoDB;
-
-  // ConexaoSQLDataBase(SQLConnection1);
-
-  VerificaInternet;
-
   AtualizaIni;
 
   ValidaINI;
@@ -1491,7 +1474,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados Nï¿½O encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1509,9 +1492,9 @@ begin
   if not fileexists(trim(Copy(Linha, 4, 400))) then
   begin
     Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Arquivo não existe.2';
+    Memo1.Lines.Text := 'Arquivo nï¿½o existe.2';
     Memo1.Lines.Add
-      ('Arquivo do XML da NFe não foi encontrado para o cancelamento.');
+      ('Arquivo do XML da NFe nï¿½o foi encontrado para o cancelamento.');
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
       IntToStr(ParNF) + '.txt');
     Application.Terminate;
@@ -1535,7 +1518,7 @@ begin
       Memo1.Lines.Text := (E.Message);
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
         IntToStr(ParNF) + '.txt');
-      if trim(E.Message) = trim('Rejeição: Cancelamento para NF-e já cancelada')
+      if trim(E.Message) = trim('Rejeiï¿½ï¿½o: Cancelamento para NF-e jï¿½ cancelada')
       then
         if fileexists(VCGeraisCaminhoArquivoRetorno + '\' + aux + '-nfe.xml')
         then
@@ -1575,7 +1558,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados Nï¿½O encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1593,9 +1576,9 @@ begin
   if not fileexists(trim(Copy(Linha, 4, 400))) then
   begin
     Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Arquivo não existe.2';
+    Memo1.Lines.Text := 'Arquivo nï¿½o existe.2';
     Memo1.Lines.Add
-      ('Arquivo do XML da NFe não foi encontrado para o cancelamento.');
+      ('Arquivo do XML da NFe nï¿½o foi encontrado para o cancelamento.');
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
       IntToStr(ParNF) + '.txt');
     Application.Terminate;
@@ -1632,7 +1615,7 @@ begin
       Memo1.Lines.Text := (E.Message);
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
         IntToStr(ParNF) + '.txt');
-      if trim(E.Message) = trim('Rejeição: Cancelamento para NF-e já cancelada')
+      if trim(E.Message) = trim('Rejeiï¿½ï¿½o: Cancelamento para NF-e jï¿½ cancelada')
       then
         if fileexists(VCGeraisCaminhoArquivoRetorno + '\' + aux + '-nfe.xml')
         then
@@ -1661,7 +1644,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados Nï¿½O encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1757,12 +1740,12 @@ begin
         end;
 
         if messagebox(Handle,
-          pchar('Numeração de NFe já enviada anteriormente com a chave: ' +
+          pchar('Numeraï¿½ï¿½o de NFe jï¿½ enviada anteriormente com a chave: ' +
           chaveDup + #13 +
-          'Caso seja a mesma NFe você pode optar por Sim para recuperar o XML.'
-          + #13 + 'Em caso de dúvida poderá consultar no site ' +
+          'Caso seja a mesma NFe vocï¿½ pode optar por Sim para recuperar o XML.'
+          + #13 + 'Em caso de dï¿½vida poderï¿½ consultar no site ' +
           'http://www.nfe.fazenda.gov.br' + #13 +
-          'Para facilitar a chave se encontra na área de transferência. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
+          'Para facilitar a chave se encontra na ï¿½rea de transferï¿½ncia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
           pchar('Envio de NFe'), MB_YESNO + MB_ICONQUESTION) = IDYES then
         begin
           if RecuperarXMLFATPED(chaveDup, protocoloDupl, False) then
@@ -1850,12 +1833,12 @@ begin
   then
   begin
     Result.isDenegada := true;
-    status := 'Inapto à emissão de NFe';
+    status := 'Inapto ï¿½ emissï¿½o de NFe';
   end
   else
   begin
     Result.isDenegada := False;
-    status := 'Apto à emissão de NFe';
+    status := 'Apto ï¿½ emissï¿½o de NFe';
   end;
 
   Result.ie := ACBrNFe1.WebServices.ConsultaCadastro.RetConsCad.InfCad.
@@ -1863,10 +1846,10 @@ begin
   Result.cgc := ACBrNFe1.WebServices.ConsultaCadastro.RetConsCad.InfCad.
     Items[0].CNPJ;
 
-  // Procedure para exibir os dados do cliente em um formulário
+  // Procedure para exibir os dados do cliente em um formulï¿½rio
   consultaCliente(Result.cgc, Result.ie, status);
 
-  { //Escrevendo informações no config.ini
+  { //Escrevendo informaï¿½ï¿½es no config.ini
     iniFile := TIniFile.Create(ExtractFilePath(application.ExeName) + 'config.ini');
     iniFile.WriteString('validacao', 'ie', result.ie);
     iniFile.WriteString('validacao', 'cgc', result.cgc);
@@ -1884,7 +1867,7 @@ begin
   // Memo1.Lines.Text := ACBrNFe1.WebServices.StatusServico.RetornoWS;
   // LoadXML(ACBrNFe1.WebServices.StatusServico.RetornoWS, Memo1);
 
-  strAux := 'Status Serviço';
+  strAux := 'Status Serviï¿½o';
   strAux := strAux + #10#13 + 'tpAmb: ' +
     TpAmbToStr(ACBrNFe1.WebServices.StatusServico.tpAmb);
   strAux := strAux + #10#13 + 'verAplic: ' +
@@ -1915,7 +1898,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados Nï¿½O encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CS' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1933,9 +1916,9 @@ begin
   if not fileexists(trim(Copy(Linha, 1, 900))) then
   begin
     Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Arquivo não existe.';
+    Memo1.Lines.Text := 'Arquivo nï¿½o existe.';
     Memo1.Lines.Add
-      ('Arquivo do XML da NFe não foi encontrado para a Consulta ao SEFAZ.');
+      ('Arquivo do XML da NFe nï¿½o foi encontrado para a Consulta ao SEFAZ.');
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CS' +
       IntToStr(ParNF) + '.txt');
     Application.Terminate;
@@ -1983,14 +1966,14 @@ begin
     begin
       Memo1.Lines.Clear;
 
-      Memo1.Lines.Text := 'Arquivo de Localização de NFE NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Localizaï¿½ï¿½o de NFE Nï¿½O encontrado';
 
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
         IntToStr(ParNF) + '.txt');
-      messagebox(0, pchar('Arquivo não localizado: ' +
+      messagebox(0, pchar('Arquivo nï¿½o localizado: ' +
         VCGeraisCaminhoArquivoLeitura + '\DANFE' + IntToStr(ParNF) + '.txt' +
         '. Favor verifique se a pasta existe e tente novamente.'),
-        'Reimpressão do Danfe', MB_OK + MB_ICONEXCLAMATION);
+        'Reimpressï¿½o do Danfe', MB_OK + MB_ICONEXCLAMATION);
 
       Application.Terminate;
 
@@ -1999,7 +1982,7 @@ begin
     on E: Exception do
     begin
       messagebox(0, pchar('Erro ao verificar os arquivos: ' + E.Message),
-        'Reimpressão do Danfe', MB_OK + MB_ICONEXCLAMATION);
+        'Reimpressï¿½o do Danfe', MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
   end;
@@ -2038,14 +2021,14 @@ begin
     end
     else
     begin
-      messagebox(0, pchar('XML não encontrado em: ' + Linha +
-        '. Favor verifique.'), 'Reimpressão da Danfe', MB_OK + MB_ICONWARNING);
+      messagebox(0, pchar('XML nï¿½o encontrado em: ' + Linha +
+        '. Favor verifique.'), 'Reimpressï¿½o da Danfe', MB_OK + MB_ICONWARNING);
     end;
   except
     on E: Exception do
     begin
-      messagebox(0, pchar('Erro na Geração da Danfe : ' + E.Message),
-        'Reimpressão do Danfe', MB_OK + MB_ICONEXCLAMATION);
+      messagebox(0, pchar('Erro na Geraï¿½ï¿½o da Danfe : ' + E.Message),
+        'Reimpressï¿½o do Danfe', MB_OK + MB_ICONEXCLAMATION);
     end;
 
   end;
@@ -2124,7 +2107,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados Nï¿½O encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -2137,7 +2120,7 @@ begin
   Reset(Arquivo);
   Readln(Arquivo, Linha);
 
-  // Busca informações do Arquivo de Leitura
+  // Busca informaï¿½ï¿½es do Arquivo de Leitura
   try
     EnviaNFe2('', '', true);
   Except
@@ -2216,12 +2199,12 @@ begin
         end;
 
         if messagebox(Handle,
-          pchar('Numeração de NFe já enviada anteriormente com a chave: ' +
+          pchar('Numeraï¿½ï¿½o de NFe jï¿½ enviada anteriormente com a chave: ' +
           chaveDup + #13 +
-          'Caso seja a mesma NFe você pode optar por Sim para recuperar o XML.'
-          + #13 + 'Em caso de dúvida poderá consultar no site ' +
+          'Caso seja a mesma NFe vocï¿½ pode optar por Sim para recuperar o XML.'
+          + #13 + 'Em caso de dï¿½vida poderï¿½ consultar no site ' +
           'http://www.nfe.fazenda.gov.br' + #13 +
-          'Para facilitar a chave se encontra na área de transferência. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
+          'Para facilitar a chave se encontra na ï¿½rea de transferï¿½ncia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
           pchar('Envio de NFe'), MB_YESNO + MB_ICONQUESTION) = IDYES then
         begin
 
@@ -2297,7 +2280,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados Nï¿½O encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO-CP'
         + IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -2310,7 +2293,7 @@ begin
   Reset(Arquivo);
   Readln(Arquivo, Linha);
 
-  // Busca informações do Arquivo de Leitura
+  // Busca informaï¿½ï¿½es do Arquivo de Leitura
   try
     EnviaNFe2('', '', true);
   Except
@@ -2468,7 +2451,7 @@ begin
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\DPEC' + IntToStr(ParNF) + '.txt') = False then
     begin
     Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Arquivo de Envio de dados NÃO encontrado';
+    Memo1.Lines.Text := 'Arquivo de Envio de dados Nï¿½O encontrado';
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO' + IntToStr(ParNF) + '.txt');
     Application.Terminate;
     end;
@@ -2482,7 +2465,7 @@ begin
     end;
     end;
 
-    // Busca informações do Arquivo de Leitura
+    // Busca informaï¿½ï¿½es do Arquivo de Leitura
     try
     EnviaNFe2('', '', False, 4);
     Except
@@ -2500,7 +2483,7 @@ begin
 
     if ACBrNFe1.WebServices.EnviarDPEC.Executar then
     begin
-    // protocolo de envio ao DPEC e impressão do DANFE
+    // protocolo de envio ao DPEC e impressï¿½o do DANFE
     ACBrNFe1.DANFE.ProtocoloNFe := ACBrNFe1.WebServices.EnviarDPEC.nRegDPEC + ' ' + DateTimeToStr
     (ACBrNFe1.WebServices.EnviarDPEC.dhRegDPEC);
     GravaProtcoloDpec(ACBrNFe1.DANFE.ProtocoloNFe);
@@ -2594,11 +2577,11 @@ begin
     begin
       Memo1.Lines.Clear;
 
-      Memo1.Lines.Text := 'Arquivo de Localização de DPEC NÃO encontrado';
+      Memo1.Lines.Text := 'Arquivo de Localizaï¿½ï¿½o de DPEC Nï¿½O encontrado';
 
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
         IntToStr(ParNF) + '.txt');
-      messagebox(0, pchar('Arquivo não localizado: ' +
+      messagebox(0, pchar('Arquivo nï¿½o localizado: ' +
         VCGeraisCaminhoArquivoLeitura + '\DEPCSEFAZ' + IntToStr(ParNF) + '.txt'
         + '. Favor verifique se a pasta existe e tente novamente.'),
         'Envio DPEC->SeFaz.', MB_OK + MB_ICONEXCLAMATION);
@@ -2610,7 +2593,7 @@ begin
     on E: Exception do
     begin
       messagebox(0, pchar('Erro ao verificar os arquivos: ' + E.Message),
-        'Reimpressão do Danfe', MB_OK + MB_ICONEXCLAMATION);
+        'Reimpressï¿½o do Danfe', MB_OK + MB_ICONEXCLAMATION);
 
       Memo1.Lines.Clear;
       Memo1.Lines.Text := 'Envio DPEC->SeFaz : ' + E.Message;
@@ -2657,15 +2640,15 @@ begin
       end
       else
       begin
-        messagebox(0, pchar('XML não encontrado em: ' + Linha +
-          '. Favor verifique.'), 'Reimpressão da Danfe',
+        messagebox(0, pchar('XML nï¿½o encontrado em: ' + Linha +
+          '. Favor verifique.'), 'Reimpressï¿½o da Danfe',
           MB_OK + MB_ICONWARNING);
       end;
     except
       on E: Exception do
       begin
-        messagebox(0, pchar('Erro na Geração da Danfe : ' + E.Message),
-          'Reimpressão do Danfe', MB_OK + MB_ICONEXCLAMATION);
+        messagebox(0, pchar('Erro na Geraï¿½ï¿½o da Danfe : ' + E.Message),
+          'Reimpressï¿½o do Danfe', MB_OK + MB_ICONEXCLAMATION);
       end;
 
     end;
@@ -2726,7 +2709,7 @@ begin
   // Vai para Primeira Linha
   Reset(Arquivo);
 
-  // Lê a Linha
+  // Lï¿½ a Linha
   Readln(Arquivo, Linha);
 
   with ACBrNFe1.NotasFiscais.Add.NFe do
@@ -2760,10 +2743,10 @@ begin
         begin
           // forma de Pagamento
           Ide.cUF := strtoint(Copy(Linha, 7, 2));
-          // Código da UF do emitente do documento fiscal
+          // Cï¿½digo da UF do emitente do documento fiscal
           Ide.natOp := trim(Copy(Linha, 18, 60));
-          // Descrição da natureza de operação
-          // Indicador da forma de pagamento 0-Pagamento à vista 1-Pagamento à prazo 2-Outros showmessage(copy(Linha,78,1));
+          // Descriï¿½ï¿½o da natureza de operaï¿½ï¿½o
+          // Indicador da forma de pagamento 0-Pagamento ï¿½ vista 1-Pagamento ï¿½ prazo 2-Outros showmessage(copy(Linha,78,1));
           if Copy(Linha, 78, 1) = '0' then
             Ide.indPag := ipVista
           else if Copy(Linha, 78, 1) = '1' then
@@ -2771,18 +2754,18 @@ begin
           else
             Ide.indPag := ipOutras;
           Ide.modelo := strtoint(Copy(Linha, 79, 2));
-          // Código do Modelo do documento fiscal
+          // Cï¿½digo do Modelo do documento fiscal
           Ide.serie := strtoint(Copy(Linha, 81, 1));
-          // Série do documento fiscal
+          // Sï¿½rie do documento fiscal
           Ide.nNF := strtoint(Copy(Linha, 82, 9));
-          // Número do documento fiscal
+          // Nï¿½mero do documento fiscal
           VNumLote := strtoint(Copy(Linha, 82, 9)); // numero do lote de envio
           try
             // Ide.dEmi := strtodate(Copy(Linha, 99, 2) + '/' + Copy(Linha, 96, 2) + '/' + Copy(Linha, 91, 4));
             Ide.dEmi := now;
-            // Data de emissão do documento fiscal
+            // Data de emissï¿½o do documento fiscal
           except
-            Memo1.Lines.Text := 'Problemas com a Data de Emissão da nota';
+            Memo1.Lines.Text := 'Problemas com a Data de Emissï¿½o da nota';
             Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
               IntToStr(VNumLote) + '.txt');
             Application.Terminate;
@@ -2799,7 +2782,7 @@ begin
           else
             Ide.tpNF := tnEntrada;
           Ide.cMunFG := strtoint(Copy(Linha, 112, 7));
-          // Código do Municipio de Ocorrência do Fato Gerador
+          // Cï¿½digo do Municipio de Ocorrï¿½ncia do Fato Gerador
           // Formato de Impressao do DANFE
           if (Copy(Linha, 119, 1)) = '1' then
             Ide.tpImp := tiRetrato
@@ -2811,21 +2794,21 @@ begin
           else if TipoEnvio = 4 then
             Ide.tpEmis := teDPEC;
 
-          // Forma de emissão da NF-e
+          // Forma de emissï¿½o da NF-e
           Ide.cDV := strtoint(Copy(Linha, 121, 1));
           // Digito verificador da Chave de Acesso da NF-e
 
-          // Identificação do Ambiente
+          // Identificaï¿½ï¿½o do Ambiente
           if (VWebSAmbiente) = 1 then
             Ide.tpAmb := taHomologacao
           else
             Ide.tpAmb := taProducao;
 
-          // Finalidade de emissão da NF-e
+          // Finalidade de emissï¿½o da NF-e
           { if (Copy(Linha, 123, 1)) = '1' then
             ide.finNFe := fnNormal; }
 
-          // Finalidade de emissão da NF-e
+          // Finalidade de emissï¿½o da NF-e
           case (strtoint(Copy(Linha, 123, 1))) of
             1:
               Ide.finNFe := fnNormal;
@@ -2837,7 +2820,7 @@ begin
               Ide.finNFe := fnDevolucao;
 
           end;
-          // Forma de Pagamento Ajuste e Devolução
+          // Forma de Pagamento Ajuste e Devoluï¿½ï¿½o
           // if (Ide.finNFe = fnAjuste) or (Ide.finNFe = fnDevolucao) or
           // (Ide.finNFe = fnComplementar) then
           if (Ide.finNFe <> fnNormal) then
@@ -2862,7 +2845,7 @@ begin
 
           Ide.procEmi := peAplicativoContribuinte;
 
-          // Processo de emissão da NF-e
+          // Processo de emissï¿½o da NF-e
           Ide.verProc := Copy(Linha, 125, 20);
 
           case (strtoint(Copy(Linha, 145, 2))) of
@@ -2902,7 +2885,7 @@ begin
         else if (Copy(Linha, 0, 6)) = 'EM1202' then
         begin
 
-          // Versão do processo de emissão da NF-e
+          // Versï¿½o do processo de emissï¿½o da NF-e
           with Ide.NFref.Add do
           begin
             if Copy(Linha, 7, 3) <> '000' then
@@ -2939,7 +2922,7 @@ begin
           if (Copy(Linha, 0, 6)) = 'EM0203' then
           begin
 
-            // Razão social obrigatória para ambiente de homologação
+            // Razï¿½o social obrigatï¿½ria para ambiente de homologaï¿½ï¿½o
             if VWebSAmbiente = 1 then
               strxNome :=
                 'NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL'
@@ -2952,22 +2935,22 @@ begin
             else
               emit.CNPJCPF := trim((Copy(Linha, 21, 14)));
             emit.xNome := trim(strxNome);
-            // copy(Linha, 35, 60); // Razão social ou Nome do emitente
+            // copy(Linha, 35, 60); // Razï¿½o social ou Nome do emitente
             emit.xFant := trim(Copy(Linha, 95, 60)); // Nome fantasia
             emit.EnderEmit.xLgr := trim(Copy(Linha, 155, 60)); // Logradouro
-            emit.EnderEmit.nro := trim(Copy(Linha, 215, 60)); // Número
+            emit.EnderEmit.nro := trim(Copy(Linha, 215, 60)); // Nï¿½mero
             emit.EnderEmit.xCpl := trim(Copy(Linha, 275, 60)); // Complemento
             emit.EnderEmit.xBairro := trim(Copy(Linha, 335, 60)); // Bairro
             emit.EnderEmit.cMun := strtoint(Copy(Linha, 395, 7));
-            // Código do municipio
+            // Cï¿½digo do municipio
             emit.EnderEmit.xMun := trim(Copy(Linha, 402, 60));
             // Nome do municipio
             emit.EnderEmit.uf := (Copy(Linha, 462, 2)); // Sigla da UF
             ACBrNFe1.Configuracoes.WebServices.uf := (Copy(Linha, 462, 2));
             emit.EnderEmit.CEP := strtoint(Copy(Linha, 464, 8));
-            // Código do CEP
+            // Cï¿½digo do CEP
             emit.EnderEmit.cPais := strtoint(Copy(Linha, 472, 4));
-            // Código do País
+            // Cï¿½digo do Paï¿½s
             emit.EnderEmit.xPais := trim(Copy(Linha, 476, 60)); // Brasil
             emit.EnderEmit.fone := trim(Copy(Linha, 536, 10)); // Telefone
             emit.ie := trim(Copy(Linha, 546, 14)); // IE
@@ -2976,7 +2959,7 @@ begin
             if SN then
               emit.CRT := crtSimplesNacional;
 
-            // =========================Responsável Técnico=======================//
+            // =========================Responsï¿½vel Tï¿½cnico=======================//
             if (emit.EnderEmit.uf = 'SC') then
             begin
               infRespTec.CNPJ := '05557708000161';
@@ -3007,32 +2990,32 @@ begin
                 dest.idEstrangeiro := Copy(Linha, 512, 20);
 
               dest.xNome := trim(Copy(Linha, 35, 60));
-              // Razão social ou nome do destinatario
+              // Razï¿½o social ou nome do destinatario
               dest.EnderDest.xLgr := trim(Copy(Linha, 95, 60)); // Logradouro
-              dest.EnderDest.nro := trim(Copy(Linha, 155, 60)); // Número
+              dest.EnderDest.nro := trim(Copy(Linha, 155, 60)); // Nï¿½mero
               dest.EnderDest.xCpl := trim(Copy(Linha, 215, 60)); // Complemento
               dest.EnderDest.xBairro := trim(Copy(Linha, 275, 60)); // Bairro
               dest.EnderDest.cMun := strtoint(Copy(Linha, 335, 7));
-              // Código do Municipio
+              // Cï¿½digo do Municipio
               dest.EnderDest.xMun := trim(Copy(Linha, 342, 60));
               // Nome do Municipio
               dest.EnderDest.uf := (Copy(Linha, 402, 2)); // Sigla da UF
               dest.EnderDest.CEP := strtoint(Copy(Linha, 404, 8));
-              // Código do Cep
+              // Cï¿½digo do Cep
               dest.EnderDest.cPais := strtoint(Copy(Linha, 412, 4));
-              // Código do País
+              // Cï¿½digo do Paï¿½s
               dest.EnderDest.xPais := trim(Copy(Linha, 416, 60)); // Brasil
               dest.EnderDest.fone := trim(Copy(Linha, 476, 10)); // Telefone
               dest.ie := trim(Copy(Linha, 486, 14)); // IE
-              dest.ISUF := trim(Copy(Linha, 500, 12)); // Inscrição SUFRAMA}
+              dest.ISUF := trim(Copy(Linha, 500, 12)); // Inscriï¿½ï¿½o SUFRAMA}
 
               dest.email := trim(Copy(Linha, 548, 60));
-              // Email para Recepção de XML
+              // Email para Recepï¿½ï¿½o de XML
               ACBrNFe1.NotasFiscais[0].NFe.dest.email :=
                 trim(Copy(Linha, 548, 60));
 
               dest.idEstrangeiro := trim(Copy(Linha, 512, 20));
-              // Inscrição de Estrangeiro}
+              // Inscriï¿½ï¿½o de Estrangeiro}
 
               case strtoint(Copy(Linha, 532, 1)) of
                 1:
@@ -3043,11 +3026,11 @@ begin
                   dest.indIEDest := inNaoContribuinte;
               end; // Indica Contribuinte
 
-              dest.IM := trim(Copy(Linha, 533, 15)); // Inscrição municiapl
+              dest.IM := trim(Copy(Linha, 533, 15)); // Inscriï¿½ï¿½o municiapl
             end; // fim do EM0204
 
       // ==============================EM0205=============================//
-      // =Endereço de Entrega
+      // =Endereï¿½o de Entrega
 
       if (Copy(Linha, 0, 6)) = 'EM0205' then
       begin
@@ -3076,8 +3059,8 @@ begin
           Prod.nItem := strtoint(Copy(Linha, 9, 3));
           // Nro. do item
           Prod.cProd := trim(Copy(Linha, 12, 60));
-          // Código do Produto ou serviço
-{$REGION 'Código Barra'}
+          // Cï¿½digo do Produto ou serviï¿½o
+{$REGION 'Cï¿½digo Barra'}
           codigoBarra := trim(Copy(Linha, 72, 14)); // cEAN
 
           if trim(codigoBarra) = '' then
@@ -3086,12 +3069,12 @@ begin
           Prod.cEAN := trim(codigoBarra); // cEAN
 {$ENDREGION}
           Prod.xProd := trim(Copy(Linha, 86, 120));
-          // Descrição do produto ou serviço
-          Prod.NCM := trim(Copy(Linha, 206, 8)); // Código NCM
+          // Descriï¿½ï¿½o do produto ou serviï¿½o
+          Prod.NCM := trim(Copy(Linha, 206, 8)); // Cï¿½digo NCM
           Prod.EXTIPI := trim(Copy(Linha, 214, 3)); // EX_TIPI
           Prod.CFOP := trim(Copy(Linha, 219, 4));
           // Prod.CEST := trim(Copy(Linha, 219, 4));
-          // Código fiscal da operação
+          // Cï¿½digo fiscal da operaï¿½ï¿½o
 
           if trim(Copy(Linha, 223, 6)) <> '' then
             Prod.uCom := trim(Copy(Linha, 223, 6)) // Unidade comercial
@@ -3103,10 +3086,10 @@ begin
           // Quantidade comercial
           Prod.vUnCom := StrToFloat(StringReplace((Copy(Linha, 244, 15)), '.',
             ',', [rfReplaceAll]));
-          // Valor unitário de comercialização
+          // Valor unitï¿½rio de comercializaï¿½ï¿½o
           Prod.vProd := StrToFloat(StringReplace((Copy(Linha, 259, 15)), '.',
             ',', [rfReplaceAll]));
-          // Valor Total Bruto dos Produtos ou Serviços
+          // Valor Total Bruto dos Produtos ou Serviï¿½os
           // if trim((Copy(Linha, 274, 14))) = '' then
           // Prod.cEANTrib :=  'SEM GTIN' // cEANTrib
           // else
@@ -3129,7 +3112,7 @@ begin
           // UQuantidade Tributavel
           Prod.vUnTrib := StrToFloat(StringReplace((Copy(Linha, 309, 15)), '.',
             ',', [rfReplaceAll]));
-          // Valor Unitário de tributação
+          // Valor Unitï¿½rio de tributaï¿½ï¿½o
           Prod.vFrete := StrToFloat(StringReplace((Copy(Linha, 324, 15)), '.',
             ',', [rfReplaceAll]));
           // Valor Total do Frete
@@ -3145,9 +3128,9 @@ begin
           FCI := trim(Copy(Linha, 517, 50));
           if FCI <> '' then
             Prod.nFCI := FCI;
-          // FCI - Número de controle da FCI - Ficha de Conteúdo de Importação
+          // FCI - Nï¿½mero de controle da FCI - Ficha de Conteï¿½do de Importaï¿½ï¿½o
 
-          /// //// Imposto de importação
+          /// //// Imposto de importaï¿½ï¿½o
 
           if length(Linha) > 385 then
           begin
@@ -3158,7 +3141,7 @@ begin
             if trim(Copy(Linha, 399, 15)) <> '' then
               Imposto.II.vII := StrToFloat(StringReplace((Copy(Linha, 399, 15)),
                 '.', ',', [rfReplaceAll]));
-            // Valor do Imposto de importação
+            // Valor do Imposto de importaï¿½ï¿½o
 
             if trim(Copy(Linha, 414, 15)) <> '' then
               Imposto.II.vDespAdu :=
@@ -3286,7 +3269,7 @@ begin
             while (Copy(Linha, 0, 6)) = 'EM3207' do
             begin
               with Prod.rastro.Add do
-              // quando usar Medicamentos usa Prod.med, nosso caso é só rastreamento então Pro.rastro
+              // quando usar Medicamentos usa Prod.med, nosso caso ï¿½ sï¿½ rastreamento entï¿½o Pro.rastro
               begin
                 nLote := trim(Copy(Linha, 7, 20));
                 qLote := StrToFloat(StringReplace(trim(Copy(Linha, 27, 15)),
@@ -3330,7 +3313,7 @@ begin
                 strtoint(Copy(Linha, 12, 1));
               except
                 messagebox(Handle,
-                  'Origem do produto não encontrada. Verifique e tente novamente.',
+                  'Origem do produto nï¿½o encontrada. Verifique e tente novamente.',
                   'Envio NFE', MB_OK + MB_ICONINFORMATION);
                 Abort;
               end;
@@ -3363,7 +3346,7 @@ begin
                 strtoint(Copy(Linha, 13, 2));
               except
                 messagebox(Handle,
-                  'Situação tributária do ICMS não encontrada. Verifique e tente novamente.',
+                  'Situaï¿½ï¿½o tributï¿½ria do ICMS nï¿½o encontrada. Verifique e tente novamente.',
                   'Envio NFE', MB_OK + MB_ICONINFORMATION);
                 Abort;
               end;
@@ -3400,11 +3383,11 @@ begin
               end;
 
               Imposto.ICMS.modBCST := dbisPrecoTabelado;
-              // Modalidade de determinação da BC do ICMS ST
+              // Modalidade de determinaï¿½ï¿½o da BC do ICMS ST
               Imposto.ICMS.pRedBC :=
                 StrToFloat(StringReplace((Copy(Linha, 17, 15)), '.', ',',
                 [rfReplaceAll]));
-              // Percential de redução de BC do ICMS
+              // Percential de reduï¿½ï¿½o de BC do ICMS
 
               Imposto.ICMS.vBC :=
                 StrToFloat(StringReplace((Copy(Linha, 32, 15)), '.', ',',
@@ -3500,7 +3483,7 @@ begin
                 strtoint(Copy(Linha, 12, 1));
               except
                 messagebox(Handle,
-                  'Origem do produto não encontrada. Verifique e tente novamente.',
+                  'Origem do produto nï¿½o encontrada. Verifique e tente novamente.',
                   'Envio NFE', MB_OK + MB_ICONINFORMATION);
                 Abort;
               end;
@@ -3531,7 +3514,7 @@ begin
                 strtoint(Copy(Linha, 13, 3));
               except
                 messagebox(Handle,
-                  'Situação tributária do ICMS não encontrada. Verifique e tente novamente.',
+                  'Situaï¿½ï¿½o tributï¿½ria do ICMS nï¿½o encontrada. Verifique e tente novamente.',
                   'Envio NFE', MB_OK + MB_ICONINFORMATION);
                 Abort;
               end;
@@ -3558,11 +3541,11 @@ begin
                   Imposto.ICMS.CSOSN := csosn900;
               end;
               Imposto.ICMS.modBCST := dbisPrecoTabelado;
-              // Modalidade de determinação da BC do ICMS ST
+              // Modalidade de determinaï¿½ï¿½o da BC do ICMS ST
               Imposto.ICMS.pRedBC :=
                 StrToFloat(StringReplace((Copy(Linha, 17, 15)), '.', ',',
                 [rfReplaceAll]));
-              // Percential de redução de BC do ICMS
+              // Percential de reduï¿½ï¿½o de BC do ICMS
               Imposto.ICMS.vBC :=
                 StrToFloat(StringReplace((Copy(Linha, 32, 15)), '.', ',',
                 [rfReplaceAll]));
@@ -3684,11 +3667,11 @@ begin
             // begin
             Pfcp := StrToFloat(StringReplace((Copy(Linha, 22, 15)), '.', ',',
               [rfReplaceAll]));
-            // Percentual do ICMS relativo ao Fundo de Combate à Pobreza (FCP) na UF de destino
+            // Percentual do ICMS relativo ao Fundo de Combate ï¿½ Pobreza (FCP) na UF de destino
 
-            // Percentual do Fundo de Combate à Pobreza (FCP)
+            // Percentual do Fundo de Combate ï¿½ Pobreza (FCP)
             // Imposto.ICMS.pFCP :=StrToFloat(StringReplace((Copy(Linha, 22, 15)), '.', ',', [rfReplaceAll]));
-            // Valor do Fundo de Combate à Pobreza (FCP)
+            // Valor do Fundo de Combate ï¿½ Pobreza (FCP)
             if Imposto.ICMS.CST = cst00 then
             begin
 
@@ -3748,7 +3731,7 @@ begin
 
             // Imposto.ICMSUFDest.vFCPUFDest := Vfcp;// StrToFloat(StringReplace((Copy(Linha, 82, 15)), '.', ',',
             // ShowMessage('VALOR vFCPUFDest ' +floattostr(Imposto.ICMSUFDest.vFCPUFDest));
-            // [rfReplaceAll])); // Valor do ICMS relativo ao Fundo de Combate à Pobreza (FCP) da UF de destino
+            // [rfReplaceAll])); // Valor do ICMS relativo ao Fundo de Combate ï¿½ Pobreza (FCP) da UF de destino
 
             Imposto.ICMSUFDest.vBCUFDest :=
               StrToFloat(StringReplace((Copy(Linha, 7, 15)), '.', ',',
@@ -3758,16 +3741,16 @@ begin
 
             Imposto.ICMSUFDest.pICMSUFDest :=
               StrToFloat(StringReplace((Copy(Linha, 37, 15)), '.', ',',
-              [rfReplaceAll])); // Alíquota interna da UF de destino
+              [rfReplaceAll])); // Alï¿½quota interna da UF de destino
 
             Imposto.ICMSUFDest.pICMSInter :=
               StrToFloat(StringReplace((Copy(Linha, 52, 15)), '.', ',',
-              [rfReplaceAll])); // Alíquota interestadual das UF envolvidas
+              [rfReplaceAll])); // Alï¿½quota interestadual das UF envolvidas
 
             Imposto.ICMSUFDest.pICMSInterPart :=
               StrToFloat(StringReplace((Copy(Linha, 67, 15)), '.', ',',
               [rfReplaceAll]));
-            // Percentual provisório de partilha do ICMS Interestadual
+            // Percentual provisï¿½rio de partilha do ICMS Interestadual
             // ShowMessage('VALOR pICMSInterPart ' + floattostr(Imposto.ICMSUFDest.pICMSInterPart));
 
             Imposto.ICMSUFDest.vICMSUFDest :=
@@ -3800,12 +3783,12 @@ begin
               '.', ',', [rfReplaceAll]));
             // 15 Valor do IPI
 
-            // CASE   Situação tributária do IPI
+            // CASE   Situaï¿½ï¿½o tributï¿½ria do IPI
             try
               strtoint(Copy(Linha, 50, 2))
             except
               messagebox(Handle,
-                'Situação de IPI não encontrada. Verifique e tente novamente.',
+                'Situaï¿½ï¿½o de IPI nï¿½o encontrada. Verifique e tente novamente.',
                 'Envio NFE', MB_OK + MB_ICONINFORMATION);
               Abort;
             end;
@@ -3848,7 +3831,7 @@ begin
           if (Copy(Linha, 0, 6)) = 'EM0209' then
           begin
 
-            // CASEEEEE 02 Situação Tributaria do PIS       showmessage(copy(EM0209,12,2));
+            // CASEEEEE 02 Situaï¿½ï¿½o Tributaria do PIS       showmessage(copy(EM0209,12,2));
             case strtoint(Copy(Linha, 12, 2)) of
               01:
                 Imposto.PIS.CST := pis01;
@@ -3879,7 +3862,7 @@ begin
             Imposto.PIS.vPIS := StrToFloat(StringReplace((Copy(Linha, 37, 15)),
               '.', ',', [rfReplaceAll]));
             // 15 Valor do PIS
-            // CASE Situação Tributaria do COFINS       showmessage(copy(EM0209,52,2));
+            // CASE Situaï¿½ï¿½o Tributaria do COFINS       showmessage(copy(EM0209,52,2));
 
             case strtoint(Copy(Linha, 52, 2)) of
               01:
@@ -3932,7 +3915,7 @@ begin
         // Valor Total do ICMS ST  showmessage(copy(linha,53,15));
         Total.ICMSTot.vST := StrToFloat(StringReplace((Copy(Linha, 52, 15)),
           '.', ',', [rfReplaceAll]));
-        // Valor Total dos produtos e serviços  showmessage(copy(linha,68,15));
+        // Valor Total dos produtos e serviï¿½os  showmessage(copy(linha,68,15));
         Total.ICMSTot.vProd := StrToFloat(StringReplace((Copy(Linha, 67, 15)),
           '.', ',', [rfReplaceAll]));
         // Valor Total do Frete       showmessage(copy(linha,83,15));
@@ -3957,14 +3940,14 @@ begin
         Total.ICMSTot.vCOFINS :=
           StrToFloat(StringReplace((Copy(Linha, 172, 15)), '.', ',',
           [rfReplaceAll]));
-        // Outras Despesas Acessórias showmessage(copy(linha,188,15));
+        // Outras Despesas Acessï¿½rias showmessage(copy(linha,188,15));
         Total.ICMSTot.vOutro := StrToFloat(StringReplace((Copy(Linha, 187, 15)),
           '.', ',', [rfReplaceAll]));
         // Valor Total da NFe       showmessage(copy(linha,203,15));
         Total.ICMSTot.vNF := StrToFloat(StringReplace((Copy(Linha, 202, 15)),
           '.', ',', [rfReplaceAll]));
 
-        // Informar a soma no cabeçalho da nota
+        // Informar a soma no cabeï¿½alho da nota
         // if (length(Linha) > 222) and (trim(Copy(Linha, 217, 15)) <> '') then
         Total.ICMSTot.vTotTrib :=
           StrToFloat(StringReplace((Copy(Linha, 217, 15)), '.', ',',
@@ -4021,11 +4004,11 @@ begin
           Transp.Transporta.CNPJCPF := (Copy(Linha, 22, 14));
 
         Transp.Transporta.xNome := (Copy(Linha, 36, 60));
-        // Razão social ou nome                     showmessage(copy(linha,36,60));
+        // Razï¿½o social ou nome                     showmessage(copy(linha,36,60));
         Transp.Transporta.ie := (Copy(Linha, 96, 14));
         // IE                                                showmessage(copy(linha,96,14));
         Transp.Transporta.xEnder := (Copy(Linha, 110, 60));
-        // Endereço completo                     showmessage(copy(linha,110,60));
+        // Endereï¿½o completo                     showmessage(copy(linha,110,60));
         Transp.Transporta.xMun := (Copy(Linha, 170, 60));
         // Nome do Municipio                     showmessage(copy(linha,170,60));
         Transp.Transporta.uf := (Copy(Linha, 230, 2));
@@ -4121,7 +4104,7 @@ begin
             numeroparcela := (Copy(Linha, 7, 60));
             nDup := LeftZero((Copy(numeroparcela, pos('-', numeroparcela) + 1,
               length(numeroparcela))), 3);
-            // Número da fatura
+            // Nï¿½mero da fatura
             dVenc := strtodate(Copy(Linha, 75, 2) + '/' + Copy(Linha, 72, 2) +
               '/' + Copy(Linha, 67, 4));
             // Data de vencimento
@@ -4143,1115 +4126,17 @@ begin
 
       end; // fim do EM0213
       Readln(Arquivo, Linha); // Ler a proxima linha
-    end; // enquanto não chegar ao fim do Arquivo
+    end; // enquanto nï¿½o chegar ao fim do Arquivo
     // =============================EM0214=============================//
     if (Copy(Linha, 0, 6)) = 'EM0214' then
     begin
 
       InfAdic.infCpl := (Copy(Linha, 7, 2000));
     end; // fim do EM0214
-  end; // Fim das configurações da NFe
+  end; // Fim das configuraï¿½ï¿½es da NFe
   CloseFile(Arquivo);
 
   Result := true;
-end;
-
-function TForm1.EnviaNFe2DB(TipoEnvio: integer = 3): Boolean;
-var
-  Arquivo: TextFile;
-  Linha: string;
-  i, j, colunai, colunaf: integer;
-  Cdi: integer;
-  VSNprod, VSNAliq: Real;
-  SQLCAB, SQLITEM, SQLDI, SQLDIETI, SQLEMP, SQLREF, SQLPARC: TSimpleDataSet;
-  TipCndPgto, id_FinPaiCli: integer;
-  EndTra: string;
-  precoUnitario, valorIpi, valorMva, baseCalculo, precoComMVA,
-    precoSemMva: Double;
-begin
-  Result := False;
-
-  SQLCAB := TSimpleDataSet.Create(self);
-  try
-
-    SQLCAB.Connection := SQLConnection1;
-    SQLCAB.ReadOnly := true;
-    SQLCAB.DataSet.CommandText := SelectCabecalho('', '');
-
-    SQLITEM := TSimpleDataSet.Create(self);
-    try
-
-      SQLITEM.Connection := SQLConnection1;
-      SQLITEM.ReadOnly := true;
-      SQLITEM.DataSet.CommandText := SelectItem('', '');
-
-      SQLCAB.First;
-
-      while not SQLCAB.Eof do
-      begin
-
-        with ACBrNFe1.NotasFiscais.Add.NFe do
-        begin
-          // Loop para ler todas as linhas do arquivo
-
-          // =============================EM0201=============================//
-          if (Copy(Linha, 0, 6)) = 'EM0201' then
-          begin
-            // Carrega Chave
-
-            infNFe.ID := 'NFe' + SQLCAB.FieldByName('SEQNFE').AsString;
-
-          end
-          else
-
-            // if (Copy(Linha, 0, 6)) = 'EM1201' then // Dados de contigencia
-            if False then // DPEC
-            begin
-              // =============================EM1201=============================//
-              Ide.dhCont := now;
-              Ide.xJust := SQLCAB.FieldByName('JustDPEC').AsString;
-            end;
-          // fim do EM0201
-          // =============================EM0202=============================//
-
-          if true then
-          begin
-
-            SQLEMP := TSimpleDataSet.Create(self);
-
-            try
-              SQLEMP.Connection := SQLConnection1;
-
-              SQLEMP.DataSet.CommandText := //
-                ' Select GerEmp.ApeEmp,' + //
-                ' GerEmp.NomEmp,' + //
-                ' GerEmp.CgcEmp,' + //
-                ' GerEmp.InsEmp,' + //
-                ' GerEmp.CepEmp,' + //
-                ' GerEmp.TenEmp,' + //
-                ' GerEmp.EndEmp,' + //
-                ' GerEmp.NumEmp,' + //
-                ' GerEmp.RefEmp,' + //
-                ' GerEmp.BaiEmp,' + //
-                ' GerEmp.SigUfe,' + //
-                ' GerEmp.PrtEmp,' + //
-                ' GerEmp.FonEmp,' + //
-                ' GerEmp.Id_FinUfe,' + //
-                ' GerEmp.Id_FinCie,' + //
-                ' GerEmp.Id_FinPai, ' + //
-                ' GerEmp.TipEmp ' + //
-                ' From GerEmp' + //
-                ' Where GerEmp.CodEmp = ' + SQLCAB.FieldByName
-                ('CODEMP').AsString;
-
-              // Código da UF do emitente do documento fiscal'
-              Ide.cUF := SQLEMP.FieldByName('Id_FinUfe').AsInteger;
-
-              // Descrição da natureza de operação
-              Ide.natOp := trim(SQLCAB.FieldByName('DesNat').AsString);
-
-              TipCndPgto := 0;
-
-              // Indicador da forma de pagamento 0-Pagamento à vista 1-Pagamento à prazo 2-Outros showmessage(copy(Linha,78,1));
-              if SQLCAB.FieldByName('IntFin').AsString = 'Nao' then
-                TipCndPgto := 2
-              else
-              begin
-                if strtoint(BuscaSimples('FatPe3', 'QtdReg', '1 = 1',
-                  SQLConnection1, //
-                  ' Select Sum(FatPe3.PraPe3) as QtdReg' + //
-                  ' From FatPe3' + //
-                  ' Where FatPe3.CODEMP = ' + ((SQLCAB.FieldByName('CODEMP')
-                  .AsString)) + //
-                  ' and FatPe3.DTERES = ' +
-                  QuotedStr(formatdatetime('mm/dd/yyyy',
-                  SQLCAB.FieldByName('DTERES').AsDateTime)) + //
-                  ' and FatPe3.NUMRES = ' + SQLCAB.FieldByName('NUMRES')
-                  .AsString + //
-                  ' and FatPe3.SEQLIB = ' + SQLCAB.FieldByName('SEQLIB')
-                  .AsString + //
-                  ' and FatPe3.SEQFAT = ' + SQLCAB.FieldByName('SEQFAT')
-                  .AsString)) > 0 then
-                  TipCndPgto := 1;
-
-              end;
-
-              if TipCndPgto = 0 then
-                Ide.indPag := ipVista
-              else if TipCndPgto = 1 then
-                Ide.indPag := ipPrazo
-              else
-                Ide.indPag := ipOutras;
-
-              /// ///////////////////////////////////////////////////
-
-              // Código do Modelo do documento fiscal
-              Ide.modelo := 55;
-              // Série do documento fiscal
-              Ide.serie := 1;
-              // Número do documento fiscal
-              Ide.nNF := SQLCAB.FieldByName('NroNfs').AsInteger;
-              // numero do lote de envio
-              VNumLote := SQLCAB.FieldByName('NroNfs').AsInteger;
-
-              try
-                // Data de emissão do documento fiscal
-                Ide.dEmi := SQLCAB.FieldByName('DteFat').AsDateTime;
-              except
-                Memo1.Lines.Text := 'Problemas com a Data de Emissão da nota';
-                Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno +
-                  '\LogErro-' + IntToStr(VNumLote) + '.txt');
-                Application.Terminate;
-              end;
-
-              // Data de saida ou entrada da Mercadoria/Produto
-              // Ide.dSaiEnt := ;//Não informado
-
-              // Tipo do documento fiscal
-              if 1 = 1 then // Verificar Quando devolução e Outros Tipos
-                Ide.tpNF := tnSaida
-              else
-                Ide.tpNF := tnEntrada;
-
-              // Código do Municipio de Ocorrência do Fato Gerador
-              Ide.cMunFG := SQLEMP.FieldByName('Id_EmpCie').AsInteger;
-
-              // Formato de Impressao do DANFE
-              if 1 = 1 then // Verificar para permitir escolha
-                Ide.tpImp := tiRetrato
-              else
-                Ide.tpImp := tiPaisagem;
-
-              // Forma de emissão da NF-e
-              if TipoEnvio = 3 then
-                Ide.tpEmis := teNormal
-              else if TipoEnvio = 4 then
-                Ide.tpEmis := teDPEC;
-
-              // Digito verificador da Chave de Acesso da NF-e
-              // Ide.cDV := strtoint(Copy(Linha, 121, 1));
-              if trim(SQLCAB.FieldByName('SeqNFE').AsString) <> '' then
-                Ide.cDV :=
-                  strtoint(Copy(SQLCAB.FieldByName('SeqNFE').AsString, 44, 1));
-
-              // Identificação do Ambiente
-              if (VWebSAmbiente) = 1 then
-                Ide.tpAmb := taHomologacao
-              else
-                Ide.tpAmb := taProducao;
-
-              // Finalidade de emissão da NF-e
-              { if (Copy(Linha, 123, 1)) = '1' then
-                ide.finNFe := fnNormal; }
-
-              // Finalidade de emissão da NF-e
-              if uppercase(SQLCAB.FieldByName('MODPFA').AsString) = 'VENDAS'
-              then
-              begin
-                Ide.finNFe := fnNormal;
-              end
-              else if uppercase(SQLCAB.FieldByName('MODPFA').AsString) = 'COMPLEMENTO'
-              then
-              // if (Copy(Linha, 123, 1)) = '2' then
-              begin
-                Ide.finNFe := fnComplementar;
-
-                SQLREF := TSimpleDataSet.Create(self);
-                SQLREF.Active := False;
-                SQLREF.DataSet.CommandText :=
-                  'select NFE_REF, CODUF, CNPJ, MODELO, SERIE, NRONFS from FATGER_REF WHERE ID_FATGER = '
-                  + SQLCAB.FieldByName('ID').AsString;
-                SQLREF.Active := true;
-
-                if not SQLREF.IsEmpty then
-                begin
-                  SQLREF.First;
-                  while not SQLREF.Eof do
-                  begin
-
-                    // Versão do processo de emissão da NF-e
-                    with Ide.NFref.Add do
-                    begin
-                      RefNF.cUF := SQLREF.FieldByName('CODUF').AsInteger;
-                      RefNF.AAMM :=
-                        Copy(SQLREF.FieldByName('NFE_REF').AsString, 3, 4);
-                      RefNF.CNPJ := SQLREF.FieldByName('CNPJ').AsString;
-                      RefNF.modelo := SQLREF.FieldByName('MODELO').AsInteger;
-                      RefNF.serie := SQLREF.FieldByName('SERIE').AsInteger;
-                      RefNF.nNF := SQLREF.FieldByName('NRONFS').AsInteger;
-                      refNFe := SQLREF.FieldByName('NFE_REF').AsString;
-
-                    end;
-
-                    SQLREF.Next;
-                  end;
-                end;
-              end
-              else if uppercase(SQLCAB.FieldByName('MODPFA').AsString) = 'DEVOLUCAO'
-              then
-              begin
-                Ide.finNFe := fnDevolucao;
-
-                SQLREF := TSimpleDataSet.Create(self);
-                SQLREF.Active := False;
-                SQLREF.DataSet.CommandText :=
-                  'select NFE_REF, CODUF, CNPJ, MODELO, SERIE, NRONFS from FATGER_REF WHERE ID_FATGER = '
-                  + SQLCAB.FieldByName('ID').AsString;
-                SQLREF.Active := true;
-
-                if not SQLREF.IsEmpty then
-                begin
-                  SQLREF.First;
-                  while not SQLREF.Eof do
-                  begin
-
-                    // Versão do processo de emissão da NF-e
-                    with Ide.NFref.Add do
-                    begin
-                      RefNF.cUF := SQLREF.FieldByName('CODUF').AsInteger;
-                      RefNF.AAMM :=
-                        Copy(SQLREF.FieldByName('NFE_REF').AsString, 3, 4);
-                      RefNF.CNPJ := SQLREF.FieldByName('CNPJ').AsString;
-                      RefNF.modelo := SQLREF.FieldByName('MODELO').AsInteger;
-                      RefNF.serie := SQLREF.FieldByName('SERIE').AsInteger;
-                      RefNF.nNF := SQLREF.FieldByName('NRONFS').AsInteger;
-                      refNFe := SQLREF.FieldByName('NFE_REF').AsString;
-
-                    end;
-
-                    SQLREF.Next;
-                  end;
-                end;
-              end
-              else if uppercase(SQLCAB.FieldByName('MODPFA').AsString) = 'AJUSTE'
-              then
-              begin
-                Ide.finNFe := fnAjuste;
-              end;
-
-              Ide.procEmi := peAplicativoContribuinte;
-
-              // Processo de emissão da NF-e
-              Ide.verProc := 'Emerion Faturamento NFeDB';
-
-
-
-              // =============================EM0203=============================//
-
-              // Razão social obrigatória para ambiente de homologação
-              if VWebSAmbiente = 1 then
-                strxNome :=
-                  'NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL'
-              else
-                strxNome := SQLEMP.FieldByName('NOMEMP').AsString;
-
-              // CNPJ do emitente  ou  CPF do emitente
-              if ValidaCNPJ(SQLEMP.FieldByName('CgcEmp').AsString, False) = true
-              then
-                emit.CNPJCPF := trim(SQLEMP.FieldByName('CgcEmp').AsString)
-              else
-                emit.CNPJCPF := trim(SQLEMP.FieldByName('CgcEmp').AsString);
-
-              // Razão social ou Nome do emitente
-              emit.xNome := trim(strxNome); // copy(Linha, 35, 60);
-              // Nome fantasia
-              emit.xFant := SQLEMP.FieldByName('ApeEmp').AsString;
-              // Logradouro
-              emit.EnderEmit.xLgr :=
-                (SQLEMP.FieldByName('TenEmp').AsString + ' ' +
-                SQLEMP.FieldByName('EndEmp').AsString);
-              // Número
-              emit.EnderEmit.nro := SQLEMP.FieldByName('NumEmp').AsString;
-              // Complemento
-              emit.EnderEmit.xCpl := SQLEMP.FieldByName('RefEmp').AsString;
-              // Bairro
-              emit.EnderEmit.xBairro := SQLEMP.FieldByName('BaiEmp').AsString;
-              // Código do municipio
-              emit.EnderEmit.cMun := SQLEMP.FieldByName('Id_EmpCie').AsInteger;
-              // Nome do municipio
-              emit.EnderEmit.xMun := SQLEMP.FieldByName('CidEmp').AsString;
-              // Sigla da UF
-              emit.EnderEmit.uf := SQLEMP.FieldByName('UfeEmp').AsString;
-              ACBrNFe1.Configuracoes.WebServices.uf :=
-                SQLEMP.FieldByName('UfeEmp').AsString;
-              // Código do CEP
-              emit.EnderEmit.CEP := SQLEMP.FieldByName('CepEmp').AsInteger;
-              // Código do País
-              emit.EnderEmit.cPais := SQLEMP.FieldByName('NroPais_Emp')
-                .AsInteger;
-              // Brasil
-              emit.EnderEmit.xPais := SQLEMP.FieldByName('NomPais_Emp')
-                .AsString;
-              // Telefone
-              emit.EnderEmit.fone := SQLEMP.FieldByName('FonEmp').AsString;
-              // IE
-              emit.ie := SQLEMP.FieldByName('InsEmp').AsString;
-              // IEST
-              emit.IEST := SQLCAB.FieldByName('INSSUB').AsString;
-
-              if SQLEMP.FieldByName('TipEmp').AsString = 'SimplesNacional' then
-                emit.CRT := crtSimplesNacional;
-
-            finally
-              FreeAndnil(SQLEMP);
-            end;
-            // fim do EM0203
-            // =============================EM0204=============================//
-
-            // CNPJ do emitente  ou  CPF do emitente
-            if ((ValidaCNPJ(SQLCAB.FieldByName('CGCCLI').AsString, False)
-              = true) and (trim(SQLCAB.FieldByName('CGCCLI').AsString) <> ''))
-            then //
-            begin
-              dest.CNPJCPF := SQLCAB.FieldByName('CGCCLI').AsString;
-            end
-            else
-            begin
-              dest.CNPJCPF := SQLCAB.FieldByName('CGCCLI').AsString;
-            end;
-
-            // Razão social ou nome do destinatario
-            dest.xNome := SQLCAB.FieldByName('NomCli').AsString;
-            // Logradouro
-            dest.EnderDest.xLgr := trim(SQLCAB.FieldByName('TefCli').AsString +
-              ' ' + SQLCAB.FieldByName('EnfCli').AsString);
-            // Número
-            dest.EnderDest.nro := trim(SQLCAB.FieldByName('NrfCli').AsString);
-            // Complemento
-            dest.EnderDest.xCpl := trim(SQLCAB.FieldByName('RffCli').AsString);
-            // Bairro
-            dest.EnderDest.xBairro :=
-              trim(SQLCAB.FieldByName('BafCli').AsString);
-            // Código do Municipio
-            id_FinPaiCli := //
-              strtoint(BuscaSimples('FinCie', 'SigNfe', 'Id_FinCie = ' + //
-              SQLCAB.FieldByName('Id_FinCif').AsString, SQLConnection1));
-            dest.EnderDest.cMun := id_FinPaiCli; //
-
-            // Nome do Municipio
-            dest.EnderDest.xMun := //
-              (BuscaSimples('FinCie', 'NomCie', 'Id_FinCie = ' + //
-              SQLCAB.FieldByName('Id_FinCif').AsString, SQLConnection1));
-            dest.EnderDest.cMun := id_FinPaiCli; //
-
-            // Sigla da UF_
-            dest.EnderDest.uf := (SQLCAB.FieldByName('UfeCli').AsString);
-            // Código do CepN
-            dest.EnderDest.CEP := SQLCAB.FieldByName('CefCli').AsInteger;
-
-            // Código do País
-            dest.EnderDest.cPais := //
-              strtoint(BuscaSimples('FinCli', 'Id_FinPai', ' CodCli = ' + //
-              SQLCAB.FieldByName('CodCli').AsString, SQLConnection1));
-            // Brasil
-            dest.EnderDest.xPais := //
-              trim(BuscaSimples('FinPai', 'NomPai',
-              'Id_FinPai = ' + IntToStr(id_FinPaiCli), SQLConnection1));
-
-            // TelefoneE
-            dest.EnderDest.fone := trim(SQLCAB.FieldByName('TelCli').AsString);
-            // trim(BuscaSimples('FinCli', 'TEL', ' 1 = 1 ', SQLConnection1),
-            // ' Select Pt1Cli||Fo1Cli TEL from fincli where codcli = ' + SQLCAB.FieldByName('CodCli').AsString);
-
-            // IE
-            dest.ie := trim(BuscaSimples('FinCli', 'InsCli', ' CodCli = ' + //
-              SQLCAB.FieldByName('CodCli').AsString, SQLConnection1));
-            // Inscrição SUFRAMA}
-            dest.ISUF := trim(BuscaSimples('FinCli', 'NroSuf', ' CodCli = ' +
-              //
-              SQLCAB.FieldByName('CodCli').AsString, SQLConnection1));
-
-            // ==============================EM0205=============================//
-
-            // CNPJ do emitente  ou  CPF do Entrega
-            if ((ValidaCNPJ(SQLCAB.FieldByName('CGCCLI').AsString, False)
-              = true) and (trim(SQLCAB.FieldByName('CGCCLI').AsString) <> ''))
-            then //
-            begin
-              Entrega.CNPJCPF := SQLCAB.FieldByName('CGCCLI').AsString;
-            end
-            else
-            begin
-              Entrega.CNPJCPF := SQLCAB.FieldByName('CGCCLI').AsString;
-            end;
-
-            Entrega.xLgr := trim(SQLCAB.FieldByName('TefCli').AsString + ' ' +
-              SQLCAB.FieldByName('TefCli').AsString);
-            Entrega.nro := SQLCAB.FieldByName('NumCli').AsString;
-            Entrega.xCpl := SQLCAB.FieldByName('RefCli').AsString;
-            Entrega.xBairro := SQLCAB.FieldByName('BaiCli').AsString;
-
-            Entrega.cMun := //
-              strtoint(BuscaSimples('FinCie', 'SigNfe', 'Id_FinCie = ' + //
-              SQLCAB.FieldByName('Id_FinCie').AsString, SQLConnection1));
-            dest.EnderDest.cMun := id_FinPaiCli; // ;
-            Entrega.xMun := //
-              BuscaSimples('FinCie', 'NomCie', 'Id_FinCie = ' + //
-              SQLCAB.FieldByName('Id_FinCie').AsString, SQLConnection1);
-            dest.EnderDest.cMun := id_FinPaiCli; // ;
-
-            Entrega.uf := SQLCAB.FieldByName('UfeCli').AsString;
-
-
-            // =============================EM0206=============================//
-
-            with Det.Add do
-            begin
-              // Nro. do item
-              Prod.nItem := SQLCAB.FieldByName('NroPe2').AsInteger;
-              // Código do Produto ou serviço
-              Prod.cProd := trim(SQLCAB.FieldByName('CodClp').AsString +
-                SQLCAB.FieldByName('CodGru').AsString +
-                SQLCAB.FieldByName('CodSub').AsString +
-                SQLCAB.FieldByName('CodPro').AsString);
-              // cEAN!
-              Prod.cEAN := trim(SQLCAB.FieldByName('cEAN').AsString);
-              // Descrição do produto ou serviço
-              Prod.xProd := trim(SQLCAB.FieldByName('DesPe2').AsString);
-              // Código NCM
-              Prod.NCM := trim(SQLCAB.FieldByName('ClsIpi').AsString);
-              // EX_TIPI
-              Prod.EXTIPI := '';
-              // Código fiscal da operação
-              Prod.CFOP := trim(SQLCAB.FieldByName('CodCfo').AsString);
-              // Unidade comercial
-              Prod.uCom := ifthen(trim(SQLCAB.FieldByName('CodUnd').AsString) <>
-                '', trim(SQLCAB.FieldByName('CodUnd').AsString), 'UN');
-              // Quantidade comercial
-              Prod.qCom := SQLCAB.FieldByName('QtpPe2').AsFloat;
-              // Valor unitário de comercialização
-              Prod.vUnCom := SQLCAB.FieldByName('VluPe2').AsFloat;
-              // Valor Total Bruto dos Produtos ou Serviços
-              Prod.vProd := SQLCAB.FieldByName('TotPe2').AsFloat;
-              // cEANTrib
-              Prod.cEANTrib := trim(SQLCAB.FieldByName('cEANTrib').AsString);
-              // Unidade Tributavel
-              Prod.uTrib := ifthen(trim(SQLCAB.FieldByName('CodUnd').AsString)
-                <> '', trim(SQLCAB.FieldByName('CodUnd').AsString), 'UND');
-              // UQuantidade Tributavel
-              Prod.qTrib := Prod.qCom;
-              // := SQLCAB.FieldByName('QtpPe2').AsFloat;
-              // Valor Unitário de tributação
-              Prod.vUnTrib := SQLCAB.FieldByName('VluPe2').AsFloat;
-              // Valor Total do Frete
-              Prod.vFrete := SQLCAB.FieldByName('TotFrt').AsFloat;
-              // Valor Total do Seguro
-              Prod.vSeg := SQLCAB.FieldByName('TotSeg').AsFloat;
-              // Valor do outras despesas acessorias
-              Prod.vOutro := SQLCAB.FieldByName('TotDes').AsFloat;
-              // Valor do outras Desconto
-              Prod.vDesc := SQLCAB.FieldByName('TotDsr').AsFloat;
-
-              /// //// Imposto de importação
-
-              if length(Linha) > 385 then
-              begin
-                // Valor da Base de Calculo para II
-                Imposto.II.vBC := SQLCAB.FieldByName('VLRBCII').AsFloat;
-                // Valor do Imposto de importação
-                Imposto.II.vII := SQLCAB.FieldByName('VLRIMPII').AsFloat;
-                // Valor de Despesas Aduaneiras
-                if trim(Copy(Linha, 414, 15)) <> '' then
-                  Imposto.II.vDespAdu :=
-                    SQLCAB.FieldByName('VLRDESPATU').AsFloat;
-                // Valor do IOF
-                if trim(Copy(Linha, 429, 15)) <> '' then
-                  Imposto.II.vIOF := SQLCAB.FieldByName('VLRIOF').AsFloat;
-
-              end;
-
-              // PEDIDO DE COMPRA
-              if trim(SQLCAB.FieldByName('NUMPEDCOMPRA').AsString) <> '' then
-              begin
-                if trim(Copy(Linha, 444, 15)) <> '' then
-                  Prod.xPed := trim(SQLCAB.FieldByName('NUMPEDCOMPRA')
-                    .AsString);
-
-                if trim(Copy(Linha, 459, 6)) <> '' then
-                  Prod.nItemPed := SQLITEM.FieldByName('NUMITEMCOMPRA')
-                    .AsString;
-              end;
-
-              // Ler aProxima linha pra chamar o 207
-              Readln(Arquivo, Linha); // Ler a proxima linha
-              // =============================EM1206=============================//
-              if (Copy(Linha, 0, 6)) = 'EM1206' then
-              begin
-                infAdProd := trim(SQLITEM.FieldByName('DESIMP').AsString);
-              end;
-              // fim do EM1206
-              // Ler aProxima linha pra chamar o 207
-              Readln(Arquivo, Linha); // Ler a proxima linha
-              // =============================EM1207  DI=============================//
-
-              if Prod.CFOP[1] = '3' then
-              begin
-                SQLDI := TSimpleDataSet.Create(self);
-                try
-                  SQLDI.Connection := SQLConnection1;
-                  SQLDI.ReadOnly := true;
-                  SQLDI.DataSet.CommandText := //
-                    ' Select ID_DI, ID_CMPNF2, NUMDI, DATADI, LOCALDESEMB, UFDESEMB, DATADESEMB, CODEXPORT, TAB_ORIGEM, ID_ITEM_ORIGEM '
-                    +
-                  //
-                    ' From DI ' + //
-                    ' Where ID_CMPNF2 = ' + SQLITEM.FieldByName
-                    ('ID_FATPE2').AsString;
-                  SQLDI.Active := true;
-
-                  SQLDIETI := TSimpleDataSet.Create(self);
-                  try
-                    SQLDIETI.Connection := SQLConnection1;
-                    SQLDIETI.ReadOnly := true;
-
-                    if not SQLDI.IsEmpty then
-                    begin
-                      SQLDI.First;
-                      while not SQLDI.Eof do
-                      begin
-                        with Prod.DI.Add do
-                        begin
-                          nDi := SQLDI.FieldByName('numdi').AsString;
-                          dDi := SQLDI.FieldByName('DATADI').AsDateTime;
-                          xLocDesemb :=
-                            SQLDI.FieldByName('LOCALDESEMB').AsString;
-                          UFDesemb := SQLDI.FieldByName('UFDESEMB').AsString;
-                          dDesemb := SQLDI.FieldByName('DATADESEMB').AsDateTime;
-                          cExportador := SQLDI.FieldByName('CODEXPORT')
-                            .AsString;
-
-                          SQLDIETI.DataSet.CommandText := //
-                            ' Select ID_DIDET, ID_DI, NSEQADIC, CODFAB, VDESCDI, QTDE, NADICAO '
-                            +
-                          //
-                            ' From DIDET ' + //
-                            ' WHERE ID_DI = ' +
-                            SQLDI.FieldByName('ID_DI').AsString;
-                          SQLDIETI.Active := true;
-                          SQLDIETI.First;
-                          // Ler a proxima linha
-                          while not SQLDIETI.Eof do
-                          begin
-                            // Cdi := 1;
-
-                            with adi.Add do
-                            begin
-                              nSeqAdi := SQLDI.FieldByName('NSEQADIC')
-                                .AsInteger;
-                              nAdicao := SQLDI.FieldByName('NADICAO').AsInteger;
-                              cFabricante :=
-                                SQLDI.FieldByName('CODFAB').AsString;
-                              vDescDI := SQLDI.FieldByName('VDESCDI').AsFloat;
-                            end;
-
-                            SQLDIETI.Next;
-                          end;
-                        end;
-                        SQLDI.Next;
-                      end;
-                    end;
-                  Finally
-                    FreeAndnil(SQLDIETI);
-                  end;
-                Finally
-                  FreeAndnil(SQLDI);
-                end;
-
-              end;
-
-              // 'EM0207'
-
-              if not true then // if not SN then
-              begin
-                case SQLITEM.FieldByName('CODST1').AsInteger of
-                  0:
-                    Imposto.ICMS.orig := oeNacional; // Origem da mercadoria
-                  1:
-                    Imposto.ICMS.orig := oeEstrangeiraImportacaoDireta;
-                  2:
-                    Imposto.ICMS.orig := oeEstrangeiraAdquiridaBrasil;
-                  3:
-                    Imposto.ICMS.orig := oeNacionalConteudoImportacaoSuperior40;
-                  // Origem da mercadoria
-                  4:
-                    Imposto.ICMS.orig := oeNacionalProcessosBasicos;
-                  5:
-                    Imposto.ICMS.orig :=
-                      oeNacionalConteudoImportacaoInferiorIgual40;
-                  6:
-                    Imposto.ICMS.orig :=
-                      oeEstrangeiraImportacaoDiretaSemSimilar;
-                  7:
-                    Imposto.ICMS.orig := oeEstrangeiraAdquiridaBrasilSemSimilar;
-                  8:
-                    Imposto.ICMS.orig := oeNacionalConteudoImportacaoSuperior70;
-                end;
-
-                case SQLITEM.FieldByName('CODST2').AsInteger of
-                  00:
-                    Imposto.ICMS.CST := cst00;
-                  10:
-                    Imposto.ICMS.CST := cst10;
-                  20:
-                    Imposto.ICMS.CST := cst20;
-                  30:
-                    Imposto.ICMS.CST := cst30;
-                  40:
-                    Imposto.ICMS.CST := cst40;
-                  41:
-                    Imposto.ICMS.CST := cst41;
-                  45:
-                    Imposto.ICMS.CST := cst45;
-                  50:
-                    Imposto.ICMS.CST := cst50;
-                  51:
-                    Imposto.ICMS.CST := cst51;
-                  60:
-                    Imposto.ICMS.CST := cst60;
-                  70:
-                    Imposto.ICMS.CST := cst70;
-                  80:
-                    Imposto.ICMS.CST := cst80;
-                  81:
-                    Imposto.ICMS.CST := cst81;
-                  90:
-                    Imposto.ICMS.CST := cst90;
-
-                end;
-
-                // Modalidade de determinação da BC do ICMS ST
-                Imposto.ICMS.modBCST := dbisPrecoTabelado;
-                // Percential de redução de BC do ICMS
-                Imposto.ICMS.pRedBC := SQLITEM.FieldByName('REDICM').AsFloat;
-                // Valor da BC do ICMS
-                Imposto.ICMS.vBC := SQLITEM.FieldByName('BASICM').AsFloat;
-                // Aliquota do imposto
-                Imposto.ICMS.pICMS := SQLITEM.FieldByName('ICMPE2').AsFloat;
-                // Valor do ICMSN
-                Imposto.ICMS.vICMS := SQLITEM.FieldByName('TOTICM').AsFloat;
-                // Valor da BC do ICMS ST
-                Imposto.ICMS.vBCST := SQLITEM.FieldByName('BASSUB').AsFloat;
-                // Aliquota do imposto do ICMS ST 5
-                Imposto.ICMS.pICMSST := SQLITEM.FieldByName('ICMSUB').AsFloat;
-                // Percentual da Margem de valor Adicionado do ICMS ST 5
-                Imposto.ICMS.pMVAST := SQLITEM.FieldByName('MRGSUB').AsFloat;
-                // Valor do ICMS ST 15
-                Imposto.ICMS.vICMSST := SQLITEM.FieldByName('TOTSUB').AsFloat;
-
-                // Imposto.ICMS.modBC := dbiValorOperacao;
-
-              end
-              else
-              begin
-                case SQLITEM.FieldByName('CODST1').AsInteger of
-                  0:
-                    Imposto.ICMS.orig := oeNacional;
-                  // Origem da mercadoria
-                  1:
-                    Imposto.ICMS.orig := oeEstrangeiraImportacaoDireta;
-                  2:
-                    Imposto.ICMS.orig := oeEstrangeiraAdquiridaBrasil;
-                  3:
-                    Imposto.ICMS.orig := oeNacionalConteudoImportacaoSuperior40;
-                  // Origem da mercadoria
-                  4:
-                    Imposto.ICMS.orig := oeNacionalProcessosBasicos;
-                  5:
-                    Imposto.ICMS.orig :=
-                      oeNacionalConteudoImportacaoInferiorIgual40;
-                  6:
-                    Imposto.ICMS.orig :=
-                      oeEstrangeiraImportacaoDiretaSemSimilar;
-                  7:
-                    Imposto.ICMS.orig := oeEstrangeiraAdquiridaBrasilSemSimilar;
-                end;
-
-                case SQLITEM.FieldByName('CODST2').AsInteger of
-
-                  101:
-                    Imposto.ICMS.CSOSN := csosn101;
-                  102:
-                    Imposto.ICMS.CSOSN := csosn102;
-                  103:
-                    Imposto.ICMS.CSOSN := csosn103;
-                  201:
-                    Imposto.ICMS.CSOSN := csosn201;
-                  202:
-                    Imposto.ICMS.CSOSN := csosn202;
-                  203:
-                    Imposto.ICMS.CSOSN := csosn203;
-                  300:
-                    Imposto.ICMS.CSOSN := csosn300;
-                  400:
-                    Imposto.ICMS.CSOSN := csosn400;
-                  500:
-                    Imposto.ICMS.CSOSN := csosn500;
-                  900:
-                    Imposto.ICMS.CSOSN := csosn900;
-                end;
-
-                // Modalidade de determinação da BC do ICMS STO
-                Imposto.ICMS.modBCST := dbisPrecoTabelado;
-                // Percential de redução de BC do ICMSL
-                Imposto.ICMS.pRedBC := SQLITEM.FieldByName('REDICM').AsFloat;
-                // Valor da BC do ICMS
-                Imposto.ICMS.vBC := SQLITEM.FieldByName('BASICM').AsFloat;
-                // Aliquota do imposto
-                // --simples--
-                Imposto.ICMS.pICMS := SQLITEM.FieldByName('ICMPE2').AsFloat;
-                // Aliquota do imposto
-                Imposto.ICMS.pCredSN := SQLITEM.FieldByName('ICMPE2').AsFloat;
-                // Aliquota do imposto
-                VSNAliq := SQLITEM.FieldByName('ICMPE2').AsFloat;
-                // Valor do ICMS
-                // --simples--
-                Imposto.ICMS.vICMS := SQLITEM.FieldByName('TOTICM').AsFloat;
-
-                // Imposto.ICMS.vCredICMSSN := VSNprod * (VSNAliq / 100);
-                Imposto.ICMS.vCredICMSSN :=
-                  SQLITEM.FieldByName('TOTICM').AsFloat;
-
-                if Copy(Linha, 13, 3) <> '500' then
-                begin
-                  // Aliquota do imposto
-                  Imposto.ICMS.vBCST := SQLITEM.FieldByName('BASSUB').AsFloat;
-                  // Valor da BC do ICMS ST
-                  Imposto.ICMS.pICMSST := SQLITEM.FieldByName('ICMSUB').AsFloat;
-                  // Aliquota do imposto do ICMS ST 5
-                  Imposto.ICMS.pMVAST := SQLITEM.FieldByName('MRGSUB').AsFloat;
-                  // Percentual da Margem de valor Adicionado do ICMS ST 5
-                  Imposto.ICMS.vICMSST := SQLITEM.FieldByName('TOTSUB').AsFloat;
-
-                end
-                else
-                begin
-                  Imposto.ICMS.vBCSTRet :=
-                    SQLITEM.FieldByName('BASSUB').AsFloat;
-                  // Valor da BC do ICMS ST
-                  Imposto.ICMS.pICMSST := SQLITEM.FieldByName('ICMSUB').AsFloat;
-                  // Aliquota do imposto do ICMS ST 5
-                  Imposto.ICMS.pMVAST := SQLITEM.FieldByName('MRGSUB').AsFloat;
-                  // Percentual da Margem de valor Adicionado do ICMS ST 5
-                  Imposto.ICMS.vICMSSTRet :=
-                    SQLITEM.FieldByName('TOTSUB').AsFloat;
-
-                  if (SQLITEM.FieldByName('TOTSUB').AsFloat > 0) then
-                  begin
-                    precoUnitario := SQLITEM.FieldByName('VPFITE').AsFloat;
-                    valorIpi := SQLITEM.FieldByName('TOTIPI').AsFloat;
-                    valorMva := SQLITEM.FieldByName('MRGSUB').AsFloat;
-                    baseCalculo := (precoUnitario + valorIpi) *
-                      (1 + valorMva / 100);
-                    precoComMVA :=
-                      ((baseCalculo * SQLCAB.FieldByName('QtpPe2').AsFloat) *
-                      SQLITEM.FieldByName('ICMSUB').AsFloat) / 100;
-                    precoSemMva :=
-                      (((precoUnitario + valorIpi) *
-                      SQLCAB.FieldByName('QtpPe2').AsFloat) *
-                      SQLITEM.FieldByName('ICMSUB').AsFloat) / 100;
-
-                    Imposto.ICMS.vBCSTRet :=
-                      SQLITEM.FieldByName('BASSUB').AsFloat;
-                    Imposto.ICMS.vICMSSubstituto := precoSemMva;
-                    Imposto.ICMS.vICMSSTRet := precoComMVA - precoSemMva;
-                    Imposto.ICMS.vICMS := SQLITEM.FieldByName('ICMSUB').AsFloat;
-                  end;
-                end;
-
-              end;
-
-
-              // =============================EM0208=============================//
-
-              Imposto.IPI.vBC := SQLITEM.FieldByName('BASIPI').AsFloat;
-              // 15 Valor da BC do IPI
-              Imposto.IPI.pIPI := SQLITEM.FieldByName('IPIPE2').AsFloat;
-              // 5 Aliquota do imposto
-              Imposto.IPI.vIPI := SQLITEM.FieldByName('TOTIPI').AsFloat;
-              // 15 Valor do IPI
-              // CASE   Situação tributária do IPI
-              case SQLITEM.FieldByName('CSTIPI').AsInteger of
-                00:
-                  Imposto.IPI.CST := ipi00;
-                49:
-                  Imposto.IPI.CST := ipi49;
-                50:
-                  Imposto.IPI.CST := ipi50;
-                99:
-                  Imposto.IPI.CST := ipi99;
-                01:
-                  Imposto.IPI.CST := ipi01;
-                02:
-                  Imposto.IPI.CST := ipi02;
-                03:
-                  Imposto.IPI.CST := ipi03;
-                04:
-                  Imposto.IPI.CST := ipi04;
-                05:
-                  Imposto.IPI.CST := ipi05;
-                51:
-                  Imposto.IPI.CST := ipi51;
-                52:
-                  Imposto.IPI.CST := ipi52;
-                53:
-                  Imposto.IPI.CST := ipi53;
-                54:
-                  Imposto.IPI.CST := ipi54;
-                55:
-                  Imposto.IPI.CST := ipi55;
-              end;
-
-              // =============================EM0209=============================//
-
-              // CASEEEEE 02 Situação Tributaria do PIS       showmessage(copy(EM0209,12,2));
-              case SQLITEM.FieldByName('CDSPIS').AsInteger of
-                01:
-                  Imposto.PIS.CST := pis01;
-                02:
-                  Imposto.PIS.CST := pis02;
-                03:
-                  Imposto.PIS.CST := pis03;
-                04:
-                  Imposto.PIS.CST := pis04;
-                06:
-                  Imposto.PIS.CST := pis06;
-                07:
-                  Imposto.PIS.CST := pis07;
-                08:
-                  Imposto.PIS.CST := pis08;
-                09:
-                  Imposto.PIS.CST := pis09;
-                99:
-                  Imposto.PIS.CST := pis99;
-              end;
-              // 15 BC PIS
-              Imposto.PIS.vBC := SQLITEM.FieldByName('BASPIS').AsFloat;
-              // 5 Percentual do PIS
-              Imposto.PIS.pPIS := SQLITEM.FieldByName('ALIQPIS').AsFloat;
-              // 15 Valor do PIS
-              Imposto.PIS.vPIS := SQLITEM.FieldByName('TOTPIS').AsFloat;
-
-              // CASE Situação Tributaria do COFINS       showmessage(copy(EM0209,52,2));
-              case SQLITEM.FieldByName('CDSCOF').AsInteger of
-                01:
-                  Imposto.COFINS.CST := cof01;
-                02:
-                  Imposto.COFINS.CST := cof02;
-                03:
-                  Imposto.COFINS.CST := cof03;
-                04:
-                  Imposto.COFINS.CST := cof04;
-                06:
-                  Imposto.COFINS.CST := cof06;
-                07:
-                  Imposto.COFINS.CST := cof07;
-                08:
-                  Imposto.COFINS.CST := cof08;
-                09:
-                  Imposto.COFINS.CST := cof09;
-                99:
-                  Imposto.COFINS.CST := cof99;
-              end;
-
-              // 15 BC COFINS
-              Imposto.COFINS.vBC := SQLITEM.FieldByName('BASCOF').AsFloat;
-              // 5 Percentual do COFINS
-              Imposto.COFINS.pCOFINS := SQLITEM.FieldByName('ALIQCOF').AsFloat;
-              // 15 Valor do COFINS
-              Imposto.COFINS.vCOFINS := SQLITEM.FieldByName('TOTCOF').AsFloat;
-
-              SQLITEM.Next;
-            end;
-          end; // with do Add.item
-
-
-          // =============================EM0210=============================//
-
-          // Base de Calculo do ICMS
-          Total.ICMSTot.vBC := SQLCAB.FieldByName('BASICM').AsFloat;
-          // Valor Total do ICMS
-          Total.ICMSTot.vICMS := SQLCAB.FieldByName('TOTICM').AsFloat;
-          // Base de Calculo do ICMS ST   showmessage(copy(linha,38,15));
-          Total.ICMSTot.vBCST := SQLCAB.FieldByName('BASSUB').AsFloat;
-          // Valor Total do ICMS ST  showmessage(copy(linha,53,15));
-          Total.ICMSTot.vST := SQLCAB.FieldByName('TOTSUB').AsFloat;
-          // Valor Total dos produtos e serviços  showmessage(copy(linha,68,15));
-          Total.ICMSTot.vProd := SQLCAB.FieldByName('TOTFAT').AsFloat;
-          // Valor Total do Frete       showmessage(copy(linha,83,15));
-          Total.ICMSTot.vFrete := SQLCAB.FieldByName('TOTFRT').AsFloat;
-          // Valor Total do Seguro      showmessage(copy(linha,98,15));
-          Total.ICMSTot.vSeg := SQLCAB.FieldByName('TOTSEG').AsFloat;
-          // Valor Total do Desconto     showmessage(copy(linha,113,15));
-          Total.ICMSTot.vDesc := SQLCAB.FieldByName('TOTDSR').AsFloat;
-          // Valor Total do II           showmessage(copy(linha,128,15));
-          Total.ICMSTot.vII := SQLCAB.FieldByName('TotImpII').AsFloat;
-          // Valor Total do IPI        showmessage(copy(linha,143,15));
-          Total.ICMSTot.vIPI := SQLCAB.FieldByName('TOTIPI').AsFloat;
-          // Valor Total do PIS         showmessage(copy(linha,158,15));
-          Total.ICMSTot.vPIS := SQLCAB.FieldByName('TOTPIS').AsFloat;
-          // Valor Total do COFINS      showmessage(copy(linha,173,15));
-          Total.ICMSTot.vCOFINS := SQLCAB.FieldByName('TOTCOF').AsFloat;
-          // Outras Despesas Acessórias showmessage(copy(linha,188,15));
-          Total.ICMSTot.vOutro := SQLCAB.FieldByName('TOTDES').AsFloat;
-          // Valor Total da NFe       showmessage(copy(linha,203,15));
-          Total.ICMSTot.vNF := SQLCAB.FieldByName('TOTCOF').AsFloat;
-          // Valor Total da NFe       showmessage(copy(linha,218,15));
-          Total.ICMSTot.vNF := SQLCAB.FieldByName('TOTCOF').AsFloat;
-
-
-
-          // =============================EM0211=============================//
-
-          case SQLCAB.FieldByName('ID_FRETE').AsInteger of
-            0:
-              Transp.modFrete := mfContaEmitente;
-            1:
-              Transp.modFrete := mfContaDestinatario;
-            2:
-              Transp.modFrete := mfContaTerceiros;
-          else
-            Transp.modFrete := mfSemFrete;
-
-          end;
-
-          // CNPJ   showmessage(copy(linha,9,14)); /CPF showmessage(copy(linha,23,14));
-          if true then
-
-            if length(trim(SQLCAB.FieldByName('CGCTRA').AsString)) < 14 then
-            begin
-              if ValidaCNPJ(trim(SQLCAB.FieldByName('CGCTRA').AsString)) then
-                Transp.Transporta.CNPJCPF :=
-                  trim(SQLCAB.FieldByName('CGCTRA').AsString);
-            end
-            else
-            begin
-              if VALIDAcpf(trim(SQLCAB.FieldByName('CGCTRA').AsString)) then
-                Transp.Transporta.CNPJCPF :=
-                  trim(SQLCAB.FieldByName('CGCTRA').AsString);
-            end;
-
-          if trim(SQLCAB.FieldByName('TenTra').AsString) <> '' then
-            EndTra := trim(SQLCAB.FieldByName('TenTra').AsString) + '. ' +
-              SQLCAB.FieldByName('EndTra').AsString + ', ' +
-              trim(SQLCAB.FieldByName('numtra').AsString)
-          else
-            EndTra := SQLCAB.FieldByName('EndTra').AsString + ', ' +
-              trim(SQLCAB.FieldByName('numtra').AsString);
-
-          Transp.Transporta.xNome :=
-            (Copy(trim(SQLCAB.FieldByName('NOMTRA').AsString), 1, 60));
-          // Razão social ou nome                     showmessage(copy(linha,36,60));
-          Transp.Transporta.ie :=
-            (Copy(trim(SQLCAB.FieldByName('InsTra').AsString), 1, 14));
-          // IE                                                showmessage(copy(linha,96,14));
-          Transp.Transporta.xEnder :=
-            (Copy(trim(SQLCAB.FieldByName('RefTra').AsString), 1, 60));
-          // Endereço completo                     showmessage(copy(linha,110,60));
-          Transp.Transporta.xMun :=
-            (Copy(trim(SQLCAB.FieldByName('NumTra').AsString), 1, 60));
-          // Nome do Municipio                     showmessage(copy(linha,170,60));
-          Transp.Transporta.uf :=
-            (Copy(trim(SQLCAB.FieldByName('UfeTra').AsString), 1, 2));
-          // Sigla da UF                     showmessage(copy(linha,230,2));
-
-          with Transp.Vol.Add do
-          begin
-            qVol := SQLCAB.FieldByName('AltVol').AsInteger;
-            // Quantidade de volume                           showmessage(copy(linha,232,15));
-            esp := (Copy(trim(SQLCAB.FieldByName('EspFat').AsString), 1, 60));
-            // Especie dos volumes transportados                           showmessage(copy(linha,247,60));
-            marca := (Copy(trim(SQLCAB.FieldByName('MarFat').AsString), 1, 60));
-            // Marca dos volumes transportados                           showmessage(copy(linha,307,60));
-            pesoL := SQLCAB.FieldByName('InfLiq').AsFloat;
-            // Peso Liquido (em Kg)                           showmessage(copy(linha,367,15));
-            pesoB := SQLCAB.FieldByName('InfBrt').AsFloat;
-            // Peso Bruto (em Kg)                           showmessage(copy(linha,382,15));
-            nVol := (Copy(trim(SQLCAB.FieldByName('NROFAT').AsString), 1, 10));
-          end;
-          // end; // fim do EM0211
-
-          // =============================EM1211=============================//
-          if SQLCAB.FieldByName('UFECLI').AsString = 'EX' then
-          begin
-            exporta.UFembarq :=
-              Copy(trim(SQLCAB.FieldByName('UFEMB').AsString), 1, 2);
-            exporta.xLocEmbarq :=
-              Copy(trim(SQLCAB.FieldByName('LOCEMB').AsString), 1, 60);
-          end;
-          // Fim do EM1211
-          // =============================EM0212=============================//
-          if (Copy(Linha, 0, 6)) = 'EM0212' then
-          begin
-
-            Cobr.Fat.nfat := trim(SQLCAB.FieldByName('NroNfs').AsString);
-            Cobr.Fat.vOrig := SQLCAB.FieldByName('TOTGER').AsFloat;
-            // Valor Original showmessage(copy(linha,67,15));
-            Cobr.Fat.vDesc := SQLCAB.FieldByName('TOTDESCINC').AsFloat;
-            // Valor do desconto showmessage(copy(linha,82,15));
-            Cobr.Fat.vliq := SQLCAB.FieldByName('TOTGER').AsFloat;
-            // Valor Original showmessage(copy(linha,97,15));
-          end; // fim do EM0212
-          // =============================EM0213=============================//
-          if (Copy(Linha, 0, 6)) = 'EM0213' then
-          begin
-            SQLPARC := TSimpleDataSet.Create(self);
-            try
-
-              SQLPARC.Connection := SQLConnection1;
-              SQLPARC.ReadOnly := true;
-              SQLPARC.DataSet.CommandText := SelectTitulos('', '');
-              SQLPARC.Active := true;
-              SQLPARC.First;
-
-              while not SQLPARC.Eof do
-              begin
-                with Cobr.Dup.Add do
-                begin
-                  nDup := SQLPARC.FieldByName('NroPe3').AsString;
-                  // Número da fatura      showmessage(copy(linha,7,60));
-                  dVenc := SQLPARC.FieldByName('DtvPe3').AsDateTime;
-                  // Data de vencimento    showmessage(datetostr(strtodate(copy(Linha,75,2)+'/'+copy(Linha,72,2)+'/'+copy(Linha,67,4))));
-                  vDup := SQLPARC.FieldByName('VlpPe3').AsFloat;
-                  // Valor da duplicata    showmessage(copy(linha,77,15));
-                end; // with
-
-                SQLPARC.Next;
-              end;
-            finally
-              SQLPARC.Active := False;
-              FreeAndnil(SQLPARC);
-            end;
-            // end; // fim do EM0213
-            Readln(Arquivo, Linha); // Ler a proxima linha
-          end; // enquanto não chegar ao fim do Arquivo
-          // =============================EM0214=============================//
-          if (Copy(Linha, 0, 6)) = 'EM0214' then
-          begin
-            InfAdic.infCpl := trim(SQLCAB.FieldByName('OB1FAT').AsString) + ' '
-              + trim(SQLCAB.FieldByName('OB2FAT').AsString) + ' ' +
-              trim(SQLCAB.FieldByName('OB3FAT').AsString) + ' ' +
-              trim(SQLCAB.FieldByName('OB4FAT').AsString) + ' ' +
-              trim(SQLCAB.FieldByName('OB5FAT').AsString) + ' ' +
-              trim(SQLCAB.FieldByName('OB6FAT').AsString) + ' ' +
-              trim(SQLCAB.FieldByName('OB7FAT').AsString) + ' ' +
-              trim(SQLCAB.FieldByName('OB8FAT').AsString);
-
-          end; // fim do EM0214
-
-        end; // Fim das configurações da NFe
-        SQLCAB.Next;
-      end; // while
-
-      Result := true;
-
-    finally
-      SQLCAB.Active := False;
-      FreeAndnil(SQLITEM);
-    end;
-  finally
-    SQLCAB.Active := False;
-    FreeAndnil(SQLCAB);
-  end;
 end;
 
 function TForm1.LeftZero(Const Text: string; Const Tam: word;
