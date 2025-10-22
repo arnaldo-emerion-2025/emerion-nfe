@@ -40,7 +40,7 @@ uses
   WideStrings,
   DBXFirebird,
   SqlExpr,
-  SimpleDS, ACBrNFeDANFEFRDM, ACBrDFe, pcnConversao, System.Math,
+  SimpleDS, ACBrNFeDANFEFRDM, ACBrDFe, ACBrDFe.Conversao, System.Math,
   ACBrDFeReport, ACBrDFeDANFeReport, frxExportImage,
   frxExportHTML, frxExportBaseDialog;
 
@@ -74,21 +74,17 @@ type
     strxNome: string;
     strDenegada: String;
     function validaCliente(cgc, uf: String): TCliente;
+    function StrToTpEmis(const codigo: Integer): TACBrTipoEmissao;
     function RecuperaChaveEnviando: string;
     procedure ReescreveChaveEnviada(strChave, strProtocolo: string;
       strDEPCSefaz: string = '');
     function EnviaNFe2(RChave, RProtocolo: String; SN: Boolean;
       TipoEnvio: integer = 3): Boolean;
     function LimpaStr(str: String): String;
-    procedure ContigenciaDPEC;
     procedure DPEC_SEFAZ;
     procedure ConfirmaEnvioDPEC(strEnviado: string);
     procedure GravaProtcoloDpec(strPTo: string);
     procedure ValidaINI;
-
-    function SelectCabecalho(strTAB, ID_TAB: string): string;
-    function SelectItem(strItem, ID_TAB: string): string;
-    function SelectTitulos(strTitulos, ID_TAB: string): string;
     function LeftZero(Const Text: string; Const Tam: word;
       Const RetQdoVazio: String = ' '): string;
 
@@ -292,10 +288,6 @@ var
   Arquivo: TextFile;
   Linha: string;
   ArrumaDuplicada: TextFile;
-  id_estsip: string;
-  ArquivoSL: Tstringlist;
-  VSNprod, VSNAliq: Real;
-  Teste: Boolean;
 begin
 
   EnviaNFe2(RChave, RProtocolo, SN, TipoEnvio);
@@ -336,23 +328,6 @@ begin
     end;
   end;
 
-  { if Result then
-    begin
-    ArquivoSL := Tstringlist.Create;
-    ArquivoSL.Clear;
-    ArquivoSL.LoadFromFile(ACBrNFe1.NotasFiscais.Items[0].NomeArq);
-    AssignFile(ArrumaDuplicada, ACBrNFe1.NotasFiscais.Items[0].NomeArq);
-    Rewrite(ArrumaDuplicada);
-    write(ArrumaDuplicada, '<?xml version="1.0" encoding="UTF-8"?><nfeProc versao="3.10" xmlns="http://www.portalfiscal.inf.br/nfe">');
-    write(ArrumaDuplicada, ArquivoSL.Text);
-    write(ArrumaDuplicada, RProtocolo + '</nfeProc>');
-    CloseFile(ArrumaDuplicada);
-    ArquivoSL.Free;
-    end
-    else
-    DeleteFile(pchar(ACBrNFe1.NotasFiscais.Items[0].NomeArq));
-  }
-
   ACBrNFe1.NotasFiscais.Clear;
   ACBrNFe1.NotasFiscais.LoadFromFile(VCGeraisCaminhoArquivoRetorno + '\' +
     RChave + '-nfe.xml');
@@ -388,208 +363,6 @@ begin
   finally
     FreeAndnil(arq);
   end;
-
-end;
-
-function TForm1.SelectCabecalho(strTAB: string; ID_TAB: string): string;
-begin
-  Result := ' Select FatPed.CodEmp, ' + //
-    ' FatPced.DteRes, ' + //
-    ' FatPed.NumRes, ' + //
-    ' FatPed.SeqLib, ' + //
-    ' FatPed.SeqFat, ' + //
-    ' FatPed.QtiFat, ' + //
-    ' FatPed.DteFat, ' + //
-    ' FatPed.UfeFat, ' + //
-    ' FatPed.NroNfs, ' + //
-    ' FatPed.CodPfa, ' + //
-    ' FatPed.TipPfa, ' + //
-    ' FatPed.CodCf1, ' + //
-    ' FatPed.CodCf2, ' + //
-    ' FatPed.CodCli, ' + //
-    ' FatPed.FlgSai, ' + //
-    ' FatPed.FlgEnt, ' + //
-    ' FatPed.TipFrt, ' + //
-    ' FatPed.EspFat, ' + //
-    ' FatPed.MarFat, ' + //
-    ' FatPed.IntFin, ' + //
-    ' FatPed.DesNat, ' + //
-    ' FatPed.InsSub, ' + //
-    ' FatPed.CodTra, ' + //
-    ' FatPed.TraSda, ' + //
-    ' FatPed.NomTra, ' + //
-    ' FatPed.CgcTra, ' + //
-    ' FatPed.InsTra, ' + //
-    ' FatPed.TenTra, ' + //
-    ' FatPed.EndTra, ' + //
-    ' FatPed.RefTra, ' + //
-    ' FatPed.NumTra, ' + //
-    ' FatPed.BaiTra, ' + //
-    ' FatPed.CidTra, ' + //
-    ' FatPed.UfeTra, ' + //
-    ' FatPed.CepTra, ' + //
-    ' FatPed.NroFat, ' + //
-    ' FatPed.PlcTra, ' + //
-    ' FatPed.UfePlc, ' + //
-    ' FatPed.TefCli, ' + //
-    ' FatPed.EnfCli, ' + //
-    ' FatPed.RffCli, ' + //
-    ' FatPed.NrfCli, ' + //
-    ' FatPed.BafCli, ' + //
-    ' FatPed.CifCli, ' + //
-    ' FatPed.UffCli, ' + //
-    ' FatPed.CefCli, ' + //
-    ' FatPed.TenCli, ' + //
-    ' FatPed.EndCli, ' + //
-    ' FatPed.RefCli, ' + //
-    ' FatPed.NumCli, ' + //
-    ' FatPed.BaiCli, ' + //
-    ' FatPed.CidCli, ' + //
-    ' FatPed.UfeCli, ' + //
-    ' FatPed.CepCli, ' + //
-    ' FatPed.CgeCli, ' + //
-    ' FatPed.IneCli, ' + //
-    ' FatPed.InfLiq, ' + //
-    ' FatPed.InfBrt, ' + //
-    ' FatPed.AltVol, ' + //
-    ' FatPed.LotNfe, ' + //
-    ' FatPed.EnvNfe, ' + //
-    ' FatPed.SeqNfe, ' + //
-    ' FatPed.DteNfe, ' + //
-    ' FatPed.RecNfe, ' + //
-    ' FatPed.ProNfe, ' + //
-    ' FatPed.DopNfe, ' + //
-    ' FatPed.HreNfe, ' + //
-    ' FatPed.UsuNfe, ' + //
-    ' FatPed.DtePnf, ' + //
-    ' FatPed.HrePnf, ' + //
-    ' FatPed.ImpNfe, ' + //
-    ' FatPed.RetNfe, ' + //
-    ' FatPed.FlgAtu, ' + //
-    ' FatPed.Id_FinUff, ' + //
-    ' FatPed.Id_FinCif, ' + //
-    ' FatPed.Id_FinUfe, ' + //
-    ' FatPed.Id_FinCie, ' + //
-    ' FatPed.Id_TraUfe, ' + //
-    ' FatPed.Id_TraCie, ' + //
-    ' FatPed.TrbPis, ' + //
-    ' FatPed.PerPis, ' + //
-    ' FatPed.TrbCof, ' + //
-    ' FatPed.PerCof, ' + //
-    ' FatPed.TotFat, ' + //
-    ' FatPed.TotDsr, ' + //
-    ' FatPed.TotFrt, ' + //
-    ' FatPed.TotSeg, ' + //
-    ' FatPed.TotDes, ' + //
-    ' FatPed.TotIpi, ' + //
-    ' FatPed.TotPis, ' + //
-    ' FatPed.TotCof, ' + //
-    ' FatPed.BasIcm, ' + //
-    ' FatPed.TotIcm, ' + //
-    ' FatPed.BasSub, ' + //
-    ' FatPed.TotSub, ' + //
-    ' FatPed.TotGer, ' + //
-    ' FatPed.Ob1Fat, ' + //
-    ' FatPed.Ob2Fat, ' + //
-    ' FatPed.Ob3Fat, ' + //
-    ' FatPed.Ob4Fat, ' + //
-    ' FatPed.Ob5Fat, ' + //
-    ' FatPed.Ob6Fat, ' + //
-    ' FatPed.Ob7Fat, ' + //
-    ' FatPed.Ob8Fat, ' + //
-    ' FatPed.NfePis, ' + //
-    ' FatPed.NfeCof, ' + //
-    ' FatPed.Id_EstSip, ' + //
-    ' FatPed.FlgDenegada, ' + //
-    ' FinCli.NomCli, ' + //
-    ' FinCli.Em1Cli, ' + //
-    ' fatped.flgimp, ' + //
-    ' fatped.flgnfe, ' + //
-    ' fatped.id_fatped, ' + //
-    ' FatPed.SitFat, ' + //
-    ' FatPed.ENVDPEC, ' + //
-    ' FatPed.USUDPEC, ' + //
-    ' FatPed.JustDPEC, ' + //
-    ' FatPed.ProtDPEC, ' + //
-    ' FatPed.Libera_Resp, ' + //
-    ' FatPed.LocEmb, ' + //
-    ' FatPed.UFEmb, ' + //
-    ' FinCli.Pt1Cli||FinCli.Fo1Cli TelCli, ' + //
-    ' 0.0 TotImpII ' + //
-    ' From FatPed LEFT ' + //
-    ' JOIN FinCli ON (FatPed.CodCli = FinCli.CodCli) ' + //
-    ' Where FatPed.id_fatped = ' + ID_TAB + //
-    ' Order by FatPed.NroNfs '; //
-
-end;
-
-function TForm1.SelectItem(strItem: string; ID_TAB: string): string;
-begin
-  Result := ' Select FatPe2.NroPe2,' + //
-    ' ESTPRO.CBAPRO cEANTRIB, ' + //
-    ' ESTPRO.CBAEMB cEAN, ' + //
-    ' ESTPRO.CBAEMB DESIMP, ' + //
-    ' FatPe2.CodClp,' + //
-    ' FatPe2.CodGru,' + //
-    ' FatPe2.CodSub,' + //
-    ' FatPe2.CodPro,' + //
-    ' FatPe2.REFPE2,' + //
-    ' FatPe2.DesPe2,' + //
-    ' FatPe2.ObsPe2,' + //
-    ' FatPe2.ClsIpi,' + //
-    ' FatPe2.CodCfo,' + //
-    ' FatPe2.CodSt1,' + //
-    ' FatPe2.CodSt2,' + //
-    ' FatPe2.CodUnd,' + //
-    ' FatPe2.QtpPe2,' + //
-    ' FatPe2.VlqPe2 VluPe2,' + //
-    ' FatPe2.TotPe2,' + //
-    ' FatPe2.IcmPe2,' + //
-    ' FatPe2.BscIcm,' + //
-    ' FatPe2.RedIcm,' + //
-    ' FatPe2.BasIcm,' + //
-    ' FatPe2.TotIcm,' + //
-    ' FatPe2.IpiPe2,' + //
-    ' FatPe2.CSTIPI,' + //
-    ' FatPe2.TrbIpi,' + //
-    ' FatPe2.BscIpi,' + //
-    ' FatPe2.RedIpi,' + //
-    ' FatPe2.BasIpi,' + //
-    ' FatPe2.TotIpi,' + //
-    ' FatPe2.IcmSub,' + //
-    ' FatPe2.MrgSub,' + //
-    ' FatPe2.BaseSb,' + //
-    ' FatPe2.BasSub,' + //
-    ' FatPe2.TotSub,' + //
-    ' FatPe2.TotDsr,' + //
-    ' FatPe2.TotFrt,' + //
-    ' FatPe2.TotSeg,' + //
-    ' FatPe2.TotDes,' + //
-    ' FatPe2.BASPIS,' + //
-    ' FatPe2.CSTPIS,' + //
-    ' FatPe2.TOTPIS,' + //
-    ' FatPe2.ALIQPIS,' + //
-    ' FatPe2.BASCOF,' + //
-    ' FatPe2.CSTCOF,' + //
-    ' FatPe2.AliqCof,' + //
-    ' FatPe2.TotCof,' + //
-    ' FatPe2.NUMPEDCOMPRA,' + //
-    ' FatPe2.NUMITEMCOMPRA,' + //
-    ' Estite.VPFITE' + //
-    ' From FatPe2' + //
-    ' Join ESTPRO on CODGRU = fatpe2.codgru and codsub = fatpe2.codsub and codpro = fatpe2.codpro and codclp = fatpe2.codclp '
-    + ' Join ESTITE on CODGRU = fatpe2.codgru and codsub = fatpe2.codsub and codpro = fatpe2.codpro and codclp = fatpe2.codclp '
-    +
-  //
-    ' Where FatPe2.id_FatPed = ' + ID_TAB + //
-    ' Order by FatPe2.NroPe2';
-end;
-
-function TForm1.SelectTitulos(strTitulos, ID_TAB: string): string;
-begin
-  Result := ' Select FatPe3.NroPe3,' + ' FatPe3.DtvPe3,' +
-    ' FatPe3.VlpPe3 From FatPe3' + ' Where FatPe3.CodEmp = ' + ID_TAB +
-    ' Order by FatPe3.NroPe3';
 
 end;
 
@@ -759,8 +532,7 @@ begin
       Application.Terminate;
     end;
     // Valida��o
-    ACBrNFe1.Configuracoes.Geral.FormaEmissao :=
-      StrToTpEmis(Ok, IntToStr(VCGeraisFormaemissao + 1));
+    ACBrNFe1.Configuracoes.Geral.FormaEmissao := StrToTpEmis(VCGeraisFormaemissao);
     ACBrNFe1.Configuracoes.Geral.Salvar := VCGeraisSalvar;
     ACBrNFe1.Configuracoes.Arquivos.PathSalvar := VCGeraisCaminhoArquivosXML;
     ACBrNFe1.Configuracoes.Arquivos.PathSchemas :=
@@ -924,7 +696,6 @@ var
   achou: Boolean;
   chaveDup, protocoloDupl, aux: string;
   ArrumaDuplicada: TextFile;
-  Cdi: integer;
   intVezes: integer;
   strNome: String;
   dataMaior: Boolean;
@@ -1167,7 +938,6 @@ var
   achou: Boolean;
   chaveDup, protocoloDupl, aux: string;
   ArrumaDuplicada: TextFile;
-  Cdi: integer;
   intVezes: integer;
   strNome: String;
 begin
@@ -1200,160 +970,6 @@ begin
   end;
   // ACBrNFe1.NotasFiscais.GravarTXT;
   ACBrNFe1.NotasFiscais.Items[0].GravarXML('XML_' + IntToStr(ParNF) + '.xml');
-
-  (* try
-
-    Foi := true;
-
-    try
-    Memo2.Lines.Clear;
-    ACBrNFe1.Enviar(VNumLote, False);
-    finally
-    Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\LogGeral-' + IntToStr(VNumLote) + '.txt');
-    end;
-
-    ACBrNFe1.NotasFiscais.ImprimirPDF;
-
-    except
-    on E: Exception do
-    begin
-    // Validando retorno para NFe Denegada
-    if (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 110) or (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 205) or
-    (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 301) or (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 302) then
-    begin
-    strDenegada := 'S';
-
-    strNome := VCGeraisCaminhoArquivoRetorno + '\' + IntToStr(VNumLote) + ' - Denegada- ' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0]
-    .chNFe + '.xml';
-
-    CopyFile(pchar(VCGeraisCaminhoArquivoRetorno + '\' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].chNFe + '-nfe.xml'), pchar(strNome),
-    true);
-
-    ValidaRejeicao(IntToStr(ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat) + ' - ' + ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.xMotivo);
-    end;
-
-    Memo1.Lines.Text := (E.Message);
-    Foi := False;
-    chaveDup := '';
-
-    // ==============================
-
-    for i := 0 to Memo1.Lines.Count - 1 do
-    begin
-    colunai := pos('[', Memo1.Lines[i]);
-    colunaf := pos(']', Memo1.Lines[i]);
-
-    if ((colunai > 0) and (colunaf > colunai)) then
-    begin
-    chaveDup := '';
-    Linha := Memo1.Lines[i];
-    for j := colunai + 1 to colunaf - 1 do
-    if Linha[j] in ['0' .. '9'] then
-    begin
-    chaveDup := chaveDup + Linha[j];
-    end;
-
-    if length(chaveDup) <> 44 then
-    begin
-    achou := False;
-    Foi := False;
-    end
-    else
-    begin
-    achou := true;
-    end;
-    end;
-    end;
-
-    { if achou then
-    messagebox(Handle, pchar(E.Message), 'Envio NFe', mb_OK); }
-
-    if achou then
-    begin
-    ACBrNFe1.NotasFiscais.Clear;
-    ACBrNFe1.WebServices.Consulta.NFeChave := chaveDup;
-    ACBrNFe1.WebServices.Consulta.Executar;
-    aux := UTF8Encode(ACBrNFe1.WebServices.Consulta.RetWS);
-    colunai := pos('<protNFe', aux);
-    colunaf := pos('</protNFe>', aux);
-    protocoloDupl := '';
-
-    for j := colunai to colunaf + 9 do
-    protocoloDupl := protocoloDupl + aux[j];
-
-    Clipboard.Open;
-    try
-    Clipboard.AsText := chaveDup;
-    finally
-    Clipboard.Close;
-    end;
-
-    if messagebox(Handle, pchar('Numera��o de NFe j� enviada anteriormente com a chave: ' + chaveDup + #13 + //
-    'Caso seja a mesma NFe voc� pode optar por Sim para recuperar o XML.' + #13 +
-    //
-    'Em caso de d�vida poder� consultar no site ' + //
-    'http://www.nfe.fazenda.gov.br' + #13 + //
-    'Para facilitar a chave se encontra na �rea de transfer�ncia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
-    pchar('Envio de NFe'), MB_YESNO + MB_ICONQUESTION) = IDYES then
-    begin
-
-    if RecuperarXMLFATPED(chaveDup, protocoloDupl, False) then
-    begin
-    ACBrNFe1.NotasFiscais.LoadFromFile(ACBrNFe1.Configuracoes.Arquivos.GetPathNFe(now) + '\' + chaveDup + '-nfe.xml');
-    Foi := true;
-    end
-    else
-    Foi := False;
-    end
-    else
-    Foi := False;
-    end;
-
-    end;
-    end;
-
-    // =============================================
-
-    if not Foi then
-    begin
-
-    Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' + IntToStr(VNumLote) + '.txt');
-    ReescreveChaveEnviada('', '');
-
-    Application.Terminate;
-    SysUtils.Abort;
-    Application.Terminate;
-
-    end
-    else
-    begin
-
-    if (ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].nProt <> '') or (chaveDup <> '') then
-    begin
-
-    Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS);
-
-    /// LoadXML(Memo1, WBResposta);
-
-    intVezes := 0;
-    strNome := VCGeraisCaminhoArquivoRetorno + '\' + IntToStr(VNumLote) + ' - NF-e- ' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0]
-    .chNFe + '.xml';
-
-    CopyFile(pchar(VCGeraisCaminhoArquivoRetorno + '\' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].chNFe + '-nfe.xml'), pchar(strNome), true);
-    // showmessage(strNome);
-    RecChave := RecuperaChaveEnviando;
-
-    if RecChave <> ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].chNFe then
-    ReescreveChaveEnviada(ifthen(achou, //
-    chaveDup, //
-    ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].chNFe), //
-    ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].nProt);
-    end
-    else
-    begin
-    ReescreveChaveEnviada('', '');
-    end;
-    end; *)
 
 end;
 
@@ -1410,8 +1026,8 @@ begin
         bEnviarSNClick
       else if ACAO = 'COMPLEMENTOSN' then
         bComplementoSNClick
-      else if ACAO = 'DPEC' then
-        ContigenciaDPEC
+      //else if ACAO = 'DPEC' then
+        //ContigenciaDPEC
       else if ACAO = 'DPECSEFAZ' then
         DPEC_SEFAZ
       else if ACAO = 'XML' then
@@ -1857,35 +1473,28 @@ begin
 
 end;
 
+function TForm1.StrToTpEmis(const codigo: Integer): TACBrTipoEmissao;
+begin
+  case Codigo of
+    0: Result := teNormal;
+    1: Result := teContingencia;
+    2: Result := teSCAN;
+    3: Result := teDPEC;
+    4: Result := teFSDA;
+    5: Result := teSVCAN;
+    6: Result := teSVCRS;
+    7: Result := teSVCSP;
+    8: Result := teOffLine;
+  else
+    raise Exception.CreateFmt('Código inválido (%d). Esperado valor entre 1 e 9.', [Codigo]);
+  end;
+end;
+
 procedure TForm1.bConsultaDisponibilidade;
 var
   strAux: string;
 begin
   ACBrNFe1.WebServices.StatusServico.Executar;
-
-  // MemoResp.Lines.Text := ACBrNFe1.WebServices.StatusServico.RetWS;
-  // Memo1.Lines.Text := ACBrNFe1.WebServices.StatusServico.RetornoWS;
-  // LoadXML(ACBrNFe1.WebServices.StatusServico.RetornoWS, Memo1);
-
-  strAux := 'Status Servi�o';
-  strAux := strAux + #10#13 + 'tpAmb: ' +
-    TpAmbToStr(ACBrNFe1.WebServices.StatusServico.tpAmb);
-  strAux := strAux + #10#13 + 'verAplic: ' +
-    ACBrNFe1.WebServices.StatusServico.verAplic;
-  strAux := strAux + #10#13 + 'cStat: ' +
-    IntToStr(ACBrNFe1.WebServices.StatusServico.cStat);
-  strAux := strAux + #10#13 + 'xMotivo: ' +
-    ACBrNFe1.WebServices.StatusServico.xMotivo;
-  strAux := strAux + #10#13 + 'cUF: ' +
-    IntToStr(ACBrNFe1.WebServices.StatusServico.cUF);
-  strAux := strAux + #10#13 + 'dhRecbto: ' +
-    DateTimeToStr(ACBrNFe1.WebServices.StatusServico.dhRecbto);
-  strAux := strAux + #10#13 + 'tMed: ' +
-    IntToStr(ACBrNFe1.WebServices.StatusServico.TMed);
-  strAux := strAux + #10#13 + 'dhRetorno: ' +
-    DateTimeToStr(ACBrNFe1.WebServices.StatusServico.dhRetorno);
-  strAux := strAux + #10#13 + 'xObs: ' +
-    ACBrNFe1.WebServices.StatusServico.xObs;
 end;
 
 procedure TForm1.bConsultaNFeClick;
@@ -2098,8 +1707,7 @@ var
   achou: Boolean;
   chaveDup, protocoloDupl, aux: string;
   ArrumaDuplicada: TextFile;
-  Cdi: integer;
-  VSNprod, VSNAliq: Real;
+  VSNprod: Real;
 begin
 
   try
@@ -2273,7 +1881,7 @@ var
   achou: Boolean;
   chaveDup, protocoloDupl, aux: string;
   ArrumaDuplicada: TextFile;
-  VSNprod, VSNAliq: Real;
+  VSNprod: Real;
 begin
   try
     if fileexists(VCGeraisCaminhoArquivoLeitura + '\CPNOTA' + IntToStr(ParNF) +
@@ -2433,139 +2041,6 @@ begin
 
 end;
 
-procedure TForm1.ContigenciaDPEC;
-var
-  Arquivo: TextFile;
-  Linha: string;
-  i, j, colunai, colunaf: integer;
-  achou: Boolean;
-  chaveDup, protocoloDupl, aux: string;
-  ArrumaDuplicada: TextFile;
-  Cdi: integer;
-  intVezes: integer;
-begin
-  { achou := False;
-    chaveDup := '';
-
-    try
-    if fileexists(VCGeraisCaminhoArquivoLeitura + '\DPEC' + IntToStr(ParNF) + '.txt') = False then
-    begin
-    Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Arquivo de Envio de dados N�O encontrado';
-    Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO' + IntToStr(ParNF) + '.txt');
-    Application.Terminate;
-    end;
-    except
-    on E: Exception do
-    begin
-    Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Validando Caminho de Leitura: ' + E.Message;
-    Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO' + IntToStr(ParNF) + '.txt');
-    Application.Terminate;
-    end;
-    end;
-
-    // Busca informa��es do Arquivo de Leitura
-    try
-    EnviaNFe2('', '', False, 4);
-    Except
-    on E: Exception do
-    begin
-    ShowMessage(E.Message);
-    end;
-    end;
-
-    try
-    Foi := true;
-    try
-    Memo2.Lines.Clear;
-    ACBrNFe1.Enviar(VNumLote, False);
-
-    if ACBrNFe1.WebServices.EnviarDPEC.Executar then
-    begin
-    // protocolo de envio ao DPEC e impress�o do DANFE
-    ACBrNFe1.DANFE.ProtocoloNFe := ACBrNFe1.WebServices.EnviarDPEC.nRegDPEC + ' ' + DateTimeToStr
-    (ACBrNFe1.WebServices.EnviarDPEC.dhRegDPEC);
-    GravaProtcoloDpec(ACBrNFe1.DANFE.ProtocoloNFe);
-    // ACBrNFe1.NotasFiscais.Imprimir;
-    end;
-
-    finally
-    Memo2.Lines.Add('DPEC');
-    Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\LogGeral-' + IntToStr(VNumLote) + '.txt');
-    end;
-
-    ACBrNFe1.NotasFiscais.ImprimirPDF;
-
-    CopyFile(pchar(VCGeraisCaminhoArquivoRetorno + '\' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0]
-    .chNFe + '-nfe.xml'),
-    pchar(VCGeraisCaminhoArquivoRetorno + '\' + IntToStr(VNumLote)
-    + ' - NF-e- ' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].chNFe + '.xml'), true);
-
-    except
-    on E: Exception do
-    begin
-    Foi := False;
-    if pos('Duplicidade', E.Message) > 0 then
-    begin
-    aux := E.Message;
-    chaveDup := Copy(aux, pos('[chNFe:', aux) + 7, 44);
-    achou := true;
-    end
-    else
-    begin
-    Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Envio para DPEC: ' + E.Message;
-    Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' + IntToStr(ParNF) + '.txt');
-    Application.Terminate;
-    end;
-    end;
-    end;
-    ReescreveChaveEnviada(ifthen(achou, chaveDup, ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].chNFe),
-    ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].nProt);
-    // =============================================
-
-    if not Foi then
-    begin
-
-    Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' + IntToStr(VNumLote) + '.txt');
-    // ReescreveChaveEnviada('', '');
-
-    Application.Terminate;
-    SysUtils.Abort;
-    Application.Terminate;
-
-    end
-    else
-    begin
-
-    if (ACBrNFe1.WebServices.ConsultaDPEC.nRegDPEC <> '') or (chaveDup <> '') then
-    begin
-
-    Memo1.Lines.Text := UTF8Encode(ACBrNFe1.WebServices.Retorno.RetWS);
-
-    /// LoadXML(Memo1, WBResposta);
-
-    intVezes := 0;
-
-    CopyFile(pchar(VCGeraisCaminhoArquivoRetorno + '\' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0]
-    .chNFe + '-nfe.xml'),
-    pchar(VCGeraisCaminhoArquivoRetorno + '\' + IntToStr(VNumLote)
-    + ' - NF-e- ' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].chNFe + '.xml'), true);
-
-    RecChave := RecuperaChaveEnviando;
-
-    if RecChave <> ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].chNFe then
-    ReescreveChaveEnviada(ifthen(achou, chaveDup, ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].chNFe),
-    ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtNFe.Items[0].nProt);
-    end
-    else
-    begin
-    // ReescreveChaveEnviada('', '');
-    end;
-    end; }
-end;
-
 procedure TForm1.DPEC_SEFAZ;
 var
   Arquivo: TextFile;
@@ -2667,7 +2142,6 @@ var
   Arquivo: TextFile;
   Linha: string;
   i, j, colunai, colunaf: integer;
-  Cdi: integer;
   VSNprod, VSNAliq, vliq, voriginal, Pfcp, Vfcp: Real;
   codigoBarra, unidadeTributacao, numeroparcela, FCI, nfat, loja: string;
 begin
@@ -2886,7 +2360,7 @@ begin
         begin
 
           // Vers�o do processo de emiss�o da NF-e
-          with Ide.NFref.Add do
+          with Ide.NFref.New do
           begin
             if Copy(Linha, 7, 3) <> '000' then
               refNFe := Copy(Linha, 7, 44);
@@ -3054,7 +2528,7 @@ begin
       if (Copy(Linha, 1, 6)) = 'EM0206' then
       begin
 
-        with Det.Add do
+        with Det.New do
         begin
           Prod.nItem := strtoint(Copy(Linha, 9, 3));
           // Nro. do item
@@ -3220,7 +2694,7 @@ begin
               begin
                 if Prod.CFOP[1] in ['3'] then
                 begin
-                  with Prod.DI.Add do
+                  with Prod.DI.New do
                   begin
                     nDi := Copy(Linha, 7, 10);
                     dDi := strtodate(Copy(Linha, 17, 10));
@@ -3232,9 +2706,8 @@ begin
                     // Ler a proxima linha
                     while (Copy(Linha, 0, 6)) = 'EM1208' do
                     begin
-                      Cdi := 1;
                       if Prod.CFOP[1] in ['3'] then
-                        with adi.Add do
+                        with adi.New do
                         begin
 
                           begin
@@ -3268,7 +2741,7 @@ begin
           begin
             while (Copy(Linha, 0, 6)) = 'EM3207' do
             begin
-              with Prod.rastro.Add do
+              with Prod.rastro.New do
               // quando usar Medicamentos usa Prod.med, nosso caso � s� rastreamento ent�o Pro.rastro
               begin
                 nLote := trim(Copy(Linha, 7, 20));
@@ -3288,7 +2761,7 @@ begin
           begin
             while (Copy(Linha, 0, 6)) = 'EM4207' do
             begin
-              with Prod.med.Add do
+              with Prod.med.New do
               begin
                 nLote := trim(Copy(Linha, 7, 20));
                 qLote := StrToFloat(StringReplace(trim(Copy(Linha, 27, 15)),
@@ -3872,7 +3345,7 @@ begin
               03:
                 Imposto.COFINS.CST := cof03;
               04:
-                Imposto.COFINS.CST := cof04;
+                Imposto.COFINS.CST :=  cof04;
               06:
                 Imposto.COFINS.CST := cof06;
               07:
@@ -4014,7 +3487,7 @@ begin
         Transp.Transporta.uf := (Copy(Linha, 230, 2));
         // Sigla da UF                     showmessage(copy(linha,230,2));
 
-        with Transp.Vol.Add do
+        with Transp.Vol.New do
         begin
           qVol := strtoint(Copy(Linha, 232, 15));
           // Quantidade de volume                           showmessage(copy(linha,232,15));
@@ -4060,7 +3533,7 @@ begin
         loja := Copy(Linha, 113, 4);
         if loja = 'loja' then
         begin
-          with pag.Add do
+          with pag.New do
           begin
             tPag := fpBoletoBancario;
             vPag := StrToFloat(StringReplace((Copy(Linha, 97, 15)), '.', ',',
@@ -4079,7 +3552,7 @@ begin
 {$REGION 'Forma de Pagamento'}
         if (Ide.finNFe <> fnNormal) then
         begin
-          with pag.Add do
+          with pag.New do
           begin
             tPag := fpSemPagamento;
             vPag := 0;
@@ -4087,7 +3560,7 @@ begin
         end
         else
         begin
-          with pag.Add do
+          with pag.New do
           begin
             tPag := fpDuplicataMercantil; // fpDuplicata
             vPag := StrToFloat(StringReplace((Copy(Linha, 77, 15)), '.', ',',
@@ -4099,7 +3572,7 @@ begin
         if ((strtodate(Copy(Linha, 75, 2) + '/' + Copy(Linha, 72, 2) + '/' +
           Copy(Linha, 67, 4)) > Date) or (strtoIntDef(numeroparcela, 0) > 1)) then
         begin
-          with Cobr.Dup.Add do
+          with Cobr.Dup.New do
           begin
             numeroparcela := (Copy(Linha, 7, 60));
             nDup := LeftZero((Copy(numeroparcela, pos('-', numeroparcela) + 1,
