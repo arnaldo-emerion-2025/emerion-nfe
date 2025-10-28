@@ -32,6 +32,8 @@ uses
   Wininet,
   StrUtils,
   uFuncoes,
+  uJsonHelper,
+  uNFeJson,
   ACBrUtil,
   ComCtrls,
   ACBrNFeDANFEFR,
@@ -87,7 +89,6 @@ type
     function LeftZero(Const Text: string; Const Tam: word;
       Const RetQdoVazio: String = ' '): string;
 
-    // Antigos bot�es do NFEEMERION
     procedure bConfigClick;
     procedure bEnviarNfeClick;
     procedure bEnviarNfeClick2;
@@ -202,7 +203,7 @@ begin
   try
     try
       Memo2.Lines.Clear;
-      ACBrNFe1.Enviar(VNumLote, False);
+      ACBrNFe1.Enviar(VNumLote, True, True);
     finally
       Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\LogGeral-' +
         IntToStr(VNumLote) + '.txt');
@@ -225,7 +226,7 @@ begin
       if ((ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 539) or
         (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 502) or
         (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 204) or
-        (pos(IntToStr(VNumLote) + '->Rejei��o: Duplicidade de NF-e', E.Message)
+        (pos(IntToStr(VNumLote) + '->Rejeicao: Duplicidade de NF-e', E.Message)
         > 0)) then
         Result := true
       else
@@ -301,7 +302,7 @@ begin
     Ini.WriteInteger('Geral', 'DANFE', VCGeraisDanfe);
     // 0=RETRATO  / 1=PAISAGEM
     Ini.WriteInteger('Geral', 'FormaEmissao', VCGeraisFormaemissao);
-    // 0=NORMAL  / 1=CONTIG�NCIA  / 2=SCAN  / 3=DPEC  / 4=FSDA
+    // 0=NORMAL  / 1=CONTIGENCIA  / 2=SCAN  / 3=DPEC  / 4=FSDA
     Ini.WriteString('Geral', 'LogoMarca', VCGeraisLogo);
     Ini.WriteBool('Geral', 'Salvar', true);
     // Salvar os arquivos de envio e resposta
@@ -321,7 +322,7 @@ begin
 
     Ini.WriteString('WebService', 'UF', VWebSUF);
     Ini.WriteInteger('WebService', 'Ambiente', VWebSAmbiente);
-    // 0=produ��o  / 1=homologa��o
+    // 0=producao  / 1=homologacao
     Ini.WriteBool('WebService', 'Visualizar', true);
 
     // ====================== PROXY   ===============================================
@@ -347,7 +348,7 @@ begin
   Ini := TIniFile.Create(IniFile);
   try
 
-    // ===== Achando o Certificado pelo Caminho ou pelo numero de s�rie
+    // ===== Achando o Certificado pelo Caminho ou pelo numero de serie
 {$IFDEF ACBrNFeOpenSSL}
     ACBrNFe1.Configuracoes.Certificados.Certificado :=
       Ini.readString('Certificado', 'Caminho', '');
@@ -358,7 +359,7 @@ begin
     ACBrNFe1.Configuracoes.Certificados.NumeroSerie :=
       Ini.readString('Certificado', 'NumSerie', '');
 {$ENDIF}
-    // ===== Setando as configura��es Gerais
+    // ===== Setando as configuracoes Gerais
     VCGeraisFormaemissao := Ini.ReadInteger('Geral', 'FormaEmissao', 0);
     VCGeraisSalvar := Ini.ReadBool('Geral', 'Salvar', true);
     VCGeraisCaminhoArquivosXML := Ini.readString('Geral', 'PathXML', '');
@@ -374,12 +375,11 @@ begin
     VCGeraisCaminhoArquivoFileImpressao :=
       Ini.readString('Geral', 'FileImpressao', '');
 
-    // Validando as Pastas necess�rias para o envio da NFe
     if not DirectoryExists(VCGeraisCaminhoArquivosXML) then
     begin
       messagebox(Handle, pchar('Caminho para a pasta XML (' +
         VCGeraisCaminhoArquivosXML +
-        ') n�o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nao encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -388,7 +388,7 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Leitura (' +
         VCGeraisCaminhoArquivoLeitura +
-        ') n�o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nao encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -397,7 +397,7 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Retorno (' +
         VCGeraisCaminhoArquivoRetorno +
-        ') n�o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nao encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -406,7 +406,7 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Cancelada (' +
         VCGeraisCaminhoArquivoCancelada +
-        ') n�o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nao encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -415,7 +415,7 @@ begin
     begin
       messagebox(Handle, pchar('Caminho para a pasta Danfe (' +
         VCGeraisCaminhoArquivoDANFE +
-        ') n�o encontrado. Verifique e tente novamente.'), 'NFE Emerion',
+        ') nao encontrado. Verifique e tente novamente.'), 'NFE Emerion',
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
@@ -428,7 +428,7 @@ begin
         MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
-    // Valida��o
+    // Validacao
     ACBrNFe1.Configuracoes.Geral.FormaEmissao :=
       StrToTpEmis(VCGeraisFormaemissao);
     ACBrNFe1.Configuracoes.Geral.Salvar := VCGeraisSalvar;
@@ -455,7 +455,7 @@ begin
     ACBrNFe1.Configuracoes.Arquivos.DownloadDFe.PathDownload :=
       VCGeraisCaminhoArquivoDownload;
 
-    // ====== Setando as configura�oes WebService
+    // ====== Setando as configuracoes WebService
     VSIte := Ini.readString('WebService', 'SITE', '');
     VWebSUF := Ini.readString('WebService', 'UF', '');
     VWebSAmbiente := Ini.ReadInteger('WebService', 'Ambiente', 0);
@@ -471,7 +471,7 @@ begin
 
     ACBrNFe1.Configuracoes.WebServices.Visualizar := VWebSVisualizar;
 
-    // ===== Setando as configura��es de Proxy
+    // ===== Setando as configuracoes de Proxy
     VProxyHost := Ini.readString('Proxy', 'Host', '');
     VProxyPorta := Ini.readString('Proxy', 'Porta', '');
     VProxyUsuario := Ini.readString('Proxy', 'User', '');
@@ -481,7 +481,7 @@ begin
     ACBrNFe1.Configuracoes.WebServices.ProxyUser := VProxyUsuario;
     ACBrNFe1.Configuracoes.WebServices.ProxyPass := VProxySenha;
 
-    // Setando as Configura�oes Gerais
+    // Setando as Configuracoes Gerais
     VCGeraisDanfe := Ini.ReadInteger('Geral', 'DANFE', 0);
     VCGeraisLogo := Ini.readString('Geral', 'LogoMarca', '');
     if ACBrNFe1.DANFE <> nil then
@@ -493,8 +493,8 @@ begin
     if trim(VCGeraisCaminhoArquivoFileImpressao) = '' then
     begin
       messagebox(0,
-        'N�o foi informado tipo de impress�o. Verifique e tente novamente.',
-        'Emiss�o de NFe', MB_OK + MB_ICONINFORMATION);
+        'Nao foi informado tipo de impressao. Verifique e tente novamente.',
+        'Emissao de NFe', MB_OK + MB_ICONINFORMATION);
       Application.Terminate;
     end;
 
@@ -508,9 +508,9 @@ begin
     end
     else
     begin
-      messagebox(0, pwidechar('N�o localizado o arquivo de impress�o do DANFE: '
+      messagebox(0, pwidechar('Nao localizado o arquivo de impressao do DANFE: '
         + VCGeraisCaminhoArquivoTipoImpressao +
-        '. Verifique e tente novamente.'), 'Emiss�o de NFe',
+        '. Verifique e tente novamente.'), 'Emissao de NFe',
         MB_OK + MB_ICONINFORMATION);
       Application.Terminate;
     end;
@@ -564,7 +564,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados NAO encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -573,7 +573,7 @@ begin
     Application.Terminate;
   end;
 
-  // Busca informa��es do Arquivo de Leitura
+  // Busca informacoes do Arquivo de Leitura
   try
     EnviaNFe2('', '', False);
   Except
@@ -591,8 +591,7 @@ begin
       Memo2.Lines.Clear;
       ACBrNFe1.NotasFiscais.GravarXML(VCGeraisCaminhoArquivosXML +
         '\xmlantesdeenviar.xml');
-      // ACBrNFe1.NotasFiscais[0].XML;
-      ACBrNFe1.Enviar(VNumLote, False);
+      ACBrNFe1.Enviar(VNumLote, True, True);
     finally
       Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\LogGeral-' +
         IntToStr(VNumLote) + '.txt');
@@ -699,14 +698,14 @@ begin
         end;
 
         if messagebox(Handle,
-          pchar('Numera��o de NFe j� enviada anteriormente com a chave: ' +
+          pchar('Numeracao de NFe ja enviada anteriormente com a chave: ' +
           chaveDup + #13 +
-          'Caso seja a mesma NFe voc� pode optar por Sim para recuperar o XML.'
+          'Caso seja a mesma NFe voce pode optar por Sim para recuperar o XML.'
           + #13 +
 
-          'Em caso de d�vida poder� consultar no site ' +
+          'Em caso de duvida podera consultar no site ' +
           'http://www.nfe.fazenda.gov.br' + #13 +
-          'Para facilitar a chave se encontra na �rea de transfer�ncia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
+          'Para facilitar a chave se encontra na area de transferencia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
           pchar('Envio de NFe'), MB_YESNO + MB_ICONQUESTION) = IDYES then
         begin
 
@@ -784,7 +783,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados NAO encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -793,7 +792,7 @@ begin
     Application.Terminate;
   end;
 
-  // Busca informa��es do Arquivo de Leitura
+  // Busca informacoes do Arquivo de Leitura
   try
     EnviaNFe2('', '', False);
     ACBrNFe1.NotasFiscais.Validar;
@@ -812,8 +811,12 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   AtualizaIni;
+  FormatSettings.DecimalSeparator := ',';
 
   ValidaINI;
+
+  sendNFe();
+  readJson('{"inicio":{"ufeEmp":"SP","SeqNFe":"35201003089573000121550010000450240000870646","LotNfe":0},"contigencia":{},"cabecalho":{"date":"35"}}');
 
   strDenegada := 'N';
 
@@ -922,7 +925,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados NAO encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -940,9 +943,9 @@ begin
   if not fileexists(trim(Copy(Linha, 4, 400))) then
   begin
     Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Arquivo n�o existe.2';
+    Memo1.Lines.Text := 'Arquivo nao existe.2';
     Memo1.Lines.Add
-      ('Arquivo do XML da NFe n�o foi encontrado para o cancelamento.');
+      ('Arquivo do XML da NFe nao foi encontrado para o cancelamento.');
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
       IntToStr(ParNF) + '.txt');
     Application.Terminate;
@@ -966,7 +969,7 @@ begin
       Memo1.Lines.Text := (E.Message);
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
         IntToStr(ParNF) + '.txt');
-      if trim(E.Message) = trim('Rejei��o: Cancelamento para NF-e j� cancelada')
+      if trim(E.Message) = trim('Rejeicao: Cancelamento para NF-e ja cancelada')
       then
         if fileexists(VCGeraisCaminhoArquivoRetorno + '\' + aux + '-nfe.xml')
         then
@@ -1004,7 +1007,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados NAO encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1022,9 +1025,9 @@ begin
   if not fileexists(trim(Copy(Linha, 4, 400))) then
   begin
     Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Arquivo n�o existe.2';
+    Memo1.Lines.Text := 'Arquivo nao existe.2';
     Memo1.Lines.Add
-      ('Arquivo do XML da NFe n�o foi encontrado para o cancelamento.');
+      ('Arquivo do XML da NFe nao foi encontrado para o cancelamento.');
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
       IntToStr(ParNF) + '.txt');
     Application.Terminate;
@@ -1061,7 +1064,7 @@ begin
       Memo1.Lines.Text := (E.Message);
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CN' +
         IntToStr(ParNF) + '.txt');
-      if trim(E.Message) = trim('Rejei��o: Cancelamento para NF-e j� cancelada')
+      if trim(E.Message) = trim('Rejeicao: Cancelamento para NF-e ja cancelada')
       then
         if fileexists(VCGeraisCaminhoArquivoRetorno + '\' + aux + '-nfe.xml')
         then
@@ -1089,7 +1092,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados NAO encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1112,7 +1115,7 @@ begin
     Foi := true;
     try
       Memo2.Lines.Clear;
-      ACBrNFe1.Enviar(VNumLote, False);
+      ACBrNFe1.Enviar(VNumLote, True, True);
     finally
       Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\LogGeral-' +
         IntToStr(VNumLote) + '.txt');
@@ -1185,12 +1188,12 @@ begin
         end;
 
         if messagebox(Handle,
-          pchar('Numera��o de NFe j� enviada anteriormente com a chave: ' +
+          pchar('Numeracao de NFe ja enviada anteriormente com a chave: ' +
           chaveDup + #13 +
-          'Caso seja a mesma NFe voc� pode optar por Sim para recuperar o XML.'
-          + #13 + 'Em caso de d�vida poder� consultar no site ' +
+          'Caso seja a mesma NFe voce pode optar por Sim para recuperar o XML.'
+          + #13 + 'Em caso de duvida podera consultar no site ' +
           'http://www.nfe.fazenda.gov.br' + #13 +
-          'Para facilitar a chave se encontra na �rea de transfer�ncia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
+          'Para facilitar a chave se encontra na area de transferencia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
           pchar('Envio de NFe'), MB_YESNO + MB_ICONQUESTION) = IDYES then
         begin
           if RecuperarXMLFATPED(chaveDup, protocoloDupl, False) then
@@ -1276,12 +1279,12 @@ begin
   then
   begin
     Result.isDenegada := true;
-    status := 'Inapto � emiss�o de NFe';
+    status := 'Inapto a emissao de NFe';
   end
   else
   begin
     Result.isDenegada := False;
-    status := 'Apto � emiss�o de NFe';
+    status := 'Apto a emissao de NFe';
   end;
 
   Result.ie := ACBrNFe1.WebServices.ConsultaCadastro.RetConsCad.InfCad.
@@ -1289,7 +1292,7 @@ begin
   Result.cgc := ACBrNFe1.WebServices.ConsultaCadastro.RetConsCad.InfCad.
     Items[0].CNPJ;
 
-  // Procedure para exibir os dados do cliente em um formul�rio
+  // Procedure para exibir os dados do cliente em um formulario
   consultaCliente(Result.cgc, Result.ie, status);
 end;
 
@@ -1308,7 +1311,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados NAO encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CS' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1326,9 +1329,9 @@ begin
   if not fileexists(trim(Copy(Linha, 1, 900))) then
   begin
     Memo1.Lines.Clear;
-    Memo1.Lines.Text := 'Arquivo n�o existe.';
+    Memo1.Lines.Text := 'Arquivo nao existe.';
     Memo1.Lines.Add
-      ('Arquivo do XML da NFe n�o foi encontrado para a Consulta ao SEFAZ.');
+      ('Arquivo do XML da NFe nao foi encontrado para a Consulta ao SEFAZ.');
     Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-CS' +
       IntToStr(ParNF) + '.txt');
     Application.Terminate;
@@ -1370,14 +1373,14 @@ begin
     begin
       Memo1.Lines.Clear;
 
-      Memo1.Lines.Text := 'Arquivo de Localiza��o de NFE N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Localizacao de NFE NAO encontrado';
 
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
         IntToStr(ParNF) + '.txt');
-      messagebox(0, pchar('Arquivo n�o localizado: ' +
+      messagebox(0, pchar('Arquivo nao localizado: ' +
         VCGeraisCaminhoArquivoLeitura + '\DANFE' + IntToStr(ParNF) + '.txt' +
         '. Favor verifique se a pasta existe e tente novamente.'),
-        'Reimpress�o do Danfe', MB_OK + MB_ICONEXCLAMATION);
+        'Reimpressao do Danfe', MB_OK + MB_ICONEXCLAMATION);
 
       Application.Terminate;
 
@@ -1386,7 +1389,7 @@ begin
     on E: Exception do
     begin
       messagebox(0, pchar('Erro ao verificar os arquivos: ' + E.Message),
-        'Reimpress�o do Danfe', MB_OK + MB_ICONEXCLAMATION);
+        'Reimpressao do Danfe', MB_OK + MB_ICONEXCLAMATION);
       Application.Terminate;
     end;
   end;
@@ -1408,14 +1411,14 @@ begin
     end
     else
     begin
-      messagebox(0, pchar('XML n�o encontrado em: ' + Linha +
-        '. Favor verifique.'), 'Reimpress�o da Danfe', MB_OK + MB_ICONWARNING);
+      messagebox(0, pchar('XML nao encontrado em: ' + Linha +
+        '. Favor verifique.'), 'Reimpressao da Danfe', MB_OK + MB_ICONWARNING);
     end;
   except
     on E: Exception do
     begin
-      messagebox(0, pchar('Erro na Gera��o da Danfe : ' + E.Message),
-        'Reimpress�o do Danfe', MB_OK + MB_ICONEXCLAMATION);
+      messagebox(0, pchar('Erro na Geracao da Danfe : ' + E.Message),
+        'Reimpressao do Danfe', MB_OK + MB_ICONEXCLAMATION);
     end;
 
   end;
@@ -1491,7 +1494,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados NAO encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO' +
         IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1504,7 +1507,7 @@ begin
   Reset(Arquivo);
   Readln(Arquivo, Linha);
 
-  // Busca informa��es do Arquivo de Leitura
+  // Busca informacoes do Arquivo de Leitura
   try
     EnviaNFe2('', '', true);
   Except
@@ -1519,7 +1522,7 @@ begin
 
     try
       Memo2.Lines.Clear;
-      ACBrNFe1.Enviar(VNumLote, False);
+      ACBrNFe1.Enviar(VNumLote, True, True);
     finally
       Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\LogGeral-' +
         IntToStr(VNumLote) + '.txt');
@@ -1583,12 +1586,12 @@ begin
         end;
 
         if messagebox(Handle,
-          pchar('Numera��o de NFe j� enviada anteriormente com a chave: ' +
+          pchar('Numeracao de NFe ja enviada anteriormente com a chave: ' +
           chaveDup + #13 +
-          'Caso seja a mesma NFe voc� pode optar por Sim para recuperar o XML.'
-          + #13 + 'Em caso de d�vida poder� consultar no site ' +
+          'Caso seja a mesma NFe voce pode optar por Sim para recuperar o XML.'
+          + #13 + 'Em caso de duvida podera consultar no site ' +
           'http://www.nfe.fazenda.gov.br' + #13 +
-          'Para facilitar a chave se encontra na �rea de transfer�ncia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
+          'Para facilitar a chave se encontra na area de transferencia. Basta utilizar CTRL+V para colar a chave no campo de pesquisa.'),
           pchar('Envio de NFe'), MB_YESNO + MB_ICONQUESTION) = IDYES then
         begin
 
@@ -1661,7 +1664,7 @@ begin
       '.txt') = False then
     begin
       Memo1.Lines.Clear;
-      Memo1.Lines.Text := 'Arquivo de Envio de dados N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Envio de dados NAO encontrado';
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-ERRO-CP'
         + IntToStr(ParNF) + '.txt');
       Application.Terminate;
@@ -1674,7 +1677,7 @@ begin
   Reset(Arquivo);
   Readln(Arquivo, Linha);
 
-  // Busca informa��es do Arquivo de Leitura
+  // Busca informacoes do Arquivo de Leitura
   try
     EnviaNFe2('', '', true);
   Except
@@ -1689,7 +1692,7 @@ begin
 
     try
       Memo2.Lines.Clear;
-      ACBrNFe1.Enviar(VNumLote, False);
+      ACBrNFe1.Enviar(VNumLote, True, True);
     finally
       Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\LogGeral-' +
         IntToStr(VNumLote) + '.txt');
@@ -1823,11 +1826,11 @@ begin
     begin
       Memo1.Lines.Clear;
 
-      Memo1.Lines.Text := 'Arquivo de Localiza��o de DPEC N�O encontrado';
+      Memo1.Lines.Text := 'Arquivo de Localizacao de DPEC NAO encontrado';
 
       Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
         IntToStr(ParNF) + '.txt');
-      messagebox(0, pchar('Arquivo n�o localizado: ' +
+      messagebox(0, pchar('Arquivo nao localizado: ' +
         VCGeraisCaminhoArquivoLeitura + '\DEPCSEFAZ' + IntToStr(ParNF) + '.txt'
         + '. Favor verifique se a pasta existe e tente novamente.'),
         'Envio DPEC->SeFaz.', MB_OK + MB_ICONEXCLAMATION);
@@ -1839,7 +1842,7 @@ begin
     on E: Exception do
     begin
       messagebox(0, pchar('Erro ao verificar os arquivos: ' + E.Message),
-        'Reimpress�o do Danfe', MB_OK + MB_ICONEXCLAMATION);
+        'Reimpressao do Danfe', MB_OK + MB_ICONEXCLAMATION);
 
       Memo1.Lines.Clear;
       Memo1.Lines.Text := 'Envio DPEC->SeFaz : ' + E.Message;
@@ -1862,7 +1865,7 @@ begin
 
           ACBrNFe1.NotasFiscais.Clear;
           ACBrNFe1.NotasFiscais.LoadFromFile(Linha);
-          ACBrNFe1.Enviar(IntToStr(ParNF), False);
+          ACBrNFe1.Enviar(IntToStr(ParNF), True, True);
 
           ReescreveChaveEnviada(ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.
             Items[0].chDFe, '');
@@ -1883,15 +1886,15 @@ begin
       end
       else
       begin
-        messagebox(0, pchar('XML n�o encontrado em: ' + Linha +
-          '. Favor verifique.'), 'Reimpress�o da Danfe',
+        messagebox(0, pchar('XML nao encontrado em: ' + Linha +
+          '. Favor verifique.'), 'Reimpressao da Danfe',
           MB_OK + MB_ICONWARNING);
       end;
     except
       on E: Exception do
       begin
-        messagebox(0, pchar('Erro na Gera��o da Danfe : ' + E.Message),
-          'Reimpress�o do Danfe', MB_OK + MB_ICONEXCLAMATION);
+        messagebox(0, pchar('Erro na Geracao da Danfe : ' + E.Message),
+          'Reimpressao do Danfe', MB_OK + MB_ICONEXCLAMATION);
       end;
 
     end;
@@ -1951,7 +1954,7 @@ begin
   // Vai para Primeira Linha
   Reset(Arquivo);
 
-  // L� a Linha
+  // Le a Linha
   Readln(Arquivo, Linha);
 
   with ACBrNFe1.NotasFiscais.Add.NFe do
@@ -1985,10 +1988,10 @@ begin
         begin
           // forma de Pagamento
           Ide.cUF := strtoint(Copy(Linha, 7, 2));
-          // C�digo da UF do emitente do documento fiscal
+          // Codigo da UF do emitente do documento fiscal
           Ide.natOp := trim(Copy(Linha, 18, 60));
-          // Descri��o da natureza de opera��o
-          // Indicador da forma de pagamento 0-Pagamento � vista 1-Pagamento � prazo 2-Outros showmessage(copy(Linha,78,1));
+          // Descricao da natureza de operacao
+          // Indicador da forma de pagamento 0-Pagamento a vista 1-Pagamento a prazo 2-Outros showmessage(copy(Linha,78,1));
           if Copy(Linha, 78, 1) = '0' then
             Ide.indPag := ipVista
           else if Copy(Linha, 78, 1) = '1' then
@@ -1996,18 +1999,18 @@ begin
           else
             Ide.indPag := ipOutras;
           Ide.modelo := strtoint(Copy(Linha, 79, 2));
-          // C�digo do Modelo do documento fiscal
+          // Codigo do Modelo do documento fiscal
           Ide.serie := strtoint(Copy(Linha, 81, 1));
-          // S�rie do documento fiscal
+          // Serie do documento fiscal
           Ide.nNF := strtoint(Copy(Linha, 82, 9));
-          // N�mero do documento fiscal
+          // Numero do documento fiscal
           VNumLote := strtoint(Copy(Linha, 82, 9)); // numero do lote de envio
           try
             // Ide.dEmi := strtodate(Copy(Linha, 99, 2) + '/' + Copy(Linha, 96, 2) + '/' + Copy(Linha, 91, 4));
             Ide.dEmi := now;
-            // Data de emiss�o do documento fiscal
+            // Data de emissao do documento fiscal
           except
-            Memo1.Lines.Text := 'Problemas com a Data de Emiss�o da nota';
+            Memo1.Lines.Text := 'Problemas com a Data de Emissao da nota';
             Memo1.Lines.SaveToFile(VCGeraisCaminhoArquivoRetorno + '\LogErro-' +
               IntToStr(VNumLote) + '.txt');
             Application.Terminate;
@@ -2024,7 +2027,7 @@ begin
           else
             Ide.tpNF := tnEntrada;
           Ide.cMunFG := strtoint(Copy(Linha, 112, 7));
-          // C�digo do Municipio de Ocorr�ncia do Fato Gerador
+          // Codigo do Municipio de Ocorrencia do Fato Gerador
           // Formato de Impressao do DANFE
           if (Copy(Linha, 119, 1)) = '1' then
             Ide.tpImp := tiRetrato
@@ -2036,17 +2039,17 @@ begin
           else if TipoEnvio = 4 then
             Ide.tpEmis := teDPEC;
 
-          // Forma de emiss�o da NF-e
+          // Forma de emissao da NF-e
           Ide.cDV := strtoint(Copy(Linha, 121, 1));
           // Digito verificador da Chave de Acesso da NF-e
 
-          // Identifica��o do Ambiente
+          // Identificacao do Ambiente
           if (VWebSAmbiente) = 1 then
             Ide.tpAmb := taHomologacao
           else
             Ide.tpAmb := taProducao;
 
-          // Finalidade de emiss�o da NF-e
+          // Finalidade de emissao da NF-e
           case (strtoint(Copy(Linha, 123, 1))) of
             1:
               Ide.finNFe := fnNormal;
@@ -2070,7 +2073,7 @@ begin
 
           Ide.procEmi := peAplicativoContribuinte;
 
-          // Processo de emiss�o da NF-e
+          // Processo de emissao da NF-e
           Ide.verProc := Copy(Linha, 125, 20);
 
           case (strtoint(Copy(Linha, 145, 2))) of
@@ -2110,7 +2113,7 @@ begin
         else if (Copy(Linha, 0, 6)) = 'EM1202' then
         begin
 
-          // Vers�o do processo de emiss�o da NF-e
+          // Versao do processo de emissao da NF-e
           with Ide.NFref.New do
           begin
             if Copy(Linha, 7, 3) <> '000' then
@@ -2132,7 +2135,7 @@ begin
           if (Copy(Linha, 0, 6)) = 'EM0203' then
           begin
 
-            // Raz�o social obrigat�ria para ambiente de homologa��o
+            // Razao social obrigatoria para ambiente de homologacao
             if VWebSAmbiente = 1 then
               strxNome :=
                 'NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL'
@@ -2145,22 +2148,22 @@ begin
             else
               emit.CNPJCPF := trim((Copy(Linha, 21, 14)));
             emit.xNome := trim(strxNome);
-            // copy(Linha, 35, 60); // Raz�o social ou Nome do emitente
+            // copy(Linha, 35, 60); // Razao social ou Nome do emitente
             emit.xFant := trim(Copy(Linha, 95, 60)); // Nome fantasia
             emit.EnderEmit.xLgr := trim(Copy(Linha, 155, 60)); // Logradouro
-            emit.EnderEmit.nro := trim(Copy(Linha, 215, 60)); // N�mero
+            emit.EnderEmit.nro := trim(Copy(Linha, 215, 60)); // Numero
             emit.EnderEmit.xCpl := trim(Copy(Linha, 275, 60)); // Complemento
             emit.EnderEmit.xBairro := trim(Copy(Linha, 335, 60)); // Bairro
             emit.EnderEmit.cMun := strtoint(Copy(Linha, 395, 7));
-            // C�digo do municipio
+            // Codigo do municipio
             emit.EnderEmit.xMun := trim(Copy(Linha, 402, 60));
             // Nome do municipio
             emit.EnderEmit.uf := (Copy(Linha, 462, 2)); // Sigla da UF
             ACBrNFe1.Configuracoes.WebServices.uf := (Copy(Linha, 462, 2));
             emit.EnderEmit.CEP := strtoint(Copy(Linha, 464, 8));
-            // C�digo do CEP
+            // Codigo do CEP
             emit.EnderEmit.cPais := strtoint(Copy(Linha, 472, 4));
-            // C�digo do Pa�s
+            // Codigo do Pais
             emit.EnderEmit.xPais := trim(Copy(Linha, 476, 60)); // Brasil
             emit.EnderEmit.fone := trim(Copy(Linha, 536, 10)); // Telefone
             emit.ie := trim(Copy(Linha, 546, 14)); // IE
@@ -2169,7 +2172,7 @@ begin
             if SN then
               emit.CRT := crtSimplesNacional;
 
-            // =========================Respons�vel T�cnico=======================//
+            // =========================Responsavel Tecnico=======================//
             if (emit.EnderEmit.uf = 'SC') then
             begin
               infRespTec.CNPJ := '05557708000161';
@@ -2200,32 +2203,32 @@ begin
                 dest.idEstrangeiro := Copy(Linha, 512, 20);
 
               dest.xNome := trim(Copy(Linha, 35, 60));
-              // Raz�o social ou nome do destinatario
+              // Razao social ou nome do destinatario
               dest.EnderDest.xLgr := trim(Copy(Linha, 95, 60)); // Logradouro
-              dest.EnderDest.nro := trim(Copy(Linha, 155, 60)); // N�mero
+              dest.EnderDest.nro := trim(Copy(Linha, 155, 60)); // Numero
               dest.EnderDest.xCpl := trim(Copy(Linha, 215, 60)); // Complemento
               dest.EnderDest.xBairro := trim(Copy(Linha, 275, 60)); // Bairro
               dest.EnderDest.cMun := strtoint(Copy(Linha, 335, 7));
-              // C�digo do Municipio
+              // Codigo do Municipio
               dest.EnderDest.xMun := trim(Copy(Linha, 342, 60));
               // Nome do Municipio
               dest.EnderDest.uf := (Copy(Linha, 402, 2)); // Sigla da UF
               dest.EnderDest.CEP := strtoint(Copy(Linha, 404, 8));
-              // C�digo do Cep
+              // Codigo do Cep
               dest.EnderDest.cPais := strtoint(Copy(Linha, 412, 4));
-              // C�digo do Pa�s
+              // Codigo do Pais
               dest.EnderDest.xPais := trim(Copy(Linha, 416, 60)); // Brasil
               dest.EnderDest.fone := trim(Copy(Linha, 476, 10)); // Telefone
               dest.ie := trim(Copy(Linha, 486, 14)); // IE
-              dest.ISUF := trim(Copy(Linha, 500, 12)); // Inscri��o SUFRAMA}
+              dest.ISUF := trim(Copy(Linha, 500, 12)); // Inscricao SUFRAMA}
 
               dest.email := trim(Copy(Linha, 548, 60));
-              // Email para Recep��o de XML
+              // Email para Recepcao de XML
               ACBrNFe1.NotasFiscais[0].NFe.dest.email :=
                 trim(Copy(Linha, 548, 60));
 
               dest.idEstrangeiro := trim(Copy(Linha, 512, 20));
-              // Inscri��o de Estrangeiro}
+              // Inscricao de Estrangeiro}
 
               case strtoint(Copy(Linha, 532, 1)) of
                 1:
@@ -2236,11 +2239,11 @@ begin
                   dest.indIEDest := inNaoContribuinte;
               end; // Indica Contribuinte
 
-              dest.IM := trim(Copy(Linha, 533, 15)); // Inscri��o municiapl
+              dest.IM := trim(Copy(Linha, 533, 15)); // Inscricao municiapl
             end; // fim do EM0204
 
       // ==============================EM0205=============================//
-      // =Endere�o de Entrega
+      // =Endereco de Entrega
 
       if (Copy(Linha, 0, 6)) = 'EM0205' then
       begin
@@ -2269,8 +2272,8 @@ begin
           Prod.nItem := strtoint(Copy(Linha, 9, 3));
           // Nro. do item
           Prod.cProd := trim(Copy(Linha, 12, 60));
-          // C�digo do Produto ou servi�o
-{$REGION 'C�digo Barra'}
+          // Codigo do Produto ou servico
+{$REGION 'Codigo Barra'}
           codigoBarra := trim(Copy(Linha, 72, 14)); // cEAN
 
           if trim(codigoBarra) = '' then
@@ -2279,12 +2282,12 @@ begin
           Prod.cEAN := trim(codigoBarra); // cEAN
 {$ENDREGION}
           Prod.xProd := trim(Copy(Linha, 86, 120));
-          // Descri��o do produto ou servi�o
-          Prod.NCM := trim(Copy(Linha, 206, 8)); // C�digo NCM
+          // Descricao do produto ou servico
+          Prod.NCM := trim(Copy(Linha, 206, 8)); // Codigo NCM
           Prod.EXTIPI := trim(Copy(Linha, 214, 3)); // EX_TIPI
           Prod.CFOP := trim(Copy(Linha, 219, 4));
           // Prod.CEST := trim(Copy(Linha, 219, 4));
-          // C�digo fiscal da opera��o
+          // Codigo fiscal da operacao
 
           if trim(Copy(Linha, 223, 6)) <> '' then
             Prod.uCom := trim(Copy(Linha, 223, 6)) // Unidade comercial
@@ -2296,10 +2299,10 @@ begin
           // Quantidade comercial
           Prod.vUnCom := StrToFloat(StringReplace((Copy(Linha, 244, 15)), '.',
             ',', [rfReplaceAll]));
-          // Valor unit�rio de comercializa��o
+          // Valor unitario de comercializacao
           Prod.vProd := StrToFloat(StringReplace((Copy(Linha, 259, 15)), '.',
             ',', [rfReplaceAll]));
-          // Valor Total Bruto dos Produtos ou Servi�os
+          // Valor Total Bruto dos Produtos ou Servicos
           // if trim((Copy(Linha, 274, 14))) = '' then
           // Prod.cEANTrib :=  'SEM GTIN' // cEANTrib
           // else
@@ -2322,7 +2325,7 @@ begin
           // UQuantidade Tributavel
           Prod.vUnTrib := StrToFloat(StringReplace((Copy(Linha, 309, 15)), '.',
             ',', [rfReplaceAll]));
-          // Valor Unit�rio de tributa��o
+          // Valor Unitario de tributacao
           Prod.vFrete := StrToFloat(StringReplace((Copy(Linha, 324, 15)), '.',
             ',', [rfReplaceAll]));
           // Valor Total do Frete
@@ -2338,9 +2341,9 @@ begin
           FCI := trim(Copy(Linha, 517, 50));
           if FCI <> '' then
             Prod.nFCI := FCI;
-          // FCI - N�mero de controle da FCI - Ficha de Conte�do de Importa��o
+          // FCI - Numero de controle da FCI - Ficha de Conteudo de Importacao
 
-          /// //// Imposto de importa��o
+          /// //// Imposto de importacao
 
           if length(Linha) > 385 then
           begin
@@ -2351,7 +2354,7 @@ begin
             if trim(Copy(Linha, 399, 15)) <> '' then
               Imposto.II.vII := StrToFloat(StringReplace((Copy(Linha, 399, 15)),
                 '.', ',', [rfReplaceAll]));
-            // Valor do Imposto de importa��o
+            // Valor do Imposto de importacao
 
             if trim(Copy(Linha, 414, 15)) <> '' then
               Imposto.II.vDespAdu :=
@@ -2478,7 +2481,7 @@ begin
             while (Copy(Linha, 0, 6)) = 'EM3207' do
             begin
               with Prod.rastro.New do
-              // quando usar Medicamentos usa Prod.med, nosso caso � s� rastreamento ent�o Pro.rastro
+              // quando usar Medicamentos usa Prod.med, nosso caso e so rastreamento entao Pro.rastro
               begin
                 nLote := trim(Copy(Linha, 7, 20));
                 qLote := StrToFloat(StringReplace(trim(Copy(Linha, 27, 15)),
@@ -2520,7 +2523,7 @@ begin
                 strtoint(Copy(Linha, 12, 1));
               except
                 messagebox(Handle,
-                  'Origem do produto n�o encontrada. Verifique e tente novamente.',
+                  'Origem do produto nao encontrada. Verifique e tente novamente.',
                   'Envio NFE', MB_OK + MB_ICONINFORMATION);
                 Abort;
               end;
@@ -2553,7 +2556,7 @@ begin
                 strtoint(Copy(Linha, 13, 2));
               except
                 messagebox(Handle,
-                  'Situa��o tribut�ria do ICMS n�o encontrada. Verifique e tente novamente.',
+                  'Situacao tributaria do ICMS nao encontrada. Verifique e tente novamente.',
                   'Envio NFE', MB_OK + MB_ICONINFORMATION);
                 Abort;
               end;
@@ -2590,11 +2593,11 @@ begin
               end;
 
               Imposto.ICMS.modBCST := dbisPrecoTabelado;
-              // Modalidade de determina��o da BC do ICMS ST
+              // Modalidade de determinacao da BC do ICMS ST
               Imposto.ICMS.pRedBC :=
                 StrToFloat(StringReplace((Copy(Linha, 17, 15)), '.', ',',
                 [rfReplaceAll]));
-              // Percential de redu��o de BC do ICMS
+              // Percential de reducao de BC do ICMS
 
               Imposto.ICMS.vBC :=
                 StrToFloat(StringReplace((Copy(Linha, 32, 15)), '.', ',',
@@ -2688,7 +2691,7 @@ begin
                 strtoint(Copy(Linha, 12, 1));
               except
                 messagebox(Handle,
-                  'Origem do produto n�o encontrada. Verifique e tente novamente.',
+                  'Origem do produto nao encontrada. Verifique e tente novamente.',
                   'Envio NFE', MB_OK + MB_ICONINFORMATION);
                 Abort;
               end;
@@ -2719,7 +2722,7 @@ begin
                 strtoint(Copy(Linha, 13, 3));
               except
                 messagebox(Handle,
-                  'Situa��o tribut�ria do ICMS n�o encontrada. Verifique e tente novamente.',
+                  'Situacao tributaria do ICMS nao encontrada. Verifique e tente novamente.',
                   'Envio NFE', MB_OK + MB_ICONINFORMATION);
                 Abort;
               end;
@@ -2746,11 +2749,11 @@ begin
                   Imposto.ICMS.CSOSN := csosn900;
               end;
               Imposto.ICMS.modBCST := dbisPrecoTabelado;
-              // Modalidade de determina��o da BC do ICMS ST
+              // Modalidade de determinacao da BC do ICMS ST
               Imposto.ICMS.pRedBC :=
                 StrToFloat(StringReplace((Copy(Linha, 17, 15)), '.', ',',
                 [rfReplaceAll]));
-              // Percential de redu��o de BC do ICMS
+              // Percential de reducao de BC do ICMS
               Imposto.ICMS.vBC :=
                 StrToFloat(StringReplace((Copy(Linha, 32, 15)), '.', ',',
                 [rfReplaceAll]));
@@ -2871,11 +2874,11 @@ begin
             // begin
             Pfcp := StrToFloat(StringReplace((Copy(Linha, 22, 15)), '.', ',',
               [rfReplaceAll]));
-            // Percentual do ICMS relativo ao Fundo de Combate � Pobreza (FCP) na UF de destino
+            // Percentual do ICMS relativo ao Fundo de Combate a Pobreza (FCP) na UF de destino
 
-            // Percentual do Fundo de Combate � Pobreza (FCP)
+            // Percentual do Fundo de Combate a Pobreza (FCP)
             // Imposto.ICMS.pFCP :=StrToFloat(StringReplace((Copy(Linha, 22, 15)), '.', ',', [rfReplaceAll]));
-            // Valor do Fundo de Combate � Pobreza (FCP)
+            // Valor do Fundo de Combate a Pobreza (FCP)
             if Imposto.ICMS.CST = cst00 then
             begin
 
@@ -2941,11 +2944,11 @@ begin
 
             Imposto.ICMSUFDest.pICMSUFDest :=
               StrToFloat(StringReplace((Copy(Linha, 37, 15)), '.', ',',
-              [rfReplaceAll])); // Al�quota interna da UF de destino
+              [rfReplaceAll])); // Aliquota interna da UF de destino
 
             Imposto.ICMSUFDest.pICMSInter :=
               StrToFloat(StringReplace((Copy(Linha, 52, 15)), '.', ',',
-              [rfReplaceAll])); // Al�quota interestadual das UF envolvidas
+              [rfReplaceAll])); // Aliquota interestadual das UF envolvidas
 
             Imposto.ICMSUFDest.pICMSInterPart :=
               StrToFloat(StringReplace((Copy(Linha, 67, 15)), '.', ',',
@@ -2977,12 +2980,12 @@ begin
               '.', ',', [rfReplaceAll]));
             // 15 Valor do IPI
 
-            // CASE   Situa��o tribut�ria do IPI
+            // CASE   Situacao tributaria do IPI
             try
               strtoint(Copy(Linha, 50, 2))
             except
               messagebox(Handle,
-                'Situa��o de IPI n�o encontrada. Verifique e tente novamente.',
+                'Situacao de IPI nao encontrada. Verifique e tente novamente.',
                 'Envio NFE', MB_OK + MB_ICONINFORMATION);
               Abort;
             end;
@@ -3025,7 +3028,7 @@ begin
           if (Copy(Linha, 0, 6)) = 'EM0209' then
           begin
 
-            // CASEEEEE 02 Situa��o Tributaria do PIS       showmessage(copy(EM0209,12,2));
+            // CASEEEEE 02 Situacao Tributaria do PIS       showmessage(copy(EM0209,12,2));
             case strtoint(Copy(Linha, 12, 2)) of
               01:
                 Imposto.PIS.CST := pis01;
@@ -3056,7 +3059,7 @@ begin
             Imposto.PIS.vPIS := StrToFloat(StringReplace((Copy(Linha, 37, 15)),
               '.', ',', [rfReplaceAll]));
             // 15 Valor do PIS
-            // CASE Situa��o Tributaria do COFINS       showmessage(copy(EM0209,52,2));
+            // CASE Situacao Tributaria do COFINS       showmessage(copy(EM0209,52,2));
 
             case strtoint(Copy(Linha, 52, 2)) of
               01:
@@ -3109,7 +3112,7 @@ begin
         // Valor Total do ICMS ST  showmessage(copy(linha,53,15));
         Total.ICMSTot.vST := StrToFloat(StringReplace((Copy(Linha, 52, 15)),
           '.', ',', [rfReplaceAll]));
-        // Valor Total dos produtos e servi�os  showmessage(copy(linha,68,15));
+        // Valor Total dos produtos e servicos  showmessage(copy(linha,68,15));
         Total.ICMSTot.vProd := StrToFloat(StringReplace((Copy(Linha, 67, 15)),
           '.', ',', [rfReplaceAll]));
         // Valor Total do Frete       showmessage(copy(linha,83,15));
@@ -3134,14 +3137,14 @@ begin
         Total.ICMSTot.vCOFINS :=
           StrToFloat(StringReplace((Copy(Linha, 172, 15)), '.', ',',
           [rfReplaceAll]));
-        // Outras Despesas Acess�rias showmessage(copy(linha,188,15));
+        // Outras Despesas Acessorias showmessage(copy(linha,188,15));
         Total.ICMSTot.vOutro := StrToFloat(StringReplace((Copy(Linha, 187, 15)),
           '.', ',', [rfReplaceAll]));
         // Valor Total da NFe       showmessage(copy(linha,203,15));
         Total.ICMSTot.vNF := StrToFloat(StringReplace((Copy(Linha, 202, 15)),
           '.', ',', [rfReplaceAll]));
 
-        // Informar a soma no cabe�alho da nota
+        // Informar a soma no cabecalho da nota
         Total.ICMSTot.vTotTrib :=
           StrToFloat(StringReplace((Copy(Linha, 217, 15)), '.', ',',
           [rfReplaceAll]));
@@ -3194,11 +3197,11 @@ begin
           Transp.Transporta.CNPJCPF := (Copy(Linha, 22, 14));
 
         Transp.Transporta.xNome := (Copy(Linha, 36, 60));
-        // Raz�o social ou nome                     showmessage(copy(linha,36,60));
+        // Razao social ou nome                     showmessage(copy(linha,36,60));
         Transp.Transporta.ie := (Copy(Linha, 96, 14));
         // IE                                                showmessage(copy(linha,96,14));
         Transp.Transporta.xEnder := (Copy(Linha, 110, 60));
-        // Endere�o completo                     showmessage(copy(linha,110,60));
+        // Endereco completo                     showmessage(copy(linha,110,60));
         Transp.Transporta.xMun := (Copy(Linha, 170, 60));
         // Nome do Municipio                     showmessage(copy(linha,170,60));
         Transp.Transporta.uf := (Copy(Linha, 230, 2));
@@ -3292,7 +3295,7 @@ begin
             numeroparcela := (Copy(Linha, 7, 60));
             nDup := LeftZero((Copy(numeroparcela, pos('-', numeroparcela) + 1,
               length(numeroparcela))), 3);
-            // N�mero da fatura
+            // Numero da fatura
             dVenc := strtodate(Copy(Linha, 75, 2) + '/' + Copy(Linha, 72, 2) +
               '/' + Copy(Linha, 67, 4));
             // Data de vencimento
@@ -3314,14 +3317,14 @@ begin
 
       end; // fim do EM0213
       Readln(Arquivo, Linha); // Ler a proxima linha
-    end; // enquanto n�o chegar ao fim do Arquivo
+    end; // enquanto nao chegar ao fim do Arquivo
     // =============================EM0214=============================//
     if (Copy(Linha, 0, 6)) = 'EM0214' then
     begin
 
       InfAdic.infCpl := (Copy(Linha, 7, 2000));
     end; // fim do EM0214
-  end; // Fim das configura��es da NFe
+  end; // Fim das configuracoes da NFe
   CloseFile(Arquivo);
 
   Result := true;

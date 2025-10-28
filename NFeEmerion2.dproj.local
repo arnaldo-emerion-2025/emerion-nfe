@@ -1,2 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<BorlandProject/>
+<BorlandProject>
+  <Transactions>
+    <Transaction>2025/10/23 16:37:29.534,=W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas</Transaction>
+    <Transaction>2025/10/23 16:37:48.390,W:\_wgsys\emerion\NFeEmerion DPEC\jsonHelper.pas=W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas</Transaction>
+    <Transaction>2025/10/23 17:02:07.160,W:\_wgsys\emerion\NFeEmerion DPEC\uJsonHelper.pas=W:\_wgsys\emerion\NFeEmerion DPEC\jsonHelper.pas</Transaction>
+    <Transaction>2025/10/23 22:54:17.969,=W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas</Transaction>
+    <Transaction>2025/10/23 22:54:28.973,W:\_wgsys\emerion\NFeEmerion DPEC\uNFeJson.pas=W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas</Transaction>
+  </Transactions>
+</BorlandProject>

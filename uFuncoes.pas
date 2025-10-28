@@ -571,13 +571,13 @@ begin
     Wdigit1 := 0;
     Wdigit2 := 0;
     Want := cpf[1];
-    // variavel para testar se o cpf � repetido como 111.111.111-11
+    // variavel para testar se o cpf eh repetido como 111.111.111-11
     Delete(cpf, ansipos('.', cpf), 1); // retira as mascaras se houver
     Delete(cpf, ansipos('.', cpf), 1);
     Delete(cpf, ansipos('-', cpf), 1);
 
     Wvalid := False;
-    // testar se o cpf � repetido como 111.111.111-11
+    // testar se o cpf eh repetido como 111.111.111-11
     for i := 1 to Length(cpf) do
     begin
       if cpf[i] <> Want then
@@ -587,7 +587,7 @@ begin
         break
       end;
     end;
-    // se o cpf � composto por numeros repetido retorna falso
+    // se o cpf eh composto por numeros repetido retorna falso
     if not Wvalid then
     begin
       Result := False;
@@ -601,12 +601,12 @@ begin
     end;
     Wdigit1 := ((11 - (Wdigit1 mod 11)) mod 11) mod 10;
     { formula do primeiro verificador
-      soma=1�*2+2�*3+3�*4.. at� 9�*10
+      soma=1o*2+2o*3+3o*4.. ate 9o*10
       digito1 = 11 - soma mod 11
       se digito > 10 digito1 =0
     }
 
-    // verifica se o 1� digito confere
+    // verifica se o 1o digito confere
     if IntToStr(Wdigit1) <> cpf[10] then
     begin
       Result := False;
@@ -619,19 +619,19 @@ begin
     end;
     Wdigit2 := ((11 - (Wdigit2 mod 11)) mod 11) mod 10;
     { formula do segundo verificador
-      soma=1�*2+2�*3+3�*4.. at� 10�*11
+      soma=1o*2+2o*3+3o*4.. ate 10o*11
       digito1 = 11 - soma mod 11
       se digito > 10 digito1 =0
     }
 
-    // confere o 2� digito verificador
+    // confere o 2o digito verificador
     if IntToStr(Wdigit2) <> cpf[11] then
     begin
       Result := False;
       exit;
     end;
 
-    // se chegar at� aqui o cpf � valido
+    // se chegar ate aqui o cpf e valido
     Result := true;
   end;
 end;
