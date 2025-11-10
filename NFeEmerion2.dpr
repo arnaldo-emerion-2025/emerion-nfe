@@ -4,7 +4,10 @@ uses
   Forms,
   Uprincipal in 'Uprincipal.pas' {Form1},
   uMsg in 'uMsg.pas',
-  uFuncoes in 'uFuncoes.pas';
+  uFuncoes in 'uFuncoes.pas',
+  uIniFileUtils in 'uIniFileUtils.pas',
+  uJsonHelper in 'uJsonHelper.pas',
+  uNFeJson in 'uNFeJson.pas';
 
 {$R *.res}
 

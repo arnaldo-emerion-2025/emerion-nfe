@@ -4,8 +4,8 @@ object Form1: TForm1
   BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Envio ao SeFaz'
-  ClientHeight = 209
-  ClientWidth = 426
+  ClientHeight = 217
+  ClientWidth = 464
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -79,11 +79,11 @@ object Form1: TForm1
   object ACBrValidador1: TACBrValidador
     TipoDocto = docCNPJ
     IgnorarChar = './-'
-    Left = 16
+    Left = 48
     Top = 56
   end
   object frxReport1: TfrxReport
-    Version = '5.2.3'
+    Version = '2022.2.10'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
@@ -311,10 +311,17 @@ object Form1: TForm1
       TopMargin = 7.000000000000000000
       BottomMargin = 7.000000000000000000
       BackPictureVisible = False
+      Frame.Typ = []
       LargeDesignHeight = True
+      MirrorMode = []
       OnBeforePrint = 'Page1OnBeforePrint'
       object DadosProdutos: TfrxMasterData
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 11.338582680000000000
         Top = 1028.000000000000000000
         Width = 755.906000000000000000
@@ -323,6 +330,7 @@ object Form1: TForm1
         RowCount = 0
         Stretched = True
         object Memo131: TfrxMemoView
+          AllowVectorExport = True
           Width = 60.472480000000000000
           Height = 11.338582680000000000
           OnBeforePrint = 'Memo131OnBeforePrint'
@@ -340,6 +348,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo132: TfrxMemoView
+          AllowVectorExport = True
           Left = 60.472480000000000000
           Width = 222.992089370000000000
           Height = 11.338582680000000000
@@ -357,6 +366,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo133: TfrxMemoView
+          AllowVectorExport = True
           Left = 283.464537640000000000
           Width = 37.795300000000000000
           Height = 11.338582680000000000
@@ -375,6 +385,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo134: TfrxMemoView
+          AllowVectorExport = True
           Left = 321.259813230000000000
           Width = 26.456695350000000000
           Height = 11.338582680000000000
@@ -393,6 +404,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo135: TfrxMemoView
+          AllowVectorExport = True
           Left = 347.716506140000000000
           Width = 24.566929130000000000
           Height = 11.338582680000000000
@@ -411,6 +423,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo136: TfrxMemoView
+          AllowVectorExport = True
           Left = 372.283493860000000000
           Width = 22.677180000000000000
           Height = 11.338582680000000000
@@ -429,6 +442,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object memqCom: TfrxMemoView
+          AllowVectorExport = True
           Left = 394.960659210000000000
           Width = 43.464574250000000000
           Height = 11.338582680000000000
@@ -450,6 +464,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object memvUnCom: TfrxMemoView
+          AllowVectorExport = True
           Left = 438.425480000000000000
           Width = 45.354360000000000000
           Height = 11.338582680000000000
@@ -471,6 +486,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo139: TfrxMemoView
+          AllowVectorExport = True
           Left = 483.779840000000000000
           Width = 45.354360000000000000
           Height = 11.338582680000000000
@@ -492,6 +508,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo140: TfrxMemoView
+          AllowVectorExport = True
           Left = 529.134200000000000000
           Width = 45.354360000000000000
           Height = 11.338582680000000000
@@ -513,6 +530,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo141: TfrxMemoView
+          AllowVectorExport = True
           Left = 574.488560000000000000
           Width = 45.354360000000000000
           Height = 11.338582680000000000
@@ -534,6 +552,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo142: TfrxMemoView
+          AllowVectorExport = True
           Left = 619.842920000000000000
           Width = 45.354360000000000000
           Height = 11.338582680000000000
@@ -555,6 +574,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo143: TfrxMemoView
+          AllowVectorExport = True
           Left = 665.197280000000000000
           Width = 45.354360000000000000
           Height = 11.338582680000000000
@@ -576,6 +596,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo144: TfrxMemoView
+          AllowVectorExport = True
           Left = 710.551640000000000000
           Width = 22.677180000000000000
           Height = 11.338582680000000000
@@ -597,6 +618,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo145: TfrxMemoView
+          AllowVectorExport = True
           Left = 733.228820000000000000
           Width = 22.677180000000000000
           Height = 11.338582680000000000
@@ -620,10 +642,16 @@ object Form1: TForm1
       end
       object Canhoto: TfrxReportTitle
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 64.252010000000000000
         Top = 16.000000000000000000
         Width = 755.906000000000000000
         object Memo2: TfrxMemoView
+          AllowVectorExport = True
           Width = 642.520100000000000000
           Height = 52.913420000000000000
           Font.Charset = ANSI_CHARSET
@@ -644,6 +672,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo3: TfrxMemoView
+          AllowVectorExport = True
           Left = 143.622140000000000000
           Top = 22.677180000000000000
           Width = 498.897960000000000000
@@ -661,6 +690,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo4: TfrxMemoView
+          AllowVectorExport = True
           Top = 22.677180000000000000
           Width = 143.622140000000000000
           Height = 30.236240000000000000
@@ -678,6 +708,7 @@ object Form1: TForm1
         end
         object Line1: TfrxLineView
           Align = baWidth
+          AllowVectorExport = True
           Top = 58.692950000000000000
           Width = 755.906000000000000000
           Color = clBlack
@@ -686,6 +717,7 @@ object Form1: TForm1
           Frame.Width = 0.500000000000000000
         end
         object Memo17: TfrxMemoView
+          AllowVectorExport = True
           Left = 642.520100000000000000
           Width = 113.385802360000000000
           Height = 52.913420000000000000
@@ -708,11 +740,17 @@ object Form1: TForm1
       end
       object Emitente: TfrxPageHeader
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 173.858362910000000000
         Top = 100.000000000000000000
         Width = 755.906000000000000000
         OnBeforePrint = 'EmitenteOnBeforePrint'
         object BarCodeContigencia: TfrxBarCodeView
+          AllowVectorExport = True
           ShiftMode = smWhenOverlapped
           Left = 473.764070000000000000
           Top = 84.370130000000010000
@@ -721,8 +759,10 @@ object Form1: TForm1
           BarType = bcCode128C
           DataField = 'Contingencia_ID'
           DataSetName = 'Parametros'
+          Frame.Typ = []
           Rotation = 0
           ShowText = False
+          TestLine = False
           Text = '123456789012345678901234567890123456'
           WideBarRatio = 2.000000000000000000
           Zoom = 1.000000000000000000
@@ -731,8 +771,10 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Arial'
           Font.Style = []
+          ColorBar = clBlack
         end
         object memConsultaAutenticidade: TfrxMemoView
+          AllowVectorExport = True
           Left = 423.307360000000000000
           Top = 79.370130000000010000
           Width = 332.598640000000000000
@@ -752,6 +794,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo1: TfrxMemoView
+          AllowVectorExport = True
           Left = 423.307360000000000000
           Width = 332.598432520000000000
           Height = 49.133890000000000000
@@ -766,6 +809,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object BarCodeChave: TfrxBarCodeView
+          AllowVectorExport = True
           Left = 453.677177560000000000
           Top = 5.559060000000003000
           Width = 277.000000000000000000
@@ -773,8 +817,10 @@ object Form1: TForm1
           BarType = bcCode128C
           DataField = 'Id'
           DataSetName = 'Identificacao'
+          Frame.Typ = []
           Rotation = 0
           ShowText = False
+          TestLine = False
           Text = '12345678901234567890123456789012345678901234'
           WideBarRatio = 2.000000000000000000
           Zoom = 1.000000000000000000
@@ -783,8 +829,10 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Arial'
           Font.Style = []
+          ColorBar = clBlack
         end
         object Memo6: TfrxMemoView
+          AllowVectorExport = True
           Left = 423.307360000000000000
           Top = 49.133890000000010000
           Width = 332.598640000000000000
@@ -802,6 +850,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo8: TfrxMemoView
+          AllowVectorExport = True
           Left = 423.307360000000000000
           Top = 59.472480000000010000
           Width = 332.598640000000000000
@@ -811,6 +860,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           HAlign = haCenter
           Memo.UTF8W = (
@@ -819,6 +869,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo9: TfrxMemoView
+          AllowVectorExport = True
           Left = 309.921460000000000000
           Width = 113.385826770000000000
           Height = 120.944960000000000000
@@ -836,6 +887,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object memEmitente: TfrxMemoView
+          AllowVectorExport = True
           Width = 309.921460000000000000
           Height = 120.944960000000000000
           Font.Charset = ANSI_CHARSET
@@ -852,6 +904,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object memDadosEmitente: TfrxMemoView
+          AllowVectorExport = True
           Left = 90.708720000000000000
           Top = 37.456709999999990000
           Width = 215.433210000000000000
@@ -861,6 +914,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           HAlign = haCenter
           LineSpacing = 4.000000000000000000
@@ -870,6 +924,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo12: TfrxMemoView
+          AllowVectorExport = True
           Left = 313.157700000000000000
           Top = 16.897650000000000000
           Width = 105.826840000000000000
@@ -879,6 +934,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           HAlign = haCenter
           Memo.UTF8W = (
@@ -888,6 +944,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo13: TfrxMemoView
+          AllowVectorExport = True
           Left = 321.716760000000000000
           Top = 70.811070000000030000
           Width = 98.267780000000000000
@@ -897,6 +954,7 @@ object Form1: TForm1
           Font.Height = -13
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'N'#186' [Identificacao."NNF"]'
@@ -906,6 +964,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo15: TfrxMemoView
+          AllowVectorExport = True
           Left = 313.716760000000000000
           Top = 45.354360000000040000
           Width = 75.590600000000000000
@@ -915,6 +974,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             '0 - ENTRADA'
@@ -923,6 +983,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo16: TfrxMemoView
+          AllowVectorExport = True
           Left = 389.748300000000000000
           Top = 45.354330710000000000
           Width = 22.677165350000000000
@@ -942,6 +1003,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo19: TfrxMemoView
+          AllowVectorExport = True
           Top = 120.944960000000000000
           Width = 423.307360000000000000
           Height = 26.456692910000000000
@@ -958,6 +1020,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo20: TfrxMemoView
+          AllowVectorExport = True
           Top = 129.259842520000000000
           Width = 423.307360000000000000
           Height = 17.007874020000000000
@@ -966,6 +1029,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -974,6 +1038,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo21: TfrxMemoView
+          AllowVectorExport = True
           Left = 423.307360000000000000
           Top = 120.944960000000000000
           Width = 332.598640000000000000
@@ -991,6 +1056,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo22: TfrxMemoView
+          AllowVectorExport = True
           Left = 423.307360000000000000
           Top = 129.393700790000000000
           Width = 332.598640000000000000
@@ -1000,6 +1066,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           HAlign = haCenter
           Memo.UTF8W = (
@@ -1008,6 +1075,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo23: TfrxMemoView
+          AllowVectorExport = True
           Top = 147.401670000000000000
           Width = 253.228510000000000000
           Height = 26.456692910000000000
@@ -1024,6 +1092,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo24: TfrxMemoView
+          AllowVectorExport = True
           Top = 156.850410790000000000
           Width = 253.228510000000000000
           Height = 17.007874020000000000
@@ -1032,6 +1101,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1040,6 +1110,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo25: TfrxMemoView
+          AllowVectorExport = True
           Left = 253.228510000000000000
           Top = 147.401670000000000000
           Width = 253.228510000000000000
@@ -1057,6 +1128,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo26: TfrxMemoView
+          AllowVectorExport = True
           Left = 253.228510000000000000
           Top = 156.850410790000000000
           Width = 253.228510000000000000
@@ -1066,6 +1138,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1074,6 +1147,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo27: TfrxMemoView
+          AllowVectorExport = True
           Left = 506.457020000000000000
           Top = 147.401670000000000000
           Width = 249.448980000000000000
@@ -1091,6 +1165,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo28: TfrxMemoView
+          AllowVectorExport = True
           Left = 506.457020000000000000
           Top = 156.850410790000000000
           Width = 249.448980000000000000
@@ -1100,6 +1175,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1108,6 +1184,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object imgLogo: TfrxPictureView
+          AllowVectorExport = True
           Left = 6.559060000000000000
           Top = 36.795300000000000000
           Width = 75.590551180000000000
@@ -1115,6 +1192,7 @@ object Form1: TForm1
           Center = True
           DataField = 'LogoCarregado'
           DataSetName = 'Parametros'
+          Frame.Typ = []
           HightQuality = False
           Transparent = False
           TransparentColor = clWhite
@@ -1122,6 +1200,11 @@ object Form1: TForm1
       end
       object PageFooter: TfrxPageFooter
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 217.322966460000000000
         Top = 2308.000000000000000000
         Width = 755.906000000000000000
@@ -1129,6 +1212,7 @@ object Form1: TForm1
         OnBeforePrint = 'PageFooter1OnBeforePrint'
         object memDataHora: TfrxMemoView
           Align = baLeft
+          AllowVectorExport = True
           Top = 204.094619999999800000
           Width = 461.102660000000000000
           Height = 13.228346460000000000
@@ -1137,6 +1221,7 @@ object Form1: TForm1
           Font.Height = -8
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             
@@ -1145,6 +1230,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object memFisco: TfrxMemoView
+          AllowVectorExport = True
           Left = 464.882190000000000000
           Top = 63.252010000000150000
           Width = 291.023622050000000000
@@ -1162,6 +1248,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object memDadosAdicionais: TfrxMemoView
+          AllowVectorExport = True
           Top = 49.133890000000060000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -1170,6 +1257,7 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'DADOS ADICIONAIS')
@@ -1177,6 +1265,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object memInformacoesComplementares: TfrxMemoView
+          AllowVectorExport = True
           Top = 63.252010000000150000
           Width = 464.881899530000000000
           Height = 136.063062910000000000
@@ -1193,6 +1282,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object memOBS: TfrxMemoView
+          AllowVectorExport = True
           Top = 70.456692910000130000
           Width = 461.102660000000000000
           Height = 128.504020000000000000
@@ -1201,6 +1291,7 @@ object Form1: TForm1
           Font.Height = -8
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapY = 2.000000000000000000
           Memo.UTF8W = (
@@ -1209,6 +1300,7 @@ object Form1: TForm1
         end
         object Memo5: TfrxMemoView
           Align = baRight
+          AllowVectorExport = True
           Left = 498.897960000000000000
           Top = 204.094619999999800000
           Width = 257.008040000000000000
@@ -1218,6 +1310,7 @@ object Form1: TForm1
           Font.Height = -8
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           HAlign = haRight
           Memo.UTF8W = (
@@ -1225,6 +1318,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object ISSQN: TfrxSubreport
+          AllowVectorExport = True
           Width = 755.905511810000000000
           Height = 45.354330710000000000
           Page = frxReport1.Page2
@@ -1233,12 +1327,18 @@ object Form1: TForm1
       end
       object Destinatario: TfrxMasterData
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 96.267762910000000000
         Top = 332.000000000000000000
         Width = 755.906000000000000000
         DataSetName = 'Identificacao'
         RowCount = 1
         object Memo29: TfrxMemoView
+          AllowVectorExport = True
           Top = 16.897650000000000000
           Width = 468.661720000000000000
           Height = 26.456692910000000000
@@ -1255,6 +1355,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo30: TfrxMemoView
+          AllowVectorExport = True
           Top = 26.346390789999990000
           Width = 464.882190000000000000
           Height = 17.007874020000000000
@@ -1263,6 +1364,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1272,6 +1374,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo31: TfrxMemoView
+          AllowVectorExport = True
           Left = 631.181510000000000000
           Top = 16.897650000000000000
           Width = 124.724490000000000000
@@ -1289,6 +1392,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo32: TfrxMemoView
+          AllowVectorExport = True
           Left = 631.181510000000000000
           Top = 26.346390789999990000
           Width = 124.724490000000000000
@@ -1298,6 +1402,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haCenter
@@ -1308,6 +1413,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo33: TfrxMemoView
+          AllowVectorExport = True
           Left = 631.181510000000000000
           Top = 43.354359999999990000
           Width = 124.724490000000000000
@@ -1325,6 +1431,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo34: TfrxMemoView
+          AllowVectorExport = True
           Left = 631.181510000000000000
           Top = 52.803100789999970000
           Width = 124.724490000000000000
@@ -1334,6 +1441,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haCenter
@@ -1344,6 +1452,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo35: TfrxMemoView
+          AllowVectorExport = True
           Left = 631.181510000000000000
           Top = 69.811069999999970000
           Width = 124.724490000000000000
@@ -1361,6 +1470,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo36: TfrxMemoView
+          AllowVectorExport = True
           Left = 631.181510000000000000
           Top = 79.259810790000010000
           Width = 124.724490000000000000
@@ -1370,6 +1480,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haCenter
@@ -1380,6 +1491,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo37: TfrxMemoView
+          AllowVectorExport = True
           Left = 468.661720000000000000
           Top = 16.897650000000000000
           Width = 162.519790000000000000
@@ -1397,6 +1509,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo38: TfrxMemoView
+          AllowVectorExport = True
           Left = 468.661720000000000000
           Top = 26.346390789999990000
           Width = 162.519790000000000000
@@ -1406,6 +1519,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1415,6 +1529,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo39: TfrxMemoView
+          AllowVectorExport = True
           Left = 555.590910000000000000
           Top = 43.354359999999990000
           Width = 75.590600000000000000
@@ -1432,6 +1547,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo40: TfrxMemoView
+          AllowVectorExport = True
           Left = 555.590910000000000000
           Top = 52.803100789999970000
           Width = 75.590600000000000000
@@ -1441,6 +1557,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1450,6 +1567,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo41: TfrxMemoView
+          AllowVectorExport = True
           Left = 385.512060000000000000
           Top = 43.354359999999990000
           Width = 170.078850000000000000
@@ -1467,6 +1585,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo42: TfrxMemoView
+          AllowVectorExport = True
           Left = 385.512060000000000000
           Top = 52.803100789999970000
           Width = 170.078850000000000000
@@ -1476,6 +1595,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1485,6 +1605,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo43: TfrxMemoView
+          AllowVectorExport = True
           Top = 43.354359999999990000
           Width = 385.512060000000000000
           Height = 26.456692910000000000
@@ -1501,6 +1622,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo44: TfrxMemoView
+          AllowVectorExport = True
           Top = 52.803100789999970000
           Width = 381.732530000000000000
           Height = 17.007874020000000000
@@ -1509,6 +1631,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1520,6 +1643,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo45: TfrxMemoView
+          AllowVectorExport = True
           Top = 69.811069999999970000
           Width = 355.275820000000000000
           Height = 26.456692910000000000
@@ -1536,6 +1660,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo46: TfrxMemoView
+          AllowVectorExport = True
           Top = 79.259810790000010000
           Width = 351.496290000000000000
           Height = 17.007874020000000000
@@ -1544,6 +1669,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1553,6 +1679,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo47: TfrxMemoView
+          AllowVectorExport = True
           Left = 355.275820000000000000
           Top = 69.811069999999970000
           Width = 30.236240000000000000
@@ -1570,6 +1697,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo48: TfrxMemoView
+          AllowVectorExport = True
           Left = 355.275820000000000000
           Top = 79.259810790000010000
           Width = 30.236240000000000000
@@ -1579,6 +1707,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haCenter
@@ -1589,6 +1718,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo49: TfrxMemoView
+          AllowVectorExport = True
           Left = 385.512060000000000000
           Top = 69.811069999999970000
           Width = 113.385900000000000000
@@ -1606,6 +1736,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo50: TfrxMemoView
+          AllowVectorExport = True
           Left = 385.512060000000000000
           Top = 79.259810790000010000
           Width = 113.385900000000000000
@@ -1615,6 +1746,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1624,6 +1756,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo51: TfrxMemoView
+          AllowVectorExport = True
           Left = 498.897960000000000000
           Top = 69.811069999999970000
           Width = 132.283550000000000000
@@ -1641,6 +1774,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo52: TfrxMemoView
+          AllowVectorExport = True
           Left = 498.897960000000000000
           Top = 79.259810790000010000
           Width = 132.283550000000000000
@@ -1650,6 +1784,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -1659,6 +1794,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo53: TfrxMemoView
+          AllowVectorExport = True
           Top = 3.779530000000022000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -1667,6 +1803,7 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'DESTINAT'#193'RIO / REMETENTE')
@@ -1676,12 +1813,18 @@ object Form1: TForm1
       end
       object Fatura: TfrxMasterData
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 70.811045590000000000
         Top = 576.000000000000000000
         Width = 755.906000000000000000
         DataSetName = 'Fatura'
         RowCount = 0
         object Memo190: TfrxMemoView
+          AllowVectorExport = True
           Top = 3.779527560000020000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -1690,6 +1833,7 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'FATURA')
@@ -1697,6 +1841,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo191: TfrxMemoView
+          AllowVectorExport = True
           Top = 17.897650000000000000
           Width = 755.905511810000000000
           Height = 52.913395590000000000
@@ -1718,6 +1863,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo192: TfrxMemoView
+          AllowVectorExport = True
           Left = 71.692950000000000000
           Top = 17.897650000000000000
           Width = 3.779530000000000000
@@ -1740,6 +1886,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo196: TfrxMemoView
+          AllowVectorExport = True
           Left = 75.472480000000000000
           Top = 17.897650000000000000
           Width = 90.708720000000000000
@@ -1750,6 +1897,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 3.000000000000000000
           Memo.UTF8W = (
@@ -1759,6 +1907,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo197: TfrxMemoView
+          AllowVectorExport = True
           Left = 75.472480000000000000
           Top = 30.370090939999960000
           Width = 90.708720000000000000
@@ -1771,6 +1920,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 3.000000000000000000
           Memo.UTF8W = (
@@ -1780,6 +1930,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo198: TfrxMemoView
+          AllowVectorExport = True
           Left = 75.472480000000000000
           Top = 42.842531890000030000
           Width = 90.708720000000000000
@@ -1792,6 +1943,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 3.000000000000000000
           Memo.UTF8W = (
@@ -1801,6 +1953,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo199: TfrxMemoView
+          AllowVectorExport = True
           Left = 75.590600000000000000
           Top = 55.692949999999990000
           Width = 90.708720000000000000
@@ -1813,6 +1966,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 3.000000000000000000
           Memo.UTF8W = (
@@ -1822,6 +1976,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo206: TfrxMemoView
+          AllowVectorExport = True
           Left = 510.236550000000000000
           Top = 17.897650000000000000
           Width = 245.669450000000000000
@@ -1832,6 +1987,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 3.000000000000000000
           HAlign = haRight
@@ -1844,6 +2000,11 @@ object Form1: TForm1
       end
       object Duplicatas: TfrxMasterData
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 37.795300000000000000
         Top = 704.000000000000000000
         Width = 755.906000000000000000
@@ -1853,11 +2014,14 @@ object Form1: TForm1
         RowCount = 0
         object Shape2: TfrxShapeView
           Align = baClient
+          AllowVectorExport = True
           Width = 755.906000000000000000
           Height = 37.795300000000000000
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
         end
         object Memo200: TfrxMemoView
+          AllowVectorExport = True
           Width = 151.181200000000000000
           Height = 37.795275590000000000
           Font.Charset = DEFAULT_CHARSET
@@ -1877,6 +2041,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo201: TfrxMemoView
+          AllowVectorExport = True
           Left = 56.692950000000000000
           Width = 3.779530000000000000
           Height = 37.795275590000000000
@@ -1897,6 +2062,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo202: TfrxMemoView
+          AllowVectorExport = True
           Left = 60.472480000000000000
           Width = 90.708720000000000000
           Height = 12.472440940000000000
@@ -1905,6 +2071,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 3.000000000000000000
           Memo.UTF8W = (
@@ -1914,6 +2081,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo203: TfrxMemoView
+          AllowVectorExport = True
           Left = 60.472480000000000000
           Top = 12.472440939999960000
           Width = 90.708720000000000000
@@ -1923,6 +2091,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 3.000000000000000000
           Memo.UTF8W = (
@@ -1932,6 +2101,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo204: TfrxMemoView
+          AllowVectorExport = True
           Left = 60.472480000000000000
           Top = 24.944881890000030000
           Width = 90.708720000000000000
@@ -1944,6 +2114,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 3.000000000000000000
           Memo.UTF8W = (
@@ -1955,12 +2126,18 @@ object Form1: TForm1
       end
       object DuplicatasHeader: TfrxGroupHeader
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 17.007874020000000000
         Top = 668.000000000000000000
         Width = 755.906000000000000000
         Condition = 'Duplicatas."ChaveNFe"'
         ReprintOnNewPage = True
         object Memo205: TfrxMemoView
+          AllowVectorExport = True
           Top = 3.779530000000022000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -1969,6 +2146,7 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'DUPLICATAS')
@@ -1978,6 +2156,11 @@ object Form1: TForm1
       end
       object DadosProdutosHeader: TfrxGroupHeader
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 41.196850390000000000
         Top = 968.000000000000000000
         Width = 755.906000000000000000
@@ -1985,6 +2168,7 @@ object Form1: TForm1
         Condition = 'DadosProdutos."ChaveNFe"'
         ReprintOnNewPage = True
         object Memo115: TfrxMemoView
+          AllowVectorExport = True
           Top = 3.779530000000022000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -1993,6 +2177,7 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'DADOS DOS PRODUTOS / SERVI'#199'OS')
@@ -2000,6 +2185,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo116: TfrxMemoView
+          AllowVectorExport = True
           Top = 18.338592440000070000
           Width = 60.472480000000000000
           Height = 22.677162910000000000
@@ -2020,6 +2206,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo117: TfrxMemoView
+          AllowVectorExport = True
           Left = 60.472480000000000000
           Top = 18.338592440000070000
           Width = 222.992089370000000000
@@ -2040,6 +2227,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo118: TfrxMemoView
+          AllowVectorExport = True
           Left = 283.464537640000000000
           Top = 18.338592440000070000
           Width = 37.795300000000000000
@@ -2060,6 +2248,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo119: TfrxMemoView
+          AllowVectorExport = True
           Left = 321.259813230000000000
           Top = 18.338592440000070000
           Width = 26.456695350000000000
@@ -2080,6 +2269,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo120: TfrxMemoView
+          AllowVectorExport = True
           Left = 347.716506140000000000
           Top = 18.338592440000070000
           Width = 24.566929130000000000
@@ -2100,6 +2290,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo121: TfrxMemoView
+          AllowVectorExport = True
           Left = 372.283493860000000000
           Top = 18.338592440000070000
           Width = 22.677180000000000000
@@ -2120,6 +2311,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo122: TfrxMemoView
+          AllowVectorExport = True
           Left = 394.960659210000000000
           Top = 18.338592440000070000
           Width = 43.464574250000000000
@@ -2140,6 +2332,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo123: TfrxMemoView
+          AllowVectorExport = True
           Left = 438.425480000000000000
           Top = 18.338592440000070000
           Width = 45.354360000000000000
@@ -2161,6 +2354,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo124: TfrxMemoView
+          AllowVectorExport = True
           Left = 483.779840000000000000
           Top = 18.338592440000070000
           Width = 45.354360000000000000
@@ -2182,6 +2376,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo125: TfrxMemoView
+          AllowVectorExport = True
           Left = 529.134200000000000000
           Top = 18.338592440000070000
           Width = 45.354360000000000000
@@ -2203,6 +2398,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo126: TfrxMemoView
+          AllowVectorExport = True
           Left = 574.488560000000000000
           Top = 18.338592440000070000
           Width = 45.354360000000000000
@@ -2224,6 +2420,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo127: TfrxMemoView
+          AllowVectorExport = True
           Left = 619.842920000000000000
           Top = 18.338592440000070000
           Width = 45.354360000000000000
@@ -2245,6 +2442,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo128: TfrxMemoView
+          AllowVectorExport = True
           Left = 665.197280000000000000
           Top = 18.338592440000070000
           Width = 45.354360000000000000
@@ -2266,6 +2464,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo129: TfrxMemoView
+          AllowVectorExport = True
           Left = 710.551640000000000000
           Top = 29.677182439999910000
           Width = 22.677180000000000000
@@ -2286,6 +2485,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo130: TfrxMemoView
+          AllowVectorExport = True
           Left = 733.228820000000000000
           Top = 29.677182439999910000
           Width = 22.677180000000000000
@@ -2306,6 +2506,7 @@ object Form1: TForm1
           VAlign = vaCenter
         end
         object Memo189: TfrxMemoView
+          AllowVectorExport = True
           Left = 710.551640000000000000
           Top = 18.338592440000070000
           Width = 45.354360000000000000
@@ -2328,12 +2529,18 @@ object Form1: TForm1
       end
       object Imposto: TfrxMasterData
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 70.031525350000000000
         Top = 760.000000000000000000
         Width = 755.906000000000000000
         DataSetName = 'CalculoImposto'
         RowCount = 1
         object Memo58: TfrxMemoView
+          AllowVectorExport = True
           Top = 3.779530000000022000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -2342,6 +2549,7 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'C'#193'LCULO DO IMPOSTO')
@@ -2349,6 +2557,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo59: TfrxMemoView
+          AllowVectorExport = True
           Top = 17.118122439999980000
           Width = 143.622140000000000000
           Height = 26.456692910000000000
@@ -2365,6 +2574,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo60: TfrxMemoView
+          AllowVectorExport = True
           Top = 26.566863229999970000
           Width = 143.622140000000000000
           Height = 17.007874020000000000
@@ -2376,6 +2586,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2386,6 +2597,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo61: TfrxMemoView
+          AllowVectorExport = True
           Left = 143.622140000000000000
           Top = 17.118122439999980000
           Width = 128.504020000000000000
@@ -2403,6 +2615,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo62: TfrxMemoView
+          AllowVectorExport = True
           Left = 143.622140000000000000
           Top = 26.566863229999970000
           Width = 128.504020000000000000
@@ -2415,6 +2628,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2425,6 +2639,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo63: TfrxMemoView
+          AllowVectorExport = True
           Left = 272.126160000000000000
           Top = 17.118122439999980000
           Width = 173.858380000000000000
@@ -2442,6 +2657,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo64: TfrxMemoView
+          AllowVectorExport = True
           Left = 272.126160000000000000
           Top = 26.566863229999970000
           Width = 173.858380000000000000
@@ -2454,6 +2670,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2464,6 +2681,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo65: TfrxMemoView
+          AllowVectorExport = True
           Left = 445.984540000000000000
           Top = 17.118122439999980000
           Width = 128.504020000000000000
@@ -2481,6 +2699,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo66: TfrxMemoView
+          AllowVectorExport = True
           Left = 445.984540000000000000
           Top = 26.566863229999970000
           Width = 128.504020000000000000
@@ -2493,6 +2712,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2503,6 +2723,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo67: TfrxMemoView
+          AllowVectorExport = True
           Left = 574.488560000000000000
           Top = 17.118122439999980000
           Width = 181.417440000000000000
@@ -2520,6 +2741,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo68: TfrxMemoView
+          AllowVectorExport = True
           Left = 574.488560000000000000
           Top = 25.566863229999970000
           Width = 181.417440000000000000
@@ -2532,6 +2754,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2542,6 +2765,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo69: TfrxMemoView
+          AllowVectorExport = True
           Left = 459.590848000000000000
           Top = 43.574832440000030000
           Width = 114.897712000000000000
@@ -2559,6 +2783,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo70: TfrxMemoView
+          AllowVectorExport = True
           Left = 459.590848000000000000
           Top = 53.023573230000010000
           Width = 114.897712000000000000
@@ -2571,6 +2796,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2581,6 +2807,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo71: TfrxMemoView
+          AllowVectorExport = True
           Left = 329.575016000000000000
           Top = 43.574832440000030000
           Width = 130.015832000000000000
@@ -2598,6 +2825,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo72: TfrxMemoView
+          AllowVectorExport = True
           Left = 329.575016000000000000
           Top = 53.023573230000010000
           Width = 130.015832000000000000
@@ -2610,6 +2838,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2620,6 +2849,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo73: TfrxMemoView
+          AllowVectorExport = True
           Left = 229.795424000000000000
           Top = 43.574832440000030000
           Width = 99.779592000000000000
@@ -2637,6 +2867,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo74: TfrxMemoView
+          AllowVectorExport = True
           Left = 229.795424000000000000
           Top = 53.023573230000010000
           Width = 99.779592000000000000
@@ -2649,6 +2880,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2659,6 +2891,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo75: TfrxMemoView
+          AllowVectorExport = True
           Left = 114.897712000000000000
           Top = 43.574832440000030000
           Width = 114.897712000000000000
@@ -2676,6 +2909,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo76: TfrxMemoView
+          AllowVectorExport = True
           Left = 114.897712000000000000
           Top = 53.023573230000010000
           Width = 114.897712000000000000
@@ -2688,6 +2922,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2698,6 +2933,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo77: TfrxMemoView
+          AllowVectorExport = True
           Top = 43.574832440000030000
           Width = 114.897712000000000000
           Height = 26.456692910000000000
@@ -2714,6 +2950,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo78: TfrxMemoView
+          AllowVectorExport = True
           Top = 53.023573230000010000
           Width = 114.897712000000000000
           Height = 17.007874020000000000
@@ -2725,6 +2962,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2734,6 +2972,7 @@ object Form1: TForm1
           WordWrap = False
         end
         object Memo79: TfrxMemoView
+          AllowVectorExport = True
           Left = 574.488560000000000000
           Top = 43.574832440000030000
           Width = 181.417440000000000000
@@ -2751,6 +2990,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo80: TfrxMemoView
+          AllowVectorExport = True
           Left = 574.488560000000000000
           Top = 52.023573230000010000
           Width = 181.417440000000000000
@@ -2763,6 +3003,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -2775,12 +3016,18 @@ object Form1: TForm1
       end
       object TransportadorVolumes: TfrxMasterData
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 96.378045510000000000
         Top = 852.000000000000000000
         Width = 755.906000000000000000
         DataSetName = 'Transportador'
         RowCount = 1
         object Memo82: TfrxMemoView
+          AllowVectorExport = True
           Top = 3.779530000000022000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -2789,12 +3036,14 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'TRANSPORTADOR / VOLUMES TRANSPORTADOS')
           ParentFont = False
         end
         object Memo83: TfrxMemoView
+          AllowVectorExport = True
           Left = 636.094512600000000000
           Top = 17.007932600000000000
           Width = 119.811023620000000000
@@ -2812,6 +3061,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo84: TfrxMemoView
+          AllowVectorExport = True
           Left = 636.094512600000000000
           Top = 26.456673389999990000
           Width = 119.811023620000000000
@@ -2821,6 +3071,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -2830,6 +3081,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo85: TfrxMemoView
+          AllowVectorExport = True
           Left = 608.504330000000000000
           Top = 17.007932600000000000
           Width = 27.590548740000000000
@@ -2847,6 +3099,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo86: TfrxMemoView
+          AllowVectorExport = True
           Left = 608.504330000000000000
           Top = 26.456673389999990000
           Width = 27.590548740000000000
@@ -2856,6 +3109,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haCenter
@@ -2866,6 +3120,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo87: TfrxMemoView
+          AllowVectorExport = True
           Left = 521.575140000000000000
           Top = 17.007932600000000000
           Width = 86.929190000000000000
@@ -2883,6 +3138,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo88: TfrxMemoView
+          AllowVectorExport = True
           Left = 521.575140000000000000
           Top = 26.456673389999990000
           Width = 86.929190000000000000
@@ -2892,6 +3148,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -2901,6 +3158,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo89: TfrxMemoView
+          AllowVectorExport = True
           Left = 438.425480000000000000
           Top = 17.007932600000000000
           Width = 83.149660000000000000
@@ -2918,6 +3176,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo90: TfrxMemoView
+          AllowVectorExport = True
           Left = 438.425480000000000000
           Top = 26.456673389999990000
           Width = 79.370130000000000000
@@ -2927,6 +3186,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -2936,6 +3196,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo91: TfrxMemoView
+          AllowVectorExport = True
           Left = 355.275820000000000000
           Top = 17.007932600000000000
           Width = 83.149660000000000000
@@ -2953,6 +3214,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo92: TfrxMemoView
+          AllowVectorExport = True
           Left = 355.275820000000000000
           Top = 26.456673389999990000
           Width = 83.149660000000000000
@@ -2962,6 +3224,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -2971,6 +3234,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo93: TfrxMemoView
+          AllowVectorExport = True
           Top = 17.007932600000000000
           Width = 355.275820000000000000
           Height = 26.456692910000000000
@@ -2987,6 +3251,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo94: TfrxMemoView
+          AllowVectorExport = True
           Top = 26.456673389999990000
           Width = 355.275820000000000000
           Height = 17.007874020000000000
@@ -2995,6 +3260,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3004,6 +3270,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo95: TfrxMemoView
+          AllowVectorExport = True
           Left = 608.504330000000000000
           Top = 43.464642600000040000
           Width = 27.590548740000000000
@@ -3021,6 +3288,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo96: TfrxMemoView
+          AllowVectorExport = True
           Left = 608.504330000000000000
           Top = 52.913383390000040000
           Width = 27.590548740000000000
@@ -3030,6 +3298,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haCenter
@@ -3040,6 +3309,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo97: TfrxMemoView
+          AllowVectorExport = True
           Left = 636.094512600000000000
           Top = 43.464642600000040000
           Width = 119.811023620000000000
@@ -3057,6 +3327,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo98: TfrxMemoView
+          AllowVectorExport = True
           Left = 636.094512600000000000
           Top = 52.913383390000040000
           Width = 119.811023620000000000
@@ -3066,6 +3337,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3075,6 +3347,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo99: TfrxMemoView
+          AllowVectorExport = True
           Left = 355.275820000000000000
           Top = 43.464642600000040000
           Width = 253.228510000000000000
@@ -3092,6 +3365,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo100: TfrxMemoView
+          AllowVectorExport = True
           Left = 355.275820000000000000
           Top = 52.913383390000040000
           Width = 253.228510000000000000
@@ -3101,6 +3375,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3110,6 +3385,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo101: TfrxMemoView
+          AllowVectorExport = True
           Top = 43.464642600000040000
           Width = 355.275820000000000000
           Height = 26.456692910000000000
@@ -3126,6 +3402,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo102: TfrxMemoView
+          AllowVectorExport = True
           Top = 52.913383390000040000
           Width = 355.275820000000000000
           Height = 17.007874020000000000
@@ -3134,6 +3411,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3143,6 +3421,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo103: TfrxMemoView
+          AllowVectorExport = True
           Top = 69.921352599999970000
           Width = 59.212636670000000000
           Height = 26.456692910000000000
@@ -3160,6 +3439,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo104: TfrxMemoView
+          AllowVectorExport = True
           Top = 79.370093389999960000
           Width = 59.212636670000000000
           Height = 17.007874020000000000
@@ -3168,6 +3448,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -3179,6 +3460,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo105: TfrxMemoView
+          AllowVectorExport = True
           Left = 59.212636670000000000
           Top = 69.921352599999970000
           Width = 153.700886670000000000
@@ -3196,6 +3478,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo106: TfrxMemoView
+          AllowVectorExport = True
           Left = 59.212636670000000000
           Top = 79.370093389999960000
           Width = 153.700886670000000000
@@ -3205,6 +3488,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3214,6 +3498,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo107: TfrxMemoView
+          AllowVectorExport = True
           Left = 212.913523330000000000
           Top = 69.921352599999970000
           Width = 142.362296670000000000
@@ -3231,6 +3516,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo108: TfrxMemoView
+          AllowVectorExport = True
           Left = 212.913523330000000000
           Top = 79.370093389999960000
           Width = 142.362296670000000000
@@ -3240,6 +3526,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3249,6 +3536,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo109: TfrxMemoView
+          AllowVectorExport = True
           Left = 355.275820000000000000
           Top = 69.921352599999970000
           Width = 161.259946670000000000
@@ -3266,6 +3554,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo110: TfrxMemoView
+          AllowVectorExport = True
           Left = 355.275820000000000000
           Top = 79.370093389999960000
           Width = 161.259946670000000000
@@ -3275,6 +3564,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3284,6 +3574,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo111: TfrxMemoView
+          AllowVectorExport = True
           Left = 516.535766670000000000
           Top = 69.921352599999970000
           Width = 119.685116670000000000
@@ -3301,6 +3592,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo112: TfrxMemoView
+          AllowVectorExport = True
           Left = 516.535766670000000000
           Top = 79.370093389999960000
           Width = 119.685116670000000000
@@ -3313,6 +3605,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -3324,6 +3617,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo113: TfrxMemoView
+          AllowVectorExport = True
           Left = 636.220883330000000000
           Top = 69.921352599999970000
           Width = 119.685116670000000000
@@ -3341,6 +3635,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo114: TfrxMemoView
+          AllowVectorExport = True
           Left = 636.220883330000000000
           Top = 79.370093389999960000
           Width = 119.685116670000000000
@@ -3353,6 +3648,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -3366,11 +3662,17 @@ object Form1: TForm1
       end
       object MarcaDagua: TfrxOverlay
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 1122.519685040000000000
         Top = 1124.000000000000000000
         Width = 755.906000000000000000
         object memWatermark: TfrxMemoView
           Align = baClient
+          AllowVectorExport = True
           Width = 755.906000000000000000
           Height = 1122.519685040000000000
           Font.Charset = DEFAULT_CHARSET
@@ -3378,6 +3680,7 @@ object Form1: TForm1
           Font.Height = -67
           Font.Name = 'Arial'
           Font.Style = [fsBold]
+          Frame.Typ = []
           HAlign = haCenter
           Memo.UTF8W = (
             '[Parametros."Mensagem0"]')
@@ -3387,10 +3690,18 @@ object Form1: TForm1
       end
       object Child1: TfrxChild
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 3.779527560000000000
         Top = 1080.000000000000000000
         Width = 755.906000000000000000
+        ToNRows = 0
+        ToNRowsMode = rmCount
         object Memo161: TfrxMemoView
+          AllowVectorExport = True
           Width = 60.472480000000000000
           Height = 3.779527560000000000
           StretchMode = smActualHeight
@@ -3406,6 +3717,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo162: TfrxMemoView
+          AllowVectorExport = True
           Left = 60.472480000000000000
           Width = 222.992270000000000000
           Height = 3.779527560000000000
@@ -3421,6 +3733,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo163: TfrxMemoView
+          AllowVectorExport = True
           Left = 283.464750000000000000
           Width = 37.795300000000000000
           Height = 3.779527560000000000
@@ -3437,6 +3750,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo164: TfrxMemoView
+          AllowVectorExport = True
           Left = 321.260050000000000000
           Width = 26.456695350000000000
           Height = 3.779527560000000000
@@ -3453,6 +3767,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo165: TfrxMemoView
+          AllowVectorExport = True
           Left = 347.716564720000000000
           Width = 24.566929130000000000
           Height = 3.779527560000000000
@@ -3469,6 +3784,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo166: TfrxMemoView
+          AllowVectorExport = True
           Left = 372.283493860000000000
           Width = 22.677180000000000000
           Height = 3.779527560000000000
@@ -3486,6 +3802,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo167: TfrxMemoView
+          AllowVectorExport = True
           Left = 394.960659210000000000
           Width = 43.464574250000000000
           Height = 3.779527560000000000
@@ -3505,6 +3822,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo168: TfrxMemoView
+          AllowVectorExport = True
           Left = 438.425480000000000000
           Width = 45.354360000000000000
           Height = 3.779527560000000000
@@ -3524,6 +3842,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo169: TfrxMemoView
+          AllowVectorExport = True
           Left = 483.779840000000000000
           Width = 45.354360000000000000
           Height = 3.779527560000000000
@@ -3541,6 +3860,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo170: TfrxMemoView
+          AllowVectorExport = True
           Left = 529.134200000000000000
           Width = 45.354360000000000000
           Height = 3.779527560000000000
@@ -3560,6 +3880,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo171: TfrxMemoView
+          AllowVectorExport = True
           Left = 574.488560000000000000
           Width = 45.354360000000000000
           Height = 3.779527560000000000
@@ -3579,6 +3900,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo172: TfrxMemoView
+          AllowVectorExport = True
           Left = 619.842920000000000000
           Width = 45.354360000000000000
           Height = 3.779527560000000000
@@ -3598,6 +3920,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo173: TfrxMemoView
+          AllowVectorExport = True
           Left = 665.197280000000000000
           Width = 45.354360000000000000
           Height = 3.779527560000000000
@@ -3617,6 +3940,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo174: TfrxMemoView
+          AllowVectorExport = True
           Left = 710.551640000000000000
           Width = 22.677180000000000000
           Height = 3.779527560000000000
@@ -3636,6 +3960,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo175: TfrxMemoView
+          AllowVectorExport = True
           Left = 733.228820000000000000
           Width = 22.677180000000000000
           Height = 3.779527560000000000
@@ -3657,16 +3982,29 @@ object Form1: TForm1
       end
       object DadosProdutosFooter: TfrxGroupFooter
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Top = 1060.000000000000000000
         Width = 755.906000000000000000
         OnBeforePrint = 'DadosProdutosFooterOnBeforePrint'
       end
       object Child2: TfrxChild
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Top = 1104.000000000000000000
         Width = 755.906000000000000000
+        ToNRows = 0
+        ToNRowsMode = rmCount
         object Line2: TfrxLineView
           Align = baWidth
+          AllowVectorExport = True
           Width = 755.906000000000000000
           Color = clBlack
           Frame.Typ = [ftTop]
@@ -3675,12 +4013,18 @@ object Form1: TForm1
       end
       object LocalRetirada: TfrxMasterData
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 43.354342910000000000
         Top = 448.000000000000000000
         Width = 755.906000000000000000
         DataSetName = 'LocalRetirada'
         RowCount = 0
         object Memo10: TfrxMemoView
+          AllowVectorExport = True
           Top = 16.897650000000000000
           Width = 113.385900000000000000
           Height = 26.456692910000000000
@@ -3697,6 +4041,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo11: TfrxMemoView
+          AllowVectorExport = True
           Top = 26.346390789999990000
           Width = 113.385826770000000000
           Height = 17.007874020000000000
@@ -3705,6 +4050,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3714,6 +4060,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo14: TfrxMemoView
+          AllowVectorExport = True
           Left = 113.385900000000000000
           Top = 16.897650000000000000
           Width = 642.520100000000000000
@@ -3731,6 +4078,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo18: TfrxMemoView
+          AllowVectorExport = True
           Left = 113.385900000000000000
           Top = 26.346390789999990000
           Width = 642.520100000000000000
@@ -3740,6 +4088,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3752,6 +4101,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo185: TfrxMemoView
+          AllowVectorExport = True
           Top = 3.779530000000022000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -3760,6 +4110,7 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'LOCAL RETIRADA')
@@ -3769,12 +4120,18 @@ object Form1: TForm1
       end
       object LocalEntrega: TfrxMasterData
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 43.354342910000000000
         Top = 512.000000000000000000
         Width = 755.906000000000000000
         DataSetName = 'LocalEntrega'
         RowCount = 0
         object Memo54: TfrxMemoView
+          AllowVectorExport = True
           Top = 16.897650000000000000
           Width = 113.385900000000000000
           Height = 26.456692910000000000
@@ -3791,6 +4148,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo55: TfrxMemoView
+          AllowVectorExport = True
           Top = 26.346390789999990000
           Width = 113.385826770000000000
           Height = 17.007874020000000000
@@ -3799,6 +4157,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3808,6 +4167,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo56: TfrxMemoView
+          AllowVectorExport = True
           Left = 113.385900000000000000
           Top = 16.897650000000000000
           Width = 642.520100000000000000
@@ -3825,6 +4185,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo57: TfrxMemoView
+          AllowVectorExport = True
           Left = 113.385900000000000000
           Top = 26.346390789999990000
           Width = 642.520100000000000000
@@ -3834,6 +4195,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3846,6 +4208,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo81: TfrxMemoView
+          AllowVectorExport = True
           Top = 3.779530000000022000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -3854,6 +4217,7 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'LOCAL ENTREGA')
@@ -3870,15 +4234,23 @@ object Form1: TForm1
       RightMargin = 5.000000000000000000
       TopMargin = 7.000000000000000000
       BottomMargin = 7.000000000000000000
+      Frame.Typ = []
       LargeDesignHeight = True
+      MirrorMode = []
       object subISSQN: TfrxMasterData
         FillType = ftBrush
+        FillGap.Top = 0
+        FillGap.Left = 0
+        FillGap.Bottom = 0
+        FillGap.Right = 0
+        Frame.Typ = []
         Height = 43.354342910000000000
         Top = 18.897650000000000000
         Width = 718.110700000000000000
         DataSetName = 'ISSQN'
         RowCount = 0
         object Memo152: TfrxMemoView
+          AllowVectorExport = True
           Top = 3.779530000000000000
           Width = 430.866420000000000000
           Height = 13.228344020000000000
@@ -3887,6 +4259,7 @@ object Form1: TForm1
           Font.Height = -9
           Font.Name = 'Times New Roman'
           Font.Style = [fsBold]
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           Memo.UTF8W = (
             'C'#193'LCULO DO ISSQN')
@@ -3894,6 +4267,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo153: TfrxMemoView
+          AllowVectorExport = True
           Top = 16.897650000000000000
           Width = 217.322859060000000000
           Height = 26.456692910000000000
@@ -3910,6 +4284,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo154: TfrxMemoView
+          AllowVectorExport = True
           Top = 26.346390790000000000
           Width = 217.322859060000000000
           Height = 17.007874020000000000
@@ -3918,6 +4293,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           Memo.UTF8W = (
@@ -3926,6 +4302,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo155: TfrxMemoView
+          AllowVectorExport = True
           Left = 217.322859060000000000
           Top = 16.897650000000000000
           Width = 179.527559060000000000
@@ -3943,6 +4320,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo156: TfrxMemoView
+          AllowVectorExport = True
           Left = 217.322859060000000000
           Top = 26.346390790000000000
           Width = 179.527559060000000000
@@ -3955,6 +4333,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -3964,6 +4343,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo157: TfrxMemoView
+          AllowVectorExport = True
           Left = 396.850418110000000000
           Top = 16.897650000000000000
           Width = 179.527559060000000000
@@ -3981,6 +4361,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo158: TfrxMemoView
+          AllowVectorExport = True
           Left = 396.850418110000000000
           Top = 26.346390790000000000
           Width = 179.527559060000000000
@@ -3993,6 +4374,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -4002,6 +4384,7 @@ object Form1: TForm1
           VAlign = vaBottom
         end
         object Memo159: TfrxMemoView
+          AllowVectorExport = True
           Left = 576.377977170000000000
           Top = 16.897650000000000000
           Width = 179.527559060000000000
@@ -4019,6 +4402,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object Memo160: TfrxMemoView
+          AllowVectorExport = True
           Left = 576.377977170000000000
           Top = 26.346390790000000000
           Width = 179.527559060000000000
@@ -4031,6 +4415,7 @@ object Form1: TForm1
           Font.Height = -11
           Font.Name = 'Times New Roman'
           Font.Style = []
+          Frame.Typ = []
           Frame.Width = 0.500000000000000000
           GapX = 5.000000000000000000
           HAlign = haRight
@@ -4059,6 +4444,9 @@ object Form1: TForm1
     ShowProgress = True
     OverwritePrompt = False
     DataOnly = False
+    EmbedFontsIfProtected = False
+    InteractiveFormsFontSubset = 'A-Z,a-z,0-9,#43-#47 '
+    OpenAfterExport = False
     PrintOptimized = False
     Outline = False
     Background = False
@@ -4066,6 +4454,7 @@ object Form1: TForm1
     Quality = 95
     Author = 'FastReport'
     Subject = 'FastReport PDF export'
+    Creator = 'FastReport'
     ProtectionFlags = [ePrint, eModify, eCopy, eAnnot]
     HideToolbar = False
     HideMenubar = False
@@ -4073,6 +4462,9 @@ object Form1: TForm1
     FitWindow = False
     CenterWindow = False
     PrintScaling = False
+    PdfA = False
+    PDFStandard = psNone
+    PDFVersion = pv17
     Left = 216
     Top = 72
   end

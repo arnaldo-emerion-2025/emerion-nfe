@@ -33,6 +33,7 @@ uses
   StrUtils,
   uFuncoes,
   uJsonHelper,
+  uIniFileUtils,
   uNFeJson,
   ACBrUtil,
   ComCtrls,
@@ -85,7 +86,6 @@ type
     procedure DPEC_SEFAZ;
     procedure ConfirmaEnvioDPEC(strEnviado: string);
     procedure GravaProtcoloDpec(strPTo: string);
-    procedure ValidaINI;
     function LeftZero(Const Text: string; Const Tam: word;
       Const RetQdoVazio: String = ' '): string;
 
@@ -101,7 +101,6 @@ type
     procedure bEnviarSNClick;
     procedure bComplementoSNClick;
     procedure bConsultaDisponibilidade;
-    procedure AtualizaIni;
 
   public
 
@@ -111,13 +110,10 @@ type
     VCertCaminho, VCertSenha, VCertNumSerie: string;
 
     // ========= variaveis Config. Gerais   VCGerais
-    VCGeraisLogo, VCGeraisCaminhoArquivosXML, VCGeraisCaminhoArquivoLeitura, //
-      VCGeraisCaminhoArquivoRetorno: string;
-    VCGeraisCaminhoArquivoDownload: string;
-    VCGeraisCaminhoArquivoCancelada, VCGeraisCaminhoArquivoDANFE, //
-      VCGeraisCaminhoArquivoSchemas: string;
-    VCGeraisCaminhoArquivoTipoImpressao,
-      VCGeraisCaminhoArquivoFileImpressao: string;
+    VCGeraisLogo, VCGeraisCaminhoArquivosXML, VCGeraisCaminhoArquivoLeitura, VCGeraisCaminhoArquivoRetorno: string;
+    VCGeraisCaminhoArquivoDownload, VCGeraisTipoArquivoEnvio: string;
+    VCGeraisCaminhoArquivoCancelada, VCGeraisCaminhoArquivoDANFE, VCGeraisCaminhoArquivoSchemas: string;
+    VCGeraisCaminhoArquivoTipoImpressao, VCGeraisCaminhoArquivoFileImpressao: string;
     VCGeraisDanfe, VCGeraisFormaemissao: Integer;
     VCGeraisSalvar: Boolean;
 
@@ -168,16 +164,6 @@ begin
   Result := ACBrValidador1.Validar;
 end;
 
-procedure TForm1.ValidaINI;
-var
-  IniFile: string;
-  arqIni: TIniFile;
-begin
-  IniFile := ChangeFileExt(Application.ExeName, '.ini');
-  arqIni := TIniFile.Create(IniFile);
-  arqIni.Free;
-end;
-
 function TForm1.RecuperaChaveEnviando: string;
 var
   arq: TIniFile;
@@ -212,20 +198,18 @@ begin
     on E: Exception do
     begin
       // Validando retorno para NFe Denegada
-      if (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 110) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 205) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 301) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 302) then
+      if (ACBrNFe1.WebServices.Enviar.cStat = 110) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 205) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 301) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 302) then
       begin
         strDenegada := 'S';
-        ValidaRejeicao(IntToStr(ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.cStat) + ' - ' + ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.xMotivo);
+        ValidaRejeicao(IntToStr(ACBrNFe1.WebServices.Enviar.cStat) + ' - ' + ACBrNFe1.WebServices.Enviar.xMotivo);
       end;
 
-      if ((ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 539) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 502) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 204) or
+      if ((ACBrNFe1.WebServices.Enviar.cStat = 539) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 502) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 204) or
         (pos(IntToStr(VNumLote) + '->Rejeicao: Duplicidade de NF-e', E.Message)
         > 0)) then
         Result := true
@@ -238,7 +222,6 @@ begin
   ACBrNFe1.NotasFiscais.LoadFromFile(VCGeraisCaminhoArquivoRetorno + '\' +
     RChave + '-nfe.xml');
   ACBrNFe1.Consultar;
-
   ACBrNFe1.NotasFiscais.Items[0].GravarXML(RChave + '-nfe.xml');
   ACBrNFe1.NotasFiscais.Items[0].GravarXML
     (IntToStr(ACBrNFe1.NotasFiscais.Items[0].NFe.Ide.nNF) + ' - NF-e- ' + RChave
@@ -318,6 +301,8 @@ begin
     if DirectoryExists(VCGeraisCaminhoArquivoRetorno) = False then
       ForceDirectories(VCGeraisCaminhoArquivoRetorno);
 
+    Ini.WriteString('TIPO_SISTEMA', 'TIPO_ARQUIVO', '');
+
     // ====================== WEBSERVICE ===============================================
 
     Ini.WriteString('WebService', 'UF', VWebSUF);
@@ -365,15 +350,12 @@ begin
     VCGeraisCaminhoArquivosXML := Ini.readString('Geral', 'PathXML', '');
     VCGeraisCaminhoArquivoLeitura := Ini.readString('Geral', 'PathLeitura', '');
     VCGeraisCaminhoArquivoRetorno := Ini.readString('Geral', 'PathRetorno', '');
-    VCGeraisCaminhoArquivoCancelada := Ini.readString('Geral',
-      'PathCancelada', '');
+    VCGeraisCaminhoArquivoCancelada := Ini.readString('Geral','PathCancelada', '');
     VCGeraisCaminhoArquivoDANFE := Ini.readString('Geral', 'PathDANFE', '');
     VCGeraisCaminhoArquivoSchemas := Ini.readString('Geral', 'PathSchemas', '');
 
-    VCGeraisCaminhoArquivoTipoImpressao :=
-      Ini.readString('Geral', 'TipoImpressao', 'RAVE');
-    VCGeraisCaminhoArquivoFileImpressao :=
-      Ini.readString('Geral', 'FileImpressao', '');
+    VCGeraisCaminhoArquivoTipoImpressao := Ini.readString('Geral', 'TipoImpressao', 'RAVE');
+    VCGeraisCaminhoArquivoFileImpressao := Ini.readString('Geral', 'FileImpressao', '');
 
     if not DirectoryExists(VCGeraisCaminhoArquivosXML) then
     begin
@@ -589,21 +571,19 @@ begin
 
     try
       Memo2.Lines.Clear;
-      ACBrNFe1.NotasFiscais.GravarXML(VCGeraisCaminhoArquivosXML +
-        '\xmlantesdeenviar.xml');
+      ACBrNFe1.NotasFiscais.GravarXML(VCGeraisCaminhoArquivosXML + '\xmlantesdeenviar.xml');
       ACBrNFe1.Enviar(VNumLote, True, True);
     finally
-      Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\LogGeral-' +
-        IntToStr(VNumLote) + '.txt');
+      Memo2.Lines.SaveToFile(VCGeraisCaminhoArquivosXML + '\LogGeral-' +IntToStr(VNumLote) + '.txt');
     end;
 
     ACBrNFe1.NotasFiscais.ImprimirPDF;
 
     // Validando retorno para NFe Denegada
-    if (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 110) or
-      (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 205) or
-      (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 301) or
-      (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 302) then
+    if (ACBrNFe1.WebServices.Enviar.cStat = 110) or
+      (ACBrNFe1.WebServices.Enviar.cStat = 205) or
+      (ACBrNFe1.WebServices.Enviar.cStat = 301) or
+      (ACBrNFe1.WebServices.Enviar.cStat = 302) then
     begin
       strDenegada := 'S';
 
@@ -615,18 +595,18 @@ begin
         ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe +
         '-nfe.xml'), pchar(strNome), true);
 
-      ValidaRejeicao(IntToStr(ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat)
-        + ' - ' + ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.xMotivo);
+      ValidaRejeicao(IntToStr(ACBrNFe1.WebServices.Enviar.cStat)
+        + ' - ' + ACBrNFe1.WebServices.Enviar.xMotivo);
     end;
 
   except
     on E: Exception do
     begin
       // Validando retorno para NFe Denegada
-      if (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 110) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 205) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 301) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 302) then
+      if (ACBrNFe1.WebServices.Enviar.cStat = 110) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 205) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 301) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 302) then
       begin
         strDenegada := 'S';
 
@@ -638,9 +618,7 @@ begin
           ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe +
           '-nfe.xml'), pchar(strNome), true);
 
-        ValidaRejeicao(IntToStr(ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.cStat) + ' - ' + ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.xMotivo);
+        ValidaRejeicao(IntToStr(ACBrNFe1.WebServices.Enviar.cStat) + ' - ' + ACBrNFe1.WebServices.Enviar.xMotivo);
       end;
 
       Memo1.Lines.Text := (E.Message);
@@ -741,7 +719,7 @@ begin
   else
   begin
 
-    if (ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].nProt <> '') or
+    if (ACBrNFe1.WebServices.Enviar.Protocolo <> '') or
       (chaveDup <> '') then
     begin
 
@@ -751,22 +729,21 @@ begin
       if (trim(chaveDup) = '') then
       begin
         strNome := VCGeraisCaminhoArquivoRetorno + '\' + IntToStr(VNumLote) +
-          ' - NF-e- ' + ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0]
-          .chDFe + '.xml';
+          ' - NF-e- ' + ACBrNFe1.NotasFiscais[0].NFe.procNFe.chNFe + '.xml';
 
         CopyFile(pchar(VCGeraisCaminhoArquivoRetorno + '\' +
-          ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe +
+          ACBrNFe1.NotasFiscais[0].NFe.procNFe.chNFe +
           '-nfe.xml'), pchar(strNome), true);
 
       end;
 
       RecChave := RecuperaChaveEnviando;
 
-      if RecChave <> ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe
+      if RecChave <> ACBrNFe1.NotasFiscais[0].NFe.procNFe.chNFe
       then
         ReescreveChaveEnviada(ifthen(achou, chaveDup,
-          ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].chDFe),
-          ACBrNFe1.WebServices.Retorno.NFeRetorno.ProtDFe.Items[0].nProt);
+          ACBrNFe1.NotasFiscais[0].NFe.procNFe.chNFe),
+          ACBrNFe1.WebServices.Enviar.Protocolo);
     end
     else
     begin
@@ -813,10 +790,7 @@ begin
   AtualizaIni;
   FormatSettings.DecimalSeparator := ',';
 
-  ValidaINI;
-
-  sendNFe();
-  readJson('{"inicio":{"ufeEmp":"SP","SeqNFe":"35201003089573000121550010000450240000870646","LotNfe":0},"contigencia":{},"cabecalho":{"date":"35"}}');
+  ValidaIni;
 
   strDenegada := 'N';
 
@@ -881,37 +855,6 @@ begin
 
   Memo2.Lines.Text := Memo2.Lines.Text + ALogLine + #13#10 +
     StringOfChar('#', 20) + #13#10;
-
-end;
-
-procedure TForm1.AtualizaIni;
-var
-  IniFile: string;
-  arqIni: TIniFile;
-begin
-  IniFile := ChangeFileExt(Application.ExeName, '.ini');
-
-  arqIni := TIniFile.Create(IniFile);
-  try
-    if (arqIni.readString('Geral', 'TipoImpressao', '') = '') then
-    begin
-      arqIni.WriteString('Geral', 'TipoImpressao', 'FAST');
-    end;
-
-    if (arqIni.readString('Geral', 'DialogoImpressao', '') = '') then
-    begin
-      arqIni.WriteString('Geral', 'DialogoImpressao', 'SIM');
-    end;
-
-    if (arqIni.readString('Geral', 'FileImpressao', '') = '') then
-    begin
-      arqIni.WriteString('Geral', 'FileImpressao', arqIni.readString('Geral',
-        'PathSchemas', '') + '\DANFeRetrato.fr3');
-    end;
-  finally
-
-    arqIni.Free
-  end;
 
 end;
 
@@ -1126,15 +1069,13 @@ begin
     begin
 
       // Validando retorno para NFe Denegada
-      if (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 110) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 205) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 301) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 302) then
+      if (ACBrNFe1.WebServices.Enviar.cStat = 110) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 205) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 301) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 302) then
       begin
         strDenegada := 'S';
-        ValidaRejeicao(IntToStr(ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.cStat) + ' - ' + ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.xMotivo);
+        ValidaRejeicao(IntToStr(ACBrNFe1.WebServices.Enviar.cStat) + ' - ' + ACBrNFe1.WebServices.Enviar.xMotivo);
       end;
 
       Memo1.Lines.Text := (E.Message);
@@ -1534,15 +1475,13 @@ begin
     begin
 
       // Validando retorno para NFe Denegada
-      if (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 110) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 205) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 301) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 302) then
+      if (ACBrNFe1.WebServices.Enviar.cStat = 110) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 205) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 301) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 302) then
       begin
         strDenegada := 'S';
-        ValidaRejeicao(IntToStr(ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.cStat) + ' - ' + ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.xMotivo);
+        ValidaRejeicao(IntToStr(ACBrNFe1.WebServices.Enviar.cStat) + ' - ' + ACBrNFe1.WebServices.Enviar.xMotivo);
       end;
 
       Memo1.Lines.Text := (E.Message);
@@ -1704,15 +1643,13 @@ begin
     begin
 
       // Validando retorno para NFe Denegada
-      if (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 110) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 205) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 301) or
-        (ACBrNFe1.NotasFiscais.Items[0].NFe.procNFe.cStat = 302) then
+      if (ACBrNFe1.WebServices.Enviar.cStat = 110) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 205) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 301) or
+        (ACBrNFe1.WebServices.Enviar.cStat = 302) then
       begin
         strDenegada := 'S';
-        ValidaRejeicao(IntToStr(ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.cStat) + ' - ' + ACBrNFe1.NotasFiscais.Items[0]
-          .NFe.procNFe.xMotivo);
+        ValidaRejeicao(IntToStr(ACBrNFe1.WebServices.Enviar.cStat) + ' - ' + ACBrNFe1.WebServices.Enviar.xMotivo);
       end;
 
       Memo1.Lines.Text := (E.Message);
@@ -1907,14 +1844,15 @@ begin
 
 end;
 
-function TForm1.EnviaNFe2(RChave, RProtocolo: String; SN: Boolean;
-  TipoEnvio: Integer = 3): Boolean;
+function TForm1.EnviaNFe2(RChave, RProtocolo: String; SN: Boolean; TipoEnvio: Integer = 3): Boolean;
 var
   Arquivo: TextFile;
   Linha: string;
   i, j, colunai, colunaf: Integer;
   VSNprod, VSNAliq, vliq, voriginal, Pfcp, Vfcp: Real;
   codigoBarra, unidadeTributacao, numeroparcela, FCI, nfat, loja: string;
+  jsonText: TStringList;
+
 begin
   Result := False;
   Vfcp := 0;
@@ -1932,8 +1870,17 @@ begin
   end
   else if ACAO = 'ENVIA' then
   begin
-    AssignFile(Arquivo, VCGeraisCaminhoArquivoLeitura + '\EVNOTA' +
-      IntToStr(ParNF) + '.txt');
+    if(VCGeraisTipoArquivoEnvio = 'JSON') then
+    begin
+      jsonText := TStringList.Create;
+      jsonText.LoadFromFile(VCGeraisCaminhoArquivoLeitura + '\EVNOTA' + IntToStr(ParNF) + '.json');
+      VNumLote := sendNFe(ACBrNFe1, jsonText.Text);
+      exit;
+    end
+    else
+    begin
+      AssignFile(Arquivo, VCGeraisCaminhoArquivoLeitura + '\EVNOTA' + IntToStr(ParNF) + '.txt');
+    end;
   end
   else if ACAO = 'ENVIASN' then
   begin
