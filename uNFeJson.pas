@@ -463,7 +463,7 @@ begin
     begin
       pagItem := pagArray.Child[i] as TlkJSONobject;
       item := cobranca.Dup.New;
-      item.nDup := pagItem.Field['nDup'].Value;
+      item.nDup := pagItem.Field['numeroParcela'].Value;
       item.dVenc := strToDate_YMD(pagItem.Field['dVenc'].Value);
       item.vDup := pagItem.Field['vPag'].Value;
     end;
