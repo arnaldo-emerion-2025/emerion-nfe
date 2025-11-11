@@ -353,6 +353,7 @@ begin
     VCGeraisCaminhoArquivoCancelada := Ini.readString('Geral','PathCancelada', '');
     VCGeraisCaminhoArquivoDANFE := Ini.readString('Geral', 'PathDANFE', '');
     VCGeraisCaminhoArquivoSchemas := Ini.readString('Geral', 'PathSchemas', '');
+    VCGeraisTipoArquivoEnvio := Ini.readString('TIPO_SISTEMA', 'TIPO_ARQUIVO', '');
 
     VCGeraisCaminhoArquivoTipoImpressao := Ini.readString('Geral', 'TipoImpressao', 'RAVE');
     VCGeraisCaminhoArquivoFileImpressao := Ini.readString('Geral', 'FileImpressao', '');
