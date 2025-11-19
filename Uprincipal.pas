@@ -86,8 +86,6 @@ type
     procedure DPEC_SEFAZ;
     procedure ConfirmaEnvioDPEC(strEnviado: string);
     procedure GravaProtcoloDpec(strPTo: string);
-    function LeftZero(Const Text: string; Const Tam: word;
-      Const RetQdoVazio: String = ' '): string;
 
     procedure bConfigClick;
     procedure bEnviarNfeClick;
@@ -143,7 +141,6 @@ type
     { Public declarations }
     function RecuperarXMLFATPED(RChave, RProtocolo: string; SN: Boolean;
       TipoEnvio: Integer = 3): Boolean;
-    function ValidaCNPJ(sCNPJ: string; MostraMsg: Boolean = true): Boolean;
   end;
 
 var
@@ -157,12 +154,6 @@ uses
   ConvUtils,
   ACBrNFeWebServices,
   pcnConversaoNFe, ACBrDFeSSL, blcksock;
-
-function TForm1.ValidaCNPJ(sCNPJ: string; MostraMsg: Boolean = true): Boolean;
-begin
-  ACBrValidador1.Documento := sCNPJ;
-  Result := ACBrValidador1.Validar;
-end;
 
 function TForm1.RecuperaChaveEnviando: string;
 var
@@ -469,7 +460,7 @@ begin
     VCGeraisLogo := Ini.readString('Geral', 'LogoMarca', '');
     if ACBrNFe1.DANFE <> nil then
     begin
-      ACBrNFe1.DANFE.TipoDANFE := StrToTpImp(Ok, IntToStr(VCGeraisDanfe + 1));
+      ACBrNFe1.DANFE.TipoDANFE := StrToTpImp(IntToStr(VCGeraisDanfe + 1));
       ACBrNFe1.DANFE.Logo := VCGeraisLogo;
     end;
 
@@ -1859,6 +1850,14 @@ begin
   Vfcp := 0;
 
   // Carrega Arquivo para leitura
+  if(VCGeraisTipoArquivoEnvio = 'JSON') then
+    begin
+      jsonText := TStringList.Create;
+      jsonText.LoadFromFile(VCGeraisCaminhoArquivoLeitura + '\EVNOTA' + IntToStr(ParNF) + '.json');
+      VNumLote := sendNFe(ACBrNFe1, jsonText.Text);
+      exit;
+    end;
+
   if ACAO = 'COMPLEMENTO' then
   begin
     AssignFile(Arquivo, VCGeraisCaminhoArquivoLeitura + '\CPNOTA' +
@@ -1871,17 +1870,7 @@ begin
   end
   else if ACAO = 'ENVIA' then
   begin
-    if(VCGeraisTipoArquivoEnvio = 'JSON') then
-    begin
-      jsonText := TStringList.Create;
-      jsonText.LoadFromFile(VCGeraisCaminhoArquivoLeitura + '\EVNOTA' + IntToStr(ParNF) + '.json');
-      VNumLote := sendNFe(ACBrNFe1, jsonText.Text);
-      exit;
-    end
-    else
-    begin
       AssignFile(Arquivo, VCGeraisCaminhoArquivoLeitura + '\EVNOTA' + IntToStr(ParNF) + '.txt');
-    end;
   end
   else if ACAO = 'ENVIASN' then
   begin
@@ -3276,25 +3265,6 @@ begin
   CloseFile(Arquivo);
 
   Result := true;
-end;
-
-function TForm1.LeftZero(Const Text: string; Const Tam: word;
-  Const RetQdoVazio: String = ' '): string;
-begin
-  Result := trim(Text);
-  if Result <> '' then
-  begin
-    // Remove zeros desnecessario a esquerda
-    if length(Result) > Tam then
-    begin
-      while (length(Result) > Tam) and (Result[1] = '0') do
-        Delete(Result, 1, 1);
-    end;
-    // Preenche com zeros a esquerda
-    while length(Result) < Tam do
-      Result := '0' + Result;
-  end;
-  Result := Copy(Result, 1, Tam);
 end;
 
 end.

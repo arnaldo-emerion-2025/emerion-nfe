@@ -21,7 +21,8 @@ uses
   DBXFirebird,
   SimpleDS,
   DB,
-  ACBrDFe.Conversao;
+  ACBrDFe.Conversao,
+  ACBrValidador;
 
 type
   TEventForm = class
@@ -55,6 +56,9 @@ function BuscaSimples(Tabela, Retorna, _and: string; Conn: TSQLConnection;
 function VALIDAcpf(cpf: string): Boolean;
 function StrToTpEmis(const codigo: Integer): TACBrTipoEmissao;
 
+function ValidaCNPJ(sCNPJ: string; MostraMsg: Boolean = true): Boolean;
+function LeftZero(Const Text: string; Const Tam: word; Const RetQdoVazio: String = ' '): string;
+
 var
   Frm: TForm;
   lb: TLabel;
@@ -68,6 +72,39 @@ var
   EventForm: TEventForm;
 
 implementation
+
+function ValidaCNPJ(sCNPJ: string; MostraMsg: Boolean = true): Boolean;
+var
+   validador: TACBrValidador;
+   resultado: String;
+   resposta:BOolean;
+begin
+  validador := TACBrValidador.Create(nil);
+  validador.TipoDocto := TACBrValTipoDocto.docCNPJ;
+  validador.Documento := sCNPJ;
+  resposta := validador.Validar;
+  resultado := validador.MsgErro;
+  Result := resposta;
+end;
+
+function LeftZero(Const Text: string; Const Tam: word;
+  Const RetQdoVazio: String = ' '): string;
+begin
+  Result := trim(Text);
+  if Result <> '' then
+  begin
+    // Remove zeros desnecessario a esquerda
+    if length(Result) > Tam then
+    begin
+      while (length(Result) > Tam) and (Result[1] = '0') do
+        Delete(Result, 1, 1);
+    end;
+    // Preenche com zeros a esquerda
+    while length(Result) < Tam do
+      Result := '0' + Result;
+  end;
+  Result := Copy(Result, 1, Tam);
+end;
 
 function EmailGerenciadorPadrao(const Assunto, Texto, Anexo, Nome_Remetente,
   Email_Remetente, Nome_Destinatario, Email_Destinatario: string): Integer;

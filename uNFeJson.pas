@@ -101,17 +101,17 @@ begin
   if (jsonObj.Field['ide'].Field['dSaiEnt'].Value <> '0000-00-00') then
     ide.dSaiEnt := jsonObj.Field['ide'].Field['dSaiEnt'].Value;
 
-  ide.tpNF := StrToTpNF(ok, jsonObj.Field['ide'].Field['tpNF'].Value);
+  ide.tpNF := StrToTpNF(jsonObj.Field['ide'].Field['tpNF'].Value);
   ide.idDest := StrToDestinoOperacao(ok, jsonObj.Field['ide'].Field['idDest'].Value);
   ide.cMunFG := jsonObj.Field['ide'].Field['cMunFG'].Value;
-  ide.tpImp := StrToTpImp(ok, jsonObj.Field['ide'].Field['tpImp'].Value);
-  ide.tpEmis := StrToTipoEmissao(ok, jsonObj.Field['ide'].Field['tpEmis'].Value);
+  ide.tpImp := StrToTpImp(jsonObj.Field['ide'].Field['tpImp'].Value);
+  ide.tpEmis := StrToTipoEmissao(jsonObj.Field['ide'].Field['tpEmis'].Value);
   ide.cDV := jsonObj.Field['ide'].Field['cDV'].Value;
-  ide.tpAmb := StrToTipoAmbiente(ok, jsonObj.Field['ide'].Field['tpAmb'].Value);
+  ide.tpAmb := StrToTipoAmbiente(jsonObj.Field['ide'].Field['tpAmb'].Value);
   ide.finNFe := StrToFinNFe(ok, jsonObj.Field['ide'].Field['finNFe'].Value);
   ide.indFinal := StrToConsumidorFinal(ok, jsonObj.Field['ide'].Field['indFinal'].Value);
   ide.indPres := StrToPresencaComprador(ok, jsonObj.Field['ide'].Field['indPres'].Value);
-  ide.procEmi := StrToprocEmi(ok, jsonObj.Field['ide'].Field['procEmi'].Value);
+  ide.procEmi := StrToprocEmi(jsonObj.Field['ide'].Field['procEmi'].Value);
   ide.verProc := jsonObj.Field['ide'].Field['verProc'].Value;
   Result := ide;
 end;
@@ -142,8 +142,6 @@ begin
 end;
 
 function fulfillDest(dest: TDest; jsonObj: TlkJSONobject): TDest;
-var
-  ok: Boolean;
 begin
   dest.CNPJCPF := jsonObj.Field['dest'].Field['CPF_CNPJ'].Value;
   dest.idEstrangeiro := jsonObj.Field['dest'].Field['idEstrangeiro'].Value;
@@ -162,7 +160,7 @@ begin
   dest.IE := jsonObj.Field['dest'].Field['ie'].Value;
   dest.ISUF := jsonObj.Field['dest'].Field['ISUF'].Value;
   dest.Email := jsonObj.Field['dest'].Field['email'].Value;
-  dest.indIEDest := StrToindIEDest(ok, jsonObj.Field['dest'].Field['indIEDest'].Value);
+  dest.indIEDest := StrToindIEDest(jsonObj.Field['dest'].Field['indIEDest'].Value);
   dest.IM := jsonObj.Field['dest'].Field['IM'].Value;
 
   Result := dest;
@@ -283,16 +281,16 @@ begin
       end;
     end;
 
-    item.Imposto.ICMS.orig := StrToOrig(ok, detItem.Field['imposto'].Field['icms'].Field['orig'].Value);
+    item.Imposto.ICMS.orig := StrToOrig(detItem.Field['imposto'].Field['icms'].Field['orig'].Value);
     if (Length(detItem.Field['imposto'].Field['icms'].Field['cst'].Value) = 2) then
     begin
-      item.Imposto.ICMS.CST := StrToCSTICMS(ok, detItem.Field['imposto'].Field['icms'].Field['cst'].Value);
+      item.Imposto.ICMS.CST := StrToCSTICMS(detItem.Field['imposto'].Field['icms'].Field['cst'].Value);
       item.Imposto.ICMS.vBCST := detItem.Field['imposto'].Field['icms'].Field['vBCST'].Value;
       item.Imposto.ICMS.vICMSST := detItem.Field['imposto'].Field['icms'].Field['vICMSST'].Value;
     end
     else
     begin
-      item.Imposto.ICMS.CSOSN := StrToCSOSNIcms(ok, detItem.Field['imposto'].Field['icms'].Field['cst'].Value);
+      item.Imposto.ICMS.CSOSN := StrToCSOSNIcms(detItem.Field['imposto'].Field['icms'].Field['cst'].Value);
       item.Imposto.ICMS.pCredSN := detItem.Field['imposto'].Field['icms'].Field['pCredSN'].Value;
       item.Imposto.ICMS.vCredICMSSN := detItem.Field['imposto'].Field['icms'].Field['vCredICMSSN'].Value;
     end;
@@ -307,7 +305,7 @@ begin
     item.Imposto.ICMS.vICMS := detItem.Field['imposto'].Field['icms'].Field['vICMS'].Value;
     item.Imposto.ICMS.vICMSDeson := detItem.Field['imposto'].Field['icms'].Field['vICMSDeson'].Value;
 
-    if ((StrToCSTICMS(ok, detItem.Field['imposto'].Field['icms'].Field['cst'].Value) = cst60) and
+    if ((StrToCSTICMS(detItem.Field['imposto'].Field['icms'].Field['cst'].Value) = cst60) and
       (getTipoConsumidor(jsonObj) <> cfConsumidorFinal)) then
     begin
       if (detItem.Field['imposto'].Field['icms'].Field['pST'].Value > 0) then
@@ -360,12 +358,12 @@ begin
     item.Imposto.PIS.vBc := detItem.Field['imposto'].Field['pis'].Field['vBC'].Value;
     item.Imposto.PIS.pPIS := detItem.Field['imposto'].Field['pis'].Field['pIPI'].Value;
     item.Imposto.PIS.vPIS := detItem.Field['imposto'].Field['pis'].Field['vIPI'].Value;
-    item.Imposto.PIS.CST := StrToCSTPIS(ok, detItem.Field['imposto'].Field['pis'].Field['CST'].Value);
+    item.Imposto.PIS.CST := StrToCSTPIS(detItem.Field['imposto'].Field['pis'].Field['CST'].Value);
 
     item.Imposto.COFINS.vBc := detItem.Field['imposto'].Field['cofins'].Field['vBC'].Value;
     item.Imposto.COFINS.pCOFINS := detItem.Field['imposto'].Field['cofins'].Field['pIPI'].Value;
     item.Imposto.COFINS.vCOFINS := detItem.Field['imposto'].Field['cofins'].Field['vIPI'].Value;
-    item.Imposto.COFINS.CST := StrToCSTCOFINS(ok, detItem.Field['imposto'].Field['cofins'].Field['CST'].Value);
+    item.Imposto.COFINS.CST := StrToCSTCOFINS(detItem.Field['imposto'].Field['cofins'].Field['CST'].Value);
   end;
   Result := det;
 end;
