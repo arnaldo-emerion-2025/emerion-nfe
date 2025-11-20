@@ -440,6 +440,15 @@ var
   ok: Boolean;
 begin
   pagArray := jsonObj.Field['pagamento'] as TlkJSONlist;
+
+  if (pagArray = nil) or (pagArray.Count = 0) then
+    begin
+      item := pag.New;
+      item.tPag := TpcnFormaPagamento.fpSemPagamento;
+      item.vPag := 0;
+      Exit(nil);
+    end;
+
   for i := 0 to pagArray.Count - 1 do
   begin
     pagItem := pagArray.Child[i] as TlkJSONobject;
@@ -469,22 +478,25 @@ var
 begin
   pagArray := jsonObj.Field['pagamento'] as TlkJSONlist;
 
-  if ((pagArray.Count > 1) or (isDateInFuture(pagArray.Child[0].Field['dVenc'].Value))) then
+  if(pagArray.Count > 0) then
   begin
-    for i := 0 to pagArray.Count - 1 do
+    if ((pagArray.Count > 1) or (isDateInFuture(pagArray.Child[0].Field['dVenc'].Value))) then
     begin
-      pagItem := pagArray.Child[i] as TlkJSONobject;
-      item := cobranca.Dup.New;
-      item.nDup := FormatFloat('000', pagItem.Field['numeroParcela'].Value);
-      item.dVenc := strToDate_YMD(pagItem.Field['dVenc'].Value);
-      item.vDup := pagItem.Field['vPag'].Value;
+      for i := 0 to pagArray.Count - 1 do
+      begin
+        pagItem := pagArray.Child[i] as TlkJSONobject;
+        item := cobranca.Dup.New;
+        item.nDup := FormatFloat('000', pagItem.Field['numeroParcela'].Value);
+        item.dVenc := strToDate_YMD(pagItem.Field['dVenc'].Value);
+        item.vDup := pagItem.Field['vPag'].Value;
+      end;
     end;
   end;
 
-  cobranca.Fat.nFat := jsonObj.Field['nfat'].Value;
-  cobranca.Fat.vOrig := jsonObj.Field['voriginal'].Value;
+  cobranca.Fat.nFat := getStringSafe(jsonObj, 'nfat');
+  cobranca.Fat.vOrig := getNumberSafe(jsonObj, 'voriginal');
   cobranca.Fat.vDesc := 0;
-  cobranca.Fat.vLiq := jsonObj.Field['vliq'].Value;
+  cobranca.Fat.vLiq := getNumberSafe(jsonObj, 'vliq');
 
   Result := cobranca;
 end;

@@ -10,6 +10,8 @@ uses
 
 procedure readJson(const jsonString: String);
 function getTipoConsumidor(const jsonObj: TlkJSONobject): TpcnConsumidorFinal;
+function getStringSafe(const jsonObj: TlkJSONobject; const field: String): String;
+function getNumberSafe(const jsonObj: TlkJSONobject; const field: String): Extended;
 
 implementation
 
@@ -33,6 +35,28 @@ begin
     raise Exception.Create('NFe IDE info not available');
 
   Result := StrToConsumidorFinal(ok, jsonObj.Field['ide'].Field['indFinal'].Value)
+end;
+
+function getStringSafe(const jsonObj: TlkJSONobject; const field: String): String;
+var
+ val: TlkJSONbase;
+begin
+   val := jsonObj.Field['nfat'];
+   if(val <> nil) then
+     Result := val.Value
+   else
+     Result := '';
+end;
+
+function getNumberSafe(const jsonObj: TlkJSONobject; const field: String): Extended;
+var
+ val: TlkJSONbase;
+begin
+   val := jsonObj.Field['nfat'];
+   if(val <> nil) then
+     Result := val.Value
+   else
+     Result := 0;
 end;
 
 end.
