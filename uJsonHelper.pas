@@ -8,24 +8,11 @@ uses
   dialogs,
   SysUtils;
 
-procedure readJson(const jsonString: String);
 function getTipoConsumidor(const jsonObj: TlkJSONobject): TpcnConsumidorFinal;
 function getStringSafe(const jsonObj: TlkJSONobject; const field: String): String;
 function getNumberSafe(const jsonObj: TlkJSONobject; const field: String): Extended;
 
 implementation
-
-procedure readJson(const jsonString: String);
-var
-  jsonObj: TlkJSONobject;
-begin
-  jsonObj := TlkJSON.ParseText(jsonString) as TlkJSONobject;
-  try
-    ShowMessage(jsonObj.Field['inicio'].Field['SeqNFe'].Value);
-  finally
-    jsonObj.Free;
-  end;
-end;
 
 function getTipoConsumidor(const jsonObj: TlkJSONobject): TpcnConsumidorFinal;
 var
@@ -41,7 +28,7 @@ function getStringSafe(const jsonObj: TlkJSONobject; const field: String): Strin
 var
  val: TlkJSONbase;
 begin
-   val := jsonObj.Field['nfat'];
+   val := jsonObj.Field[field];
    if(val <> nil) then
      Result := val.Value
    else
@@ -52,7 +39,7 @@ function getNumberSafe(const jsonObj: TlkJSONobject; const field: String): Exten
 var
  val: TlkJSONbase;
 begin
-   val := jsonObj.Field['nfat'];
+   val := jsonObj.Field[field];
    if(val <> nil) then
      Result := val.Value
    else
