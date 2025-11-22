@@ -11,7 +11,8 @@ uses
   ACBrDFe.Conversao,
   pcnConversaoNFe,
   SysUtils,
-  uJsonHelper;
+  uJsonHelper,
+  uWebServiceTributos;
 
 function isDateInFuture(const dateStr: string): Boolean;
 function strToDate_YMD(const dateStr: string): TDateTime;
@@ -27,6 +28,9 @@ function fulfillTransport(transport: TTransp; jsonObj: TlkJSONobject): TTransp;
 function fulfillExport(exporta: TExporta; jsonObj: TlkJSONobject): TExporta;
 function fulfillPayment(pag: TpagCollection; jsonObj: TlkJSONobject): TpagCollection;
 function fulfillCob(cobranca: TCobr; jsonObj: TlkJSONobject): TCobr;
+
+function fulfillIBSCBS000(imposto: TImposto): TImposto;
+function fulfillIBSCBS200(imposto: TImposto): TImposto;
 
 procedure fulfillRespTec(nfeObj: TNFe);
 
@@ -47,6 +51,9 @@ var
   pag: TpagCollection;
   cobranca: TCobr;
 begin
+
+  TRestClientHelper.calcularNovosImpostos;
+  exit(1);
 
   ShowMessage('Enviando NFE com o modelo mais atual');
 
@@ -228,6 +235,8 @@ begin
     item.Prod.vDesc := detItem.Field['item'].Field['vDesc'].Value;
     item.Prod.nFCI := detItem.Field['item'].Field['nFCI'].Value;
 
+    fulfillIBSCBS000(item.Imposto);
+
     item.Prod.xPed := detItem.Field['item'].Field['xPed'].Value;
     item.Prod.nItemPed := detItem.Field['item'].Field['nItemPed'].Value;
 
@@ -366,6 +375,63 @@ begin
     item.Imposto.COFINS.CST := StrToCSTCOFINS(detItem.Field['imposto'].Field['cofins'].Field['CST'].Value);
   end;
   Result := det;
+end;
+
+function fulfillIBSCBS000(imposto: TImposto): TImposto;
+var
+ novoImposto : TIBSCBS;
+begin
+  novoImposto := imposto.IBSCBS;
+
+  novoImposto.CST := TCSTIBSCBS.cst000;
+  novoImposto.cClassTrib := '';
+  novoImposto.indDoacao := TIndicadorEx.tieNenhum;
+  novoImposto.gIBSCBS.vBC := 0;
+  novoImposto.gIBSCBS.gIBSUF.pIBSUF := 0;
+  novoImposto.gIBSCBS.gIBSUF.vIBSUF := 0;
+  novoImposto.gIBSCBS.gIBSMun.pIBSMun := 0;
+  novoImposto.gIBSCBS.gIBSMun.vIBSMun := 0;
+  novoImposto.gIBSCBS.vIBS := 0;
+  novoImposto.gIBSCBS.gCBS.pCBS := 0;
+  novoImposto.gIBSCBS.gCBS.vCBS := 0;
+end;
+
+function fulfillIBSCBS200(imposto: TImposto): TImposto;
+var
+ novoImposto : TIBSCBS;
+begin
+  novoImposto := imposto.IBSCBS;
+
+  novoImposto.CST := TCSTIBSCBS.cst000;
+  novoImposto.cClassTrib := '';
+
+  novoImposto.gIBSCBS.vBC := 0;
+
+  novoImposto.gIBSCBS.gIBSUF.pIBSUF := 0;
+  novoImposto.gIBSCBS.gIBSUF.gRed.pRedAliq := 0;
+  novoImposto.gIBSCBS.gIBSUF.gRed.pAliqEfet := 0;
+  novoImposto.gIBSCBS.gIBSUF.vIBSUF := 0;
+
+  novoImposto.gIBSCBS.gIBSMun.pIBSMun := 0;
+  novoImposto.gIBSCBS.gIBSMun.gRed.pRedAliq := 0;
+  novoImposto.gIBSCBS.gIBSMun.gRed.pAliqEfet := 0;
+  novoImposto.gIBSCBS.gIBSMun.vIBSMun := 0;
+
+  novoImposto.gIBSCBS.vIBS := 0;
+
+  novoImposto.gIBSCBS.gCBS.pCBS := 0;
+  novoImposto.gIBSCBS.gCBS.gRed.pRedAliq := 0;
+  novoImposto.gIBSCBS.gCBS.gRed.pAliqEfet := 0;
+  novoImposto.gIBSCBS.gCBS.vCBS := 0;
+
+  novoImposto.gIBSCBS.gTribRegular.CSTReg := TCSTIBSCBS.cst200;
+  novoImposto.gIBSCBS.gTribRegular.cClassTribReg := '';
+  novoImposto.gIBSCBS.gTribRegular.pAliqEfetRegIBSUF := 0;
+  novoImposto.gIBSCBS.gTribRegular.vTribRegIBSUF := 0;
+  novoImposto.gIBSCBS.gTribRegular.pAliqEfetRegIBSMun := 0;
+  novoImposto.gIBSCBS.gTribRegular.vTribRegIBSMun := 0;
+  novoImposto.gIBSCBS.gTribRegular.pAliqEfetRegCBS := 0;
+  novoImposto.gIBSCBS.gTribRegular.vTribRegCBS := 0;
 end;
 
 function fulfillIcmsTot(total: TTotal; jsonObj: TlkJSONobject): TTotal;

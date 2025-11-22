@@ -7,7 +7,9 @@ uses
   uFuncoes in 'uFuncoes.pas',
   uIniFileUtils in 'uIniFileUtils.pas',
   uJsonHelper in 'uJsonHelper.pas',
-  uNFeJson in 'uNFeJson.pas';
+  uNFeJson in 'uNFeJson.pas',
+  uWebServiceTributos in 'uWebServiceTributos.pas',
+  uRegimeGeralModel in 'uRegimeGeralModel.pas';
 
 {$R *.res}
 
