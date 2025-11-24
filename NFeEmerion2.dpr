@@ -9,7 +9,8 @@ uses
   uJsonHelper in 'uJsonHelper.pas',
   uNFeJson in 'uNFeJson.pas',
   uWebServiceTributos in 'uWebServiceTributos.pas',
-  uRegimeGeralModel in 'uRegimeGeralModel.pas';
+  uRegimeGeralModel in 'uRegimeGeralModel.pas',
+  uWebServiceUtils in 'uWebServiceUtils.pas';
 
 {$R *.res}
 

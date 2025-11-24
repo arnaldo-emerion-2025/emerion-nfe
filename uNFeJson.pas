@@ -18,19 +18,19 @@ function isDateInFuture(const dateStr: string): Boolean;
 function strToDate_YMD(const dateStr: string): TDateTime;
 
 function sendNFe(ACBrNFe1: TACBrNFe; jsonString: String): Integer;
-function fulfillIde(ide: TIde; jsonObj: TlkJSONobject): TIde;
-function fulfillEmit(emit: TEmit; jsonObj: TlkJSONobject): TEmit;
-function fulfillDest(dest: TDest; jsonObj: TlkJSONobject): TDest;
-function fulfillEntrega(entrega: TEntrega; jsonObj: TlkJSONobject): TEntrega;
-function fulfillDet(det: TDetCollection; jsonObj: TlkJSONobject): TDetCollection;
-function fulfillIcmsTot(total: TTotal; jsonObj: TlkJSONobject): TTotal;
-function fulfillTransport(transport: TTransp; jsonObj: TlkJSONobject): TTransp;
-function fulfillExport(exporta: TExporta; jsonObj: TlkJSONobject): TExporta;
-function fulfillPayment(pag: TpagCollection; jsonObj: TlkJSONobject): TpagCollection;
-function fulfillCob(cobranca: TCobr; jsonObj: TlkJSONobject): TCobr;
+procedure fulfillIde(ide: TIde; jsonObj: TlkJSONobject);
+procedure fulfillEmit(emit: TEmit; jsonObj: TlkJSONobject);
+procedure fulfillDest(dest: TDest; jsonObj: TlkJSONobject);
+procedure fulfillEntrega(entrega: TEntrega; jsonObj: TlkJSONobject);
+procedure fulfillDet(det: TDetCollection; jsonObj: TlkJSONobject);
+procedure fulfillIcmsTot(total: TTotal; jsonObj: TlkJSONobject);
+procedure fulfillTransport(transport: TTransp; jsonObj: TlkJSONobject);
+procedure fulfillExport(exporta: TExporta; jsonObj: TlkJSONobject);
+procedure fulfillPayment(pag: TpagCollection; jsonObj: TlkJSONobject);
+procedure fulfillCob(cobranca: TCobr; jsonObj: TlkJSONobject);
 
-function fulfillIBSCBS000(imposto: TImposto): TImposto;
-function fulfillIBSCBS200(imposto: TImposto): TImposto;
+procedure fulfillIBSCBS000(imposto: TImposto);
+procedure fulfillIBSCBS200(imposto: TImposto);
 
 procedure fulfillRespTec(nfeObj: TNFe);
 
@@ -39,20 +39,10 @@ implementation
 function sendNFe(ACBrNFe1: TACBrNFe; jsonString: String): Integer;
 var
   nfeObj: TNFe;
-  ide: TIde;
-  emit: TEmit;
-  dest: TDest;
-  entrega: TEntrega;
-  det: TDetCollection;
-  total: TTotal;
-  transport: TTransp;
   jsonObj: TlkJSONobject;
-  exporta: TExporta;
-  pag: TpagCollection;
-  cobranca: TCobr;
 begin
 
-  TRestClientHelper.calcularNovosImpostos;
+  TWebServiceTributos.calcularNovosImpostos;
   exit(1);
 
   ShowMessage('Enviando NFE com o modelo mais atual');
@@ -63,19 +53,19 @@ begin
 
   nfeObj := ACBrNFe1.NotasFiscais.Items[0].NFe;
 
-  ide := fulfillIde(nfeObj.ide, jsonObj);
-  emit := fulfillEmit(nfeObj.emit, jsonObj);
-  dest := fulfillDest(nfeObj.dest, jsonObj);
-  entrega := fulfillEntrega(nfeObj.entrega, jsonObj);
-  det := fulfillDet(nfeObj.det, jsonObj);
-  total := fulfillIcmsTot(nfeObj.total, jsonObj);
-  transport := fulfillTransport(nfeObj.Transp, jsonObj);
-  exporta := fulfillExport(nfeObj.exporta, jsonObj);
-  pag := fulfillPayment(nfeObj.pag, jsonObj);
-  cobranca := fulfillCob(nfeObj.Cobr, jsonObj);
+  fulfillIde(nfeObj.ide, jsonObj);
+  fulfillEmit(nfeObj.emit, jsonObj);
+  fulfillDest(nfeObj.dest, jsonObj);
+  fulfillEntrega(nfeObj.entrega, jsonObj);
+  fulfillDet(nfeObj.det, jsonObj);
+  fulfillIcmsTot(nfeObj.total, jsonObj);
+  fulfillTransport(nfeObj.Transp, jsonObj);
+  fulfillExport(nfeObj.exporta, jsonObj);
+  fulfillPayment(nfeObj.pag, jsonObj);
+  fulfillCob(nfeObj.Cobr, jsonObj);
   nfeObj.InfAdic.infCpl := jsonObj.Field['infCpl'].Value;
 
-  if (emit.EnderEmit.UF = 'SC') then
+  if (nfeObj.emit.EnderEmit.UF = 'SC') then
   begin
     fulfillRespTec(nfeObj);
   end;
@@ -83,10 +73,10 @@ begin
   if (ACBrNFe1.Configuracoes.WebServices.Ambiente = TACBrTipoAmbiente.taHomologacao) then
     nfeObj.emit.xNome := 'NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
 
-  Result := ide.nNF;
+  Result := nfeObj.ide.nNF;
 end;
 
-function fulfillIde(ide: TIde; jsonObj: TlkJSONobject): TIde;
+procedure fulfillIde(ide: TIde; jsonObj: TlkJSONobject);
 var
   ok: Boolean;
 begin
@@ -99,7 +89,7 @@ begin
   ide.cUF := jsonObj.Field['ide'].Field['cUF'].Value;
   // ide.cNF := 1;
   ide.natOp := jsonObj.Field['ide'].Field['natOp'].Value;
-  ide.indPag := StrToIndpag(ok, jsonObj.Field['ide'].Field['TipCnd'].Value);
+  ide.indPag := StrToIndpagEX(jsonObj.Field['ide'].Field['TipCnd'].Value);
   ide.modelo := jsonObj.Field['ide'].Field['modelo'].Value;
   ide.serie := jsonObj.Field['ide'].Field['serie'].Value;
   ide.nNF := jsonObj.Field['ide'].Field['nNF'].Value;
@@ -120,10 +110,9 @@ begin
   ide.indPres := StrToPresencaComprador(ok, jsonObj.Field['ide'].Field['indPres'].Value);
   ide.procEmi := StrToprocEmi(jsonObj.Field['ide'].Field['procEmi'].Value);
   ide.verProc := jsonObj.Field['ide'].Field['verProc'].Value;
-  Result := ide;
 end;
 
-function fulfillEmit(emit: TEmit; jsonObj: TlkJSONobject): TEmit;
+procedure fulfillEmit(emit: TEmit; jsonObj: TlkJSONobject);
 var
   ok: Boolean;
 begin
@@ -144,11 +133,9 @@ begin
   emit.IE := jsonObj.Field['emit'].Field['ie'].Value;
   emit.IEST := jsonObj.Field['emit'].Field['IEST'].Value;
   emit.CRT := StrToCRT(ok, jsonObj.Field['emit'].Field['CRT'].Value);
-
-  Result := emit;
 end;
 
-function fulfillDest(dest: TDest; jsonObj: TlkJSONobject): TDest;
+procedure fulfillDest(dest: TDest; jsonObj: TlkJSONobject);
 begin
   dest.CNPJCPF := jsonObj.Field['dest'].Field['CPF_CNPJ'].Value;
   dest.idEstrangeiro := jsonObj.Field['dest'].Field['idEstrangeiro'].Value;
@@ -169,8 +156,6 @@ begin
   dest.Email := jsonObj.Field['dest'].Field['email'].Value;
   dest.indIEDest := StrToindIEDest(jsonObj.Field['dest'].Field['indIEDest'].Value);
   dest.IM := jsonObj.Field['dest'].Field['IM'].Value;
-
-  Result := dest;
 end;
 
 procedure fulfillRespTec(nfeObj: TNFe);
@@ -181,7 +166,7 @@ begin
   nfeObj.infRespTec.fone := '01120217221';
 end;
 
-function fulfillEntrega(entrega: TEntrega; jsonObj: TlkJSONobject): TEntrega;
+procedure fulfillEntrega(entrega: TEntrega; jsonObj: TlkJSONobject);
 begin
   if (jsonObj.Field['entrega'].Count = 0) then
     exit;
@@ -193,11 +178,9 @@ begin
   entrega.cMun := jsonObj.Field['entrega'].Field['cMun'].Value;
   entrega.xMun := jsonObj.Field['entrega'].Field['xMun'].Value;
   entrega.UF := jsonObj.Field['entrega'].Field['UF'].Value;
-
-  Result := entrega;
 end;
 
-function fulfillDet(det: TDetCollection; jsonObj: TlkJSONobject): TDetCollection;
+procedure fulfillDet(det: TDetCollection; jsonObj: TlkJSONobject);
 var
   detArray, rastroArray, medArray: TlkJSONlist;
   detItem, rastroItem, medItem: TlkJSONobject;
@@ -350,14 +333,16 @@ begin
       end;
     end;
 
-    item.Imposto.ICMSUFDest.vBCUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCUFDest'].Value;
-    item.Imposto.ICMSUFDest.vBCFCPUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCUFDest'].Value;
-    item.Imposto.ICMSUFDest.pICMSUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['pICMSUFDest'].Value;
-    item.Imposto.ICMSUFDest.pICMSInter := detItem.Field['imposto'].Field['ICMSUFDest'].Field['pICMSInter'].Value;
-    item.Imposto.ICMSUFDest.pICMSInterPart := detItem.Field['imposto'].Field['ICMSUFDest'].Field
-      ['pICMSInterPart'].Value;
-    item.Imposto.ICMSUFDest.vICMSUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vICMSUFDest'].Value;
-    item.Imposto.ICMSUFDest.vICMSUFRemet := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vICMSUFRemet'].Value;
+    if(detItem.Field['imposto'].Field['ICMSUFDest'] <> Nil) then
+    begin
+      item.Imposto.ICMSUFDest.vBCUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCUFDest'].Value;
+      item.Imposto.ICMSUFDest.vBCFCPUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCUFDest'].Value;
+      item.Imposto.ICMSUFDest.pICMSUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['pICMSUFDest'].Value;
+      item.Imposto.ICMSUFDest.pICMSInter := detItem.Field['imposto'].Field['ICMSUFDest'].Field['pICMSInter'].Value;
+      item.Imposto.ICMSUFDest.pICMSInterPart := detItem.Field['imposto'].Field['ICMSUFDest'].Field['pICMSInterPart'].Value;
+      item.Imposto.ICMSUFDest.vICMSUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vICMSUFDest'].Value;
+      item.Imposto.ICMSUFDest.vICMSUFRemet := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vICMSUFRemet'].Value;
+    end;
 
     item.Imposto.IPI.vBc := detItem.Field['imposto'].Field['ipi'].Field['vBC'].Value;
     item.Imposto.IPI.pIPI := detItem.Field['imposto'].Field['ipi'].Field['pIPI'].Value;
@@ -374,10 +359,9 @@ begin
     item.Imposto.COFINS.vCOFINS := detItem.Field['imposto'].Field['cofins'].Field['vIPI'].Value;
     item.Imposto.COFINS.CST := StrToCSTCOFINS(detItem.Field['imposto'].Field['cofins'].Field['CST'].Value);
   end;
-  Result := det;
 end;
 
-function fulfillIBSCBS000(imposto: TImposto): TImposto;
+procedure fulfillIBSCBS000(imposto: TImposto);
 var
  novoImposto : TIBSCBS;
 begin
@@ -396,7 +380,7 @@ begin
   novoImposto.gIBSCBS.gCBS.vCBS := 0;
 end;
 
-function fulfillIBSCBS200(imposto: TImposto): TImposto;
+procedure fulfillIBSCBS200(imposto: TImposto);
 var
  novoImposto : TIBSCBS;
 begin
@@ -434,7 +418,7 @@ begin
   novoImposto.gIBSCBS.gTribRegular.vTribRegCBS := 0;
 end;
 
-function fulfillIcmsTot(total: TTotal; jsonObj: TlkJSONobject): TTotal;
+procedure fulfillIcmsTot(total: TTotal; jsonObj: TlkJSONobject);
 begin
   total.ICMSTot.vBc := jsonObj.Field['icmsTot'].Field['vBC'].Value;
   total.ICMSTot.vICMS := jsonObj.Field['icmsTot'].Field['vICMS'].Value;
@@ -455,10 +439,9 @@ begin
   total.ICMSTot.vFCPUFDest := jsonObj.Field['icmsTot'].Field['vFCPUFDest'].Value;
   total.ICMSTot.vICMSUFDest := jsonObj.Field['icmsTot'].Field['vICMSUFDest'].Value;
   total.ICMSTot.vICMSUFRemet := jsonObj.Field['icmsTot'].Field['vICMSUFRemet'].Value;
-  Result := total;
 end;
 
-function fulfillTransport(transport: TTransp; jsonObj: TlkJSONobject): TTransp;
+procedure fulfillTransport(transport: TTransp; jsonObj: TlkJSONobject);
 var
   ok: Boolean;
   volItem: TVolCollectionItem;
@@ -481,11 +464,9 @@ begin
 
   transport.veicTransp.placa := jsonObj.Field['transporte'].Field['placa'].Value;
   transport.veicTransp.placa := jsonObj.Field['transporte'].Field['ufPlaca'].Value;
-
-  Result := transport;
 end;
 
-function fulfillExport(exporta: TExporta; jsonObj: TlkJSONobject): TExporta;
+procedure fulfillExport(exporta: TExporta; jsonObj: TlkJSONobject);
 begin
   if (jsonObj.Field['export'].Count = 0) then
     exit;
@@ -494,10 +475,9 @@ begin
   exporta.xLocExporta := jsonObj.Field['export'].Field['xLocExporta'].Value;
   exporta.xLocDespacho := jsonObj.Field['export'].Field['xLocDespacho'].Value;
 
-  Result := exporta;
 end;
 
-function fulfillPayment(pag: TpagCollection; jsonObj: TlkJSONobject): TpagCollection;
+procedure fulfillPayment(pag: TpagCollection; jsonObj: TlkJSONobject);
 var
   pagArray: TlkJSONlist;
   pagItem: TlkJSONobject;
@@ -512,7 +492,7 @@ begin
       item := pag.New;
       item.tPag := TpcnFormaPagamento.fpSemPagamento;
       item.vPag := 0;
-      Exit(nil);
+      Exit;
     end;
 
   for i := 0 to pagArray.Count - 1 do
@@ -531,11 +511,9 @@ begin
       item.vPag := pagItem.Field['vPag'].Value;
     end;
   end;
-
-  Result := pag;
 end;
 
-function fulfillCob(cobranca: TCobr; jsonObj: TlkJSONobject): TCobr;
+procedure fulfillCob(cobranca: TCobr; jsonObj: TlkJSONobject);
 var
   pagArray: TlkJSONlist;
   pagItem: TlkJSONobject;
@@ -563,8 +541,6 @@ begin
   cobranca.Fat.vOrig := getNumberSafe(jsonObj, 'voriginal');
   cobranca.Fat.vDesc := 0;
   cobranca.Fat.vLiq := getNumberSafe(jsonObj, 'vliq');
-
-  Result := cobranca;
 end;
 
 function isDateInFuture(const dateStr: string): Boolean;

@@ -523,7 +523,6 @@ function SoNumero(strCLPIPI: string): string;
 var
   intChar: Integer;
 begin
-  intChar := 0;
   Result := '';
   for intChar := 1 to Length(strCLPIPI) do
   begin

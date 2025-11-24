@@ -5,18 +5,19 @@ interface
 uses
   System.SysUtils,
   System.IniFiles,
+  System.Classes,
+  System.Contnrs,
   Forms,
   uRegimeGeralModel,
   Dialogs,
   Winapi.Windows,
   Winapi.ActiveX,
-  ComObj;
+  uWebServiceUtils;
 
 type
-  TRestClientHelper = class
+  TWebServiceTributos = class
   public
     class procedure calcularNovosImpostos();
-    class function PostJSON(const Url, ContentType, Body: string): string;
     class function generateRegimeGeralData(): string;
   end;
 
@@ -26,40 +27,32 @@ var
   endpointGerarXML: string = '';
   endpointValidarXML: string = '';
 
-const
-  WinHttpRequestOption_SslErrorIgnoreFlags = 3;
-  WinHttpRequestOption_EnableRedirects = 6;
-  WinHttpRequestOption_SecurityFlags = 4;
-  WinHttpRequestOption_SecureProtocols = 9;
-
-  SECURITY_FLAG_IGNORE_CERT_CN_INVALID = $00001000;
-  SECURITY_FLAG_IGNORE_CERT_DATE_INVALID = $00002000;
-
-  WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2 = $00000800;
-
 implementation
 
 var
   Ini: TIniFile;
 
-  { TRestClientHelper }
+  { TWebServiceTributos }
 
-class procedure TRestClientHelper.calcularNovosImpostos;
+class procedure TWebServiceTributos.calcularNovosImpostos;
 var
-  jsonArquivoEntrada, responseString: String;
+  jsonArquivoEntrada, responseString, xmlGenerated: String;
 begin
   jsonArquivoEntrada := generateRegimeGeralData;
 
-  responseString := PostJSON(APIBaseURL + endpointCalcularTributos, 'application/json', jsonArquivoEntrada);
+  responseString := TRestClientHelper.PostJSON(APIBaseURL + endpointCalcularTributos, [], jsonArquivoEntrada);
 
   ShowMessage(responseString);
+
+  xmlGenerated := TRestClientHelper.PostJSON(APIBaseURL + endpointGerarXML, ['tipo=nfe'], responseString);
+
+  ShowMessage(xmlGenerated);
 end;
 
-class function TRestClientHelper.generateRegimeGeralData: string;
+class function TWebServiceTributos.generateRegimeGeralData: string;
 var
   entrada: TRegimeGeral;
   item: TItem;
-  jsonText: string;
 begin
   entrada := TRegimeGeral.Create;
   entrada.id := '1';
@@ -92,32 +85,6 @@ begin
   entrada.itens.Add(item);
 
   Result := entrada.ToJSONString;
-end;
-
-class function TRestClientHelper.PostJSON(const Url, ContentType, Body: string): string;
-var
-  WinHttp: OleVariant;
-begin
-  WinHttp := CreateOleObject('WinHttp.WinHttpRequest.5.1');
-
-  // Open connection - TRUE for async off (we want sync)
-  WinHttp.Open('POST', Url, False);
-
-  // Force TLS 1.2 (if supported by the OS)
-  WinHttp.Option[WinHttpRequestOption_SslErrorIgnoreFlags] := 0;
-  WinHttp.Option[WinHttpRequestOption_EnableRedirects] := True;
-  WinHttp.Option[WinHttpRequestOption_SecurityFlags] := SECURITY_FLAG_IGNORE_CERT_CN_INVALID or
-    SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
-
-  // Set headers
-  WinHttp.SetRequestHeader('Content-Type', ContentType);
-  WinHttp.SetRequestHeader('Accept', 'application/json');
-
-  // Send body
-  WinHttp.Send(Body);
-
-  // Return response as string
-  Result := WinHttp.ResponseText;
 end;
 
 initialization
