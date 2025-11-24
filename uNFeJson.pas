@@ -42,8 +42,8 @@ var
   jsonObj: TlkJSONobject;
 begin
 
-  TWebServiceTributos.calcularNovosImpostos;
-  exit(1);
+  //TWebServiceTributos.calcularNovosImpostos;
+  //exit(1);
 
   ShowMessage('Enviando NFE com o modelo mais atual');
 
