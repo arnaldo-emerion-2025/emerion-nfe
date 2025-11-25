@@ -42,8 +42,7 @@ var
   jsonObj: TlkJSONobject;
 begin
 
-  //TWebServiceTributos.calcularNovosImpostos;
-  //exit(1);
+  //TWebServiceTributos.calcularNovosImpostos; exit(1);
 
   ShowMessage('Enviando NFE com o modelo mais atual');
 
@@ -312,29 +311,29 @@ begin
     item.Imposto.ICMS.motDesICMS := StrTomotDesICMS(ok, detItem.Field['imposto'].Field['icms'].Field
       ['motDesICMS'].Value);
 
-    if (item.Imposto.ICMS.CST = cst00) then
-    begin
-      if (detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCFCPUFDest'].Value > 0) then
-      begin
-        if not((StrToDestinoOperacao(ok, jsonObj.Field['ide'].Field['idDest'].Value) = doInterestadual) and
-          (getTipoConsumidor(jsonObj) = cfConsumidorFinal)) then
-        begin
-          item.Imposto.ICMS.vBCFCP := detItem.Field['imposto'].Field['icms'].Field['vBC'].Value;
-          item.Imposto.ICMS.pFCP := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCFCPUFDest'].Value;
-          item.Imposto.ICMS.vFCP := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vICMSUFDest'].Value;
-        end
-        else
-        begin
-          item.Imposto.ICMS.vBCFCP := detItem.Field['imposto'].Field['icms'].Field['vBC'].Value;
-          item.Imposto.ICMSUFDest.pFCPUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field
-            ['vBCFCPUFDest'].Value;
-          item.Imposto.ICMSUFDest.vFCPUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vFCPUFDest'].Value;
-        end;
-      end;
-    end;
-
     if(detItem.Field['imposto'].Field['ICMSUFDest'] <> Nil) then
     begin
+      if (item.Imposto.ICMS.CST = cst00) then
+      begin
+        if (detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCFCPUFDest'].Value > 0) then
+        begin
+          if not((StrToDestinoOperacao(ok, jsonObj.Field['ide'].Field['idDest'].Value) = doInterestadual) and
+            (getTipoConsumidor(jsonObj) = cfConsumidorFinal)) then
+          begin
+            item.Imposto.ICMS.vBCFCP := detItem.Field['imposto'].Field['icms'].Field['vBC'].Value;
+            item.Imposto.ICMS.pFCP := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCFCPUFDest'].Value;
+            item.Imposto.ICMS.vFCP := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vICMSUFDest'].Value;
+          end
+          else
+          begin
+            item.Imposto.ICMS.vBCFCP := detItem.Field['imposto'].Field['icms'].Field['vBC'].Value;
+            item.Imposto.ICMSUFDest.pFCPUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field
+              ['vBCFCPUFDest'].Value;
+            item.Imposto.ICMSUFDest.vFCPUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vFCPUFDest'].Value;
+          end;
+        end;
+      end;
+
       item.Imposto.ICMSUFDest.vBCUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCUFDest'].Value;
       item.Imposto.ICMSUFDest.vBCFCPUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['vBCUFDest'].Value;
       item.Imposto.ICMSUFDest.pICMSUFDest := detItem.Field['imposto'].Field['ICMSUFDest'].Field['pICMSUFDest'].Value;
