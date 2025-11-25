@@ -181,12 +181,14 @@ end;
 
 procedure fulfillDet(det: TDetCollection; jsonObj: TlkJSONobject);
 var
-  detArray, rastroArray, medArray: TlkJSONlist;
-  detItem, rastroItem, medItem: TlkJSONobject;
+  detArray, rastroArray, medArray, diArray, adiArray: TlkJSONlist;
+  detItem, rastroItem, medItem, diItem, adiItem: TlkJSONobject;
   item: TDetCollectionItem;
   detRastroItem: TRastroCollectionItem;
   detMedItem: TMedCollectionItem;
-  i, j, k: Integer;
+  detDiItem: TDICollectionItem;
+  detAdiItem: TADICollectionItem;
+  i, j, k, l, m: Integer;
   ok: Boolean;
 begin
   detArray := jsonObj.Field['det'] as TlkJSONlist;
@@ -217,7 +219,7 @@ begin
     item.Prod.vDesc := detItem.Field['item'].Field['vDesc'].Value;
     item.Prod.nFCI := detItem.Field['item'].Field['nFCI'].Value;
 
-    fulfillIBSCBS000(item.Imposto);
+    //fulfillIBSCBS000(item.Imposto);
 
     item.Prod.xPed := detItem.Field['item'].Field['xPed'].Value;
     item.Prod.nItemPed := detItem.Field['item'].Field['nItemPed'].Value;
@@ -235,13 +237,44 @@ begin
 
     item.infAdProd := detItem.Field['infAdProd'].Value;
 
+    if (detArray.Child[i].Field['di'].Count > 0) then
+    begin
+      diArray := detArray.Child[i].Field['di'] as TlkJSONlist;
+      for l := 0 to diArray.Count - 1 do
+      begin
+        diItem := diArray.Child[l] as TlkJSONobject;
+        detDiItem := item.Prod.di.New;
+
+        detDiItem.nDi := diItem.Field['nDi'].Value;
+        detDiItem.dDi :=  strToDate_YMD(diItem.Field['dDi'].Value);
+        detDiItem.xLocDesemb := diItem.Field['xLocDesemb'].Value;
+        detDiItem.UFDesemb := diItem.Field['UFDesemb'].Value;
+        detDiItem.dDesemb := strToDate_YMD(diItem.Field['dDesemb'].Value);
+        detDiItem.cExportador := diItem.Field['cExportador'].Value;
+
+        if (diArray.Child[i].Field['adi'].Count > 0) then
+        begin
+          adiArray := diArray.Child[i].Field['adi'] as TlkJSONlist;
+          for m := 0 to adiArray.Count - 1 do
+          begin
+            adiItem := adiArray.Child[m] as TlkJSONobject;
+            detAdiItem := detDiItem.adi.New;
+            detAdiItem.nSeqAdi := adiItem.Field['nSeqAdi'].Value;
+            detAdiItem.nAdicao := adiItem.Field['nAdicao'].Value;
+            detAdiItem.cFabricante := adiItem.Field['cFabricante'].Value;
+            detAdiItem.vDescDI := adiItem.Field['vDescDI'].Value;
+          end;
+        end;
+      end;
+    end;
+
     item.Imposto.II.vBc := detItem.Field['imposto'].Field['importoImportacao'].Field['vBC'].Value;
     item.Imposto.II.vII := detItem.Field['imposto'].Field['importoImportacao'].Field['vII'].Value;
     item.Imposto.II.vDespAdu := detItem.Field['imposto'].Field['importoImportacao'].Field['vDespAdu'].Value;
     item.Imposto.II.vIOF := detItem.Field['imposto'].Field['importoImportacao'].Field['vIOF'].Value;
     item.Imposto.vTotTrib := detItem.Field['imposto'].Field['vTotTrib'].Value;
 
-    if (jsonObj.Field['det'].Field['rastro'].Count > 0) then
+    if (detArray.Child[i].Field['rastro'].Count > 0) then
     begin
       rastroArray := detArray.Child[i].Field['rastro'] as TlkJSONlist;
       for j := 0 to rastroArray.Count - 1 do
