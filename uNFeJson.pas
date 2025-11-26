@@ -252,9 +252,9 @@ begin
         detDiItem.dDesemb := strToDate_YMD(diItem.Field['dDesemb'].Value);
         detDiItem.cExportador := diItem.Field['cExportador'].Value;
 
-        if (diArray.Child[i].Field['adi'].Count > 0) then
+        if (diArray.Child[l].Field['adi'].Count > 0) then
         begin
-          adiArray := diArray.Child[i].Field['adi'] as TlkJSONlist;
+          adiArray := diArray.Child[l].Field['adi'] as TlkJSONlist;
           for m := 0 to adiArray.Count - 1 do
           begin
             adiItem := adiArray.Child[m] as TlkJSONobject;
@@ -479,12 +479,15 @@ var
   volItem: TVolCollectionItem;
 begin
   transport.modFrete := StrTomodFrete(ok, jsonObj.Field['transporte'].Field['modFrete'].Value);
-  transport.Transporta.CNPJCPF := jsonObj.Field['transporte'].Field['CNPJCPF'].Value;
-  transport.Transporta.xNome := jsonObj.Field['transporte'].Field['xNome'].Value;
-  transport.Transporta.IE := jsonObj.Field['transporte'].Field['ie'].Value;
-  transport.Transporta.xEnder := jsonObj.Field['transporte'].Field['xEnder'].Value;
-  transport.Transporta.xMun := jsonObj.Field['transporte'].Field['xMun'].Value;
-  transport.Transporta.UF := jsonObj.Field['transporte'].Field['uf'].Value;
+  if(transport.modFrete <> TpcnModalidadeFrete.mfSemFrete) then
+  begin
+    transport.Transporta.CNPJCPF := jsonObj.Field['transporte'].Field['CNPJCPF'].Value;
+    transport.Transporta.xNome := jsonObj.Field['transporte'].Field['xNome'].Value;
+    transport.Transporta.IE := jsonObj.Field['transporte'].Field['ie'].Value;
+    transport.Transporta.xEnder := jsonObj.Field['transporte'].Field['xEnder'].Value;
+    transport.Transporta.xMun := jsonObj.Field['transporte'].Field['xMun'].Value;
+    transport.Transporta.UF := jsonObj.Field['transporte'].Field['uf'].Value;
+  end;
 
   volItem := transport.Vol.New;
   volItem.qVol := jsonObj.Field['transporte'].Field['qVol'].Value;
