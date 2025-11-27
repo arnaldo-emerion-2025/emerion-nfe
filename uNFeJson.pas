@@ -237,32 +237,35 @@ begin
 
     item.infAdProd := detItem.Field['infAdProd'].Value;
 
-    if (detArray.Child[i].Field['di'].Count > 0) then
+    if(detArray.Child[i].Field['di'] <> Nil) then
     begin
-      diArray := detArray.Child[i].Field['di'] as TlkJSONlist;
-      for l := 0 to diArray.Count - 1 do
+      if (detArray.Child[i].Field['di'].Count > 0) then
       begin
-        diItem := diArray.Child[l] as TlkJSONobject;
-        detDiItem := item.Prod.di.New;
-
-        detDiItem.nDi := diItem.Field['nDi'].Value;
-        detDiItem.dDi :=  strToDate_YMD(diItem.Field['dDi'].Value);
-        detDiItem.xLocDesemb := diItem.Field['xLocDesemb'].Value;
-        detDiItem.UFDesemb := diItem.Field['UFDesemb'].Value;
-        detDiItem.dDesemb := strToDate_YMD(diItem.Field['dDesemb'].Value);
-        detDiItem.cExportador := diItem.Field['cExportador'].Value;
-
-        if (diArray.Child[l].Field['adi'].Count > 0) then
+        diArray := detArray.Child[i].Field['di'] as TlkJSONlist;
+        for l := 0 to diArray.Count - 1 do
         begin
-          adiArray := diArray.Child[l].Field['adi'] as TlkJSONlist;
-          for m := 0 to adiArray.Count - 1 do
+          diItem := diArray.Child[l] as TlkJSONobject;
+          detDiItem := item.Prod.di.New;
+
+          detDiItem.nDi := diItem.Field['nDi'].Value;
+          detDiItem.dDi :=  strToDate_YMD(diItem.Field['dDi'].Value);
+          detDiItem.xLocDesemb := diItem.Field['xLocDesemb'].Value;
+          detDiItem.UFDesemb := diItem.Field['UFDesemb'].Value;
+          detDiItem.dDesemb := strToDate_YMD(diItem.Field['dDesemb'].Value);
+          detDiItem.cExportador := diItem.Field['cExportador'].Value;
+
+          if (diArray.Child[l].Field['adi'].Count > 0) then
           begin
-            adiItem := adiArray.Child[m] as TlkJSONobject;
-            detAdiItem := detDiItem.adi.New;
-            detAdiItem.nSeqAdi := adiItem.Field['nSeqAdi'].Value;
-            detAdiItem.nAdicao := adiItem.Field['nAdicao'].Value;
-            detAdiItem.cFabricante := adiItem.Field['cFabricante'].Value;
-            detAdiItem.vDescDI := adiItem.Field['vDescDI'].Value;
+            adiArray := diArray.Child[l].Field['adi'] as TlkJSONlist;
+            for m := 0 to adiArray.Count - 1 do
+            begin
+              adiItem := adiArray.Child[m] as TlkJSONobject;
+              detAdiItem := detDiItem.adi.New;
+              detAdiItem.nSeqAdi := adiItem.Field['nSeqAdi'].Value;
+              detAdiItem.nAdicao := adiItem.Field['nAdicao'].Value;
+              detAdiItem.cFabricante := adiItem.Field['cFabricante'].Value;
+              detAdiItem.vDescDI := adiItem.Field['vDescDI'].Value;
+            end;
           end;
         end;
       end;
