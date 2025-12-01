@@ -19,5 +19,9 @@
     <Transaction>2025/11/21 22:09:00.000.442,W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas=W:\_wgsys\emerion\NFeEmerion DPEC\uWebServiceTributos.pas</Transaction>
     <Transaction>2025/11/22 01:00:33.000.525,=W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas</Transaction>
     <Transaction>2025/11/22 01:00:44.000.508,W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas=W:\_wgsys\emerion\NFeEmerion DPEC\uRegimeGeralModel.pas</Transaction>
+    <Transaction>2025/11/24 09:10:01.000.453,=W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas</Transaction>
+    <Transaction>2025/11/24 09:10:18.000.087,W:\_wgsys\emerion\NFeEmerion DPEC\uWebServiceUtils.pas=W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas</Transaction>
+    <Transaction>2025/11/28 23:36:01.000.782,=W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas</Transaction>
+    <Transaction>2025/11/28 23:36:32.000.286,W:\_wgsys\emerion\NFeEmerion DPEC\uGeneratedXMLUtil.pas=W:\_wgsys\emerion\NFeEmerion DPEC\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>

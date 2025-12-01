@@ -12,13 +12,16 @@ uses
   Dialogs,
   Winapi.Windows,
   Winapi.ActiveX,
-  uWebServiceUtils;
+  uWebServiceUtils,
+  uGeneratedXMLUtil,
+  ACBrNFe.Classes;
 
 type
   TWebServiceTributos = class
   public
-    class procedure calcularNovosImpostos();
-    class function generateRegimeGeralData(): string;
+    class function calcularNovosImpostos(items: TDetCollection): TInfNFeNovosTributos;
+  private
+    class function generateRegimeGeralData(items: TDetCollection): string;
   end;
 
 var
@@ -34,55 +37,66 @@ var
 
   { TWebServiceTributos }
 
-class procedure TWebServiceTributos.calcularNovosImpostos;
+class function TWebServiceTributos.calcularNovosImpostos(items: TDetCollection): TInfNFeNovosTributos;
 var
   jsonArquivoEntrada, responseString, xmlGenerated: String;
+  response: THttpResponse;
+  Inf: TInfNFeNovosTributos;
 begin
-  jsonArquivoEntrada := generateRegimeGeralData;
+  jsonArquivoEntrada := generateRegimeGeralData(items);
 
-  responseString := TRestClientHelper.PostJSON(APIBaseURL + endpointCalcularTributos, [], jsonArquivoEntrada);
+  {
+    First step defined
+    Calcular Tributos da RTC
+  }
+  responseString := TRestClientHelper.PostJSON(APIBaseURL + endpointCalcularTributos, [], jsonArquivoEntrada).Body;
 
-  ShowMessage(responseString);
+  {
+    Second step defined
+    Gerar XML dos Grupos de Tributação da RTC
+  }
+  xmlGenerated := TRestClientHelper.PostJSON(APIBaseURL + endpointGerarXML, ['tipo=nfe'], responseString).Body;
 
-  xmlGenerated := TRestClientHelper.PostJSON(APIBaseURL + endpointGerarXML, ['tipo=nfe'], responseString);
+  {
+    Third step defined
+    Validar XML Gerado
+  }
+  response := TRestClientHelper.PostJSON(APIBaseURL + endpointValidarXML, ['tipo=nfe', 'subtipo=grupo'], xmlGenerated,
+    'application/xml');
 
-  ShowMessage(xmlGenerated);
+  Inf := TInfNFeNovosTributos.Create;
+  Inf.LoadFromXML(xmlGenerated);
+
+  Result := Inf;
 end;
 
-class function TWebServiceTributos.generateRegimeGeralData: string;
+class function TWebServiceTributos.generateRegimeGeralData(items: TDetCollection): string;
 var
   entrada: TRegimeGeral;
   item: TItem;
+  det: TDetCollectionItem;
+  i: Integer;
 begin
   entrada := TRegimeGeral.Create;
   entrada.id := '1';
   entrada.versao := '1.0.0';
   entrada.dataHoraEmissao := '2026-01-01T09:50:05-03:00';
-  entrada.municipio := 4314902;
-  entrada.uf := 'RS';
+  entrada.municipio := 3550308;
+  entrada.uf := 'SP';
 
-  // create an item and set properties
-  item := TItem.Create;
-  item.numero := 1;
-  item.ncm := '24021000';
-  item.nbs := '';
-  item.quantidade := 222;
-  item.unidade := 'KG';
-  item.cst := '000';
-  item.baseCalculo := 200;
-  item.cClassTrib := '000001';
-
-  item.tributacaoRegular.cst := '000';
-  item.tributacaoRegular.cClassTrib := '000000';
-
-  item.impostoSeletivo.cst := '000';
-  item.impostoSeletivo.baseCalculo := 1111;
-  item.impostoSeletivo.cClassTrib := '000000';
-  item.impostoSeletivo.unidade := 'KG';
-  item.impostoSeletivo.quantidade := 222;
-  item.impostoSeletivo.impostoInformado := 0;
-
-  entrada.itens.Add(item);
+  for i := 0 to items.Count - 1 do
+  begin
+    det := items[i];
+    item := TItem.Create;
+    item.numero := det.Prod.nItem;
+    item.ncm := det.Prod.ncm;
+    item.quantidade := det.Prod.qCom;
+    item.unidade := det.Prod.uCom;
+    item.cst := '000';
+    item.baseCalculo := det.Prod.vProd;
+    item.cClassTrib := '000001';
+    entrada.itens.Add(item);
+  end;
 
   Result := entrada.ToJSONString;
 end;

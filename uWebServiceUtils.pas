@@ -6,11 +6,17 @@ uses
   ComObj, System.SysUtils;
 
 type
+  THttpResponse = record
+    Status: Integer;
+    Body: string;
+  end;
+
+type
   TRestClientHelper = class
   public
     class function EncodeURLParam(const S: string): string;
     class function BuildQueryString(const Params: array of string): string;
-    class function PostJSON(const Url: String; const Params: array of string; Body: string): string;
+    class function PostJSON(const Url: String; const Params: array of string; Body: string; contentType : String = 'application/json'): THttpResponse;
   end;
 
 const
@@ -64,7 +70,7 @@ begin
   end;
 end;
 
-class function TRestClientHelper.PostJSON(const Url: String; const Params: array of string; Body: string): string;
+class function TRestClientHelper.PostJSON(const Url: String; const Params: array of string; Body: string; contentType : String = 'application/json'): THttpResponse;
 var
   WinHttp: OleVariant;
   FullUrl, Query: string;
@@ -88,13 +94,14 @@ begin
     SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
 
   // Set headers
-  WinHttp.SetRequestHeader('Content-Type', 'application/json');
+  WinHttp.SetRequestHeader('Content-Type', contentType);
 
   // Send body
   WinHttp.Send(Body);
 
   // Return response as string
-  Result := WinHttp.ResponseText;
+  Result.Status := WinHttp.Status;
+  Result.Body := WinHttp.ResponseText;
 end;
 
 end.

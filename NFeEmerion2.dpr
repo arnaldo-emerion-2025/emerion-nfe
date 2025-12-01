@@ -10,7 +10,8 @@ uses
   uNFeJson in 'uNFeJson.pas',
   uWebServiceTributos in 'uWebServiceTributos.pas',
   uRegimeGeralModel in 'uRegimeGeralModel.pas',
-  uWebServiceUtils in 'uWebServiceUtils.pas';
+  uWebServiceUtils in 'uWebServiceUtils.pas',
+  uGeneratedXMLUtil in 'uGeneratedXMLUtil.pas';
 
 {$R *.res}
 

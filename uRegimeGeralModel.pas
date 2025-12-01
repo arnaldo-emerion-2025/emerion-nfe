@@ -84,14 +84,14 @@ end;
 constructor TItem.Create;
 begin
   inherited Create;
-  tributacaoRegular := TTributacaoRegular.Create;
-  impostoSeletivo := TImpostoSeletivo.Create;
 end;
 
 destructor TItem.Destroy;
 begin
-  impostoSeletivo.Free;
-  tributacaoRegular.Free;
+  if (impostoSeletivo <> Nil) then
+    impostoSeletivo.Free;
+  if (tributacaoRegular <> Nil) then
+    tributacaoRegular.Free;
   inherited Destroy;
 end;
 
@@ -105,8 +105,10 @@ begin
   Result.Add('cst', cst);
   Result.Add('baseCalculo', baseCalculo);
   Result.Add('cClassTrib', cClassTrib);
-  Result.Add('tributacaoRegular', tributacaoRegular.ToJSON);
-  Result.Add('impostoSeletivo', impostoSeletivo.ToJSON);
+  if (tributacaoRegular <> Nil) then
+    Result.Add('tributacaoRegular', tributacaoRegular.ToJSON);
+  if (impostoSeletivo <> Nil) then
+    Result.Add('impostoSeletivo', impostoSeletivo.ToJSON);
 end;
 
 { TRegimeGeral }
