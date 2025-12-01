@@ -53,7 +53,7 @@ begin
 
   {
     Second step defined
-    Gerar XML dos Grupos de Tributação da RTC
+    Gerar XML dos Grupos de Tributacao da RTC
   }
   xmlGenerated := TRestClientHelper.PostJSON(APIBaseURL + endpointGerarXML, ['tipo=nfe'], responseString).Body;
 
