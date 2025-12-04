@@ -3,6 +3,7 @@ unit uWebServiceTributos;
 interface
 
 uses
+  ulkJSON,
   System.SysUtils,
   System.IniFiles,
   System.Classes,
@@ -19,9 +20,9 @@ uses
 type
   TWebServiceTributos = class
   public
-    class function calcularNovosImpostos(items: TDetCollection): TInfNFeNovosTributos;
+    class function calcularNovosImpostos(items: TDetCollection; jsonObj: TlkJSONobject): TInfNFeNovosTributos;
   private
-    class function generateRegimeGeralData(items: TDetCollection): string;
+    class function generateRegimeGeralData(items: TDetCollection; jsonObj: TlkJSONobject): string;
   end;
 
 var
@@ -37,13 +38,14 @@ var
 
   { TWebServiceTributos }
 
-class function TWebServiceTributos.calcularNovosImpostos(items: TDetCollection): TInfNFeNovosTributos;
+class function TWebServiceTributos.calcularNovosImpostos(items: TDetCollection; jsonObj: TlkJSONobject)
+  : TInfNFeNovosTributos;
 var
   jsonArquivoEntrada, responseString, xmlGenerated: String;
   response: THttpResponse;
   Inf: TInfNFeNovosTributos;
 begin
-  jsonArquivoEntrada := generateRegimeGeralData(items);
+  jsonArquivoEntrada := generateRegimeGeralData(items, jsonObj);
 
   {
     First step defined
@@ -64,18 +66,23 @@ begin
   response := TRestClientHelper.PostJSON(APIBaseURL + endpointValidarXML, ['tipo=nfe', 'subtipo=grupo'], xmlGenerated,
     'application/xml');
 
+  if (response.Status <> 200) then
+    raise Exception.Create('Erro enquanto consultando calculadora do Sefaz: ' + response.Body);
+
   Inf := TInfNFeNovosTributos.Create;
   Inf.LoadFromXML(xmlGenerated);
 
   Result := Inf;
 end;
 
-class function TWebServiceTributos.generateRegimeGeralData(items: TDetCollection): string;
+class function TWebServiceTributos.generateRegimeGeralData(items: TDetCollection; jsonObj: TlkJSONobject): string;
 var
   entrada: TRegimeGeral;
   item: TItem;
   det: TDetCollectionItem;
   i: Integer;
+  detArray: TlkJSONlist;
+  detItem: TlkJSONobject;
 begin
   entrada := TRegimeGeral.Create;
   entrada.id := '1';
@@ -84,17 +91,21 @@ begin
   entrada.municipio := 3550308;
   entrada.uf := 'SP';
 
+  detArray := jsonObj.Field['det'] as TlkJSONlist;
+
   for i := 0 to items.Count - 1 do
   begin
     det := items[i];
+    detItem := detArray.Child[i] as TlkJSONobject;
+
     item := TItem.Create;
     item.numero := det.Prod.nItem;
     item.ncm := det.Prod.ncm;
     item.quantidade := det.Prod.qCom;
     item.unidade := det.Prod.uCom;
-    item.cst := '000';
+    item.cst := detItem.Field['imposto'].Field['IBSCBS'].Field['cst'].Value;
     item.baseCalculo := det.Prod.vProd;
-    item.cClassTrib := '000001';
+    item.cClassTrib := detItem.Field['imposto'].Field['IBSCBS'].Field['cClassTrib'].Value;;
     entrada.itens.Add(item);
   end;
 

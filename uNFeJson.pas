@@ -13,7 +13,8 @@ uses
   SysUtils,
   uJsonHelper,
   uWebServiceTributos,
-  uGeneratedXMLUtil;
+  uGeneratedXMLUtil,
+  uIniFileUtils;
 
 function isDateInFuture(const dateStr: string): Boolean;
 function strToDate_YMD(const dateStr: string): TDateTime;
@@ -73,9 +74,12 @@ begin
   if (ACBrNFe1.Configuracoes.WebServices.Ambiente = TACBrTipoAmbiente.taHomologacao) then
     nfeObj.emit.xNome := 'NF-E EMITIDA EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL';
 
-  inf := TWebServiceTributos.calcularNovosImpostos(nfeObj.det);
-  fulfillIBSCBS000(inf, nfeObj.det);
-  fulfillIBSCBSTot(inf, nfeObj.total);
+  if (nfeEmerionIni.utilizarNovoImposto) then
+  begin
+    inf := TWebServiceTributos.calcularNovosImpostos(nfeObj.det, jsonObj);
+    fulfillIBSCBS000(inf, nfeObj.det);
+    fulfillIBSCBSTot(inf, nfeObj.total);
+  end;
 
   Result := nfeObj.ide.nNF;
 end;
@@ -411,6 +415,7 @@ begin
   for i := 0 to items.Count - 1 do
   begin
     item := items.items[i];
+
     novoImposto := item.imposto.IBSCBS;
 
     impostosCalculados := inf.FindByItemNumber(item.Prod.nItem);

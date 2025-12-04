@@ -554,6 +554,7 @@ begin
     on E: Exception do
     begin
       ShowMessage(E.Message);
+      Exit;
     end;
   end;
 
